@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('扩展树示例')" />
+	<th:block th:include="include :: select2-css" />
+	<th:block th:include="include :: ztree-css" />
+</head>
+
+<body>
+<div class="main-content">
+	<form id="form-user-add" class="form-horizontal">
+		<div class="row">
+			<h4 class="form-header h4" style="margin:15px">扩展通用树组件的使用说明</h4>
+			<div class="col-sm-12">
+				<p>1、引入 ztree-css和ztree-js</p>
+				<p>2、绑定html的dom，并给自定义属性data-exdtree-options赋值</p>
+				<p>3、在页面加载完成时执行$.exdTree.initialize();</p>
+				<p>4、同步tree使用get方法，异步tree使用post方法;</p>
+			</div>
+		</div>
+		<div class="row">
+			<h4 class="form-header h4" style="margin:15px">示例信息</h4>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label"><span style="color: red; ">*</span>用户-异步-无默认值：</label>
+					<div class="col-sm-8">
+						<input id="userNameId" name="userId" type="hidden" value=""/>
+						<input id="userName" name="userName" data-exdtree-options='{"url":"system/user/treeData","rootData":{"id":333,"root":true}}' placeholder="请输入用户名称" class="form-control" value="" type="text" maxlength="30" required>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label"><span style="color: red; ">*</span>用户-异步-单选-默认：</label>
+					<div class="col-sm-8">
+						<input id="userName2Id" name="userId2" type="hidden" value="13838345915"/>
+						<input id="userName2" name="userName2" data-exdtree-options='{"url":"system/user/treeData"}' placeholder="请输入用户名称" class="form-control" value="13838345915" type="text" maxlength="30" required>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label"><span style="color: red; ">*</span>用户-异步-多层默认：</label>
+					<div class="col-sm-8">
+						<input id="userName3Id" name="userId" type="hidden" value="100,332,13838345915"/>
+						<input id="userName3" name="userName" data-exdtree-options='{"url":"system/user/treeData","enableMulti":true}' placeholder="单选的多层模式" class="form-control" value="XXX科技有限公司/杨锋科技12/13838345915" type="text" maxlength="30" required>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label"><span style="color: red; ">*</span>用户-异步-多选默认：</label>
+					<div class="col-sm-8">
+						<input id="userName4Id" name="userId2" type="hidden" value="13838345915,wyq_stu05,wyq_stu06,10032:aqsubadmin"/>
+						<input id="userName4" name="userName2" data-exdtree-options='{"url":"system/user/treeData","checkBox": true}' placeholder="多选默认值" class="form-control" value="13838345915,王勇全学生5,王勇全学生6,安全管理员" type="text" maxlength="30" required>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">部门-单选-父节点可选：</label>
+					<div class="col-sm-8">
+						<input id="deptNameId" name="deptId" type="hidden" value=""/>
+						<input id="deptName" data-exdtree-options='{"url":"system/dept/treeData","isPclick":true,"expandLevel": 2}' name="deptName" class="form-control email" type="text" maxlength="50" placeholder="请输入部门" >
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">部门-多选-父节点不可选：</label>
+					<div class="col-sm-8">
+						<input id="deptName2Id" name="deptId" type="hidden" value=""/>
+						<input id="deptName2" data-exdtree-options='{"url":"system/dept/treeData", "checkBox":true,"expandLevel": 2,"rootData":{"id":333,"root":true}}' name="deptName2" class="form-control email" type="text" maxlength="50" placeholder="请输入部门" >
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">部门--多层单选-弹出：</label>
+					<div class="col-sm-8">
+						<input id="deptName3Id" name="deptId3" type="hidden" value=""/>
+						<input id="deptName3" data-exdtree-options='{"url":"system/dept/treeData", "showType":"modal","expandLevel": 2,"multiSeparator":"-"}' name="deptName3" class="form-control email" type="text" maxlength="50" placeholder="请输入部门" >
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">部门-多选弹出-默认：</label>
+					<div class="col-sm-8">
+						<input id="deptName4Id" name="deptId4" type="hidden" value="334,335,336,337"/>
+						<input id="deptName4" data-exdtree-options='{"url":"system/dept/treeData", "showType":"modal", "checkBox":true,"expandLevel": 2,"rootData":{"id":333,"root":true}}' name="deptName4" class="form-control email" type="text" value="业务部,安全部,财务部,技术部" maxlength="50" placeholder="请输入部门" >
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label"><span style="color: red; ">*</span>角色-弹出：</label>
+					<div class="col-sm-8">
+						<input id="roleNameId" name="roleId" type="hidden" value=""/>
+						<input id="roleName" data-exdtree-options='{"url":"system/role/treeData", "showType":"modal","enableAsync":false}' name="roleName" placeholder="请输入角色" class="form-control" value="" type="text" maxlength="110" required>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label"><span style="color: red; ">*</span>角色-下拉：</label>
+					<div class="col-sm-8">
+						<input id="roleName2Id" name="roleId" type="hidden" value=""/>
+						<input id="roleName2" data-exdtree-options='{"url":"system/role/treeData","enableAsync":false}' name="roleName2" placeholder="请输入角色" class="form-control" value="" type="text" maxlength="110" required>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">字典-设置取值1：</label>
+					<div class="col-sm-8">
+						<input id="dictNameId" name="roleId" type="hidden" value=""/>
+						<input id="dictName" data-exdtree-options='{"url":"system/dict/data/treeData","isPclick":true,"revertValue":"key","enableAsync":false}' name="dictName" class="form-control email" type="text" maxlength="50" placeholder="请输入字典" >
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">字典-设置取值2：</label>
+					<div class="col-sm-8">
+						<input id="dictName2Id" name="roleId" type="hidden" value=""/>
+						<input id="dictName2" data-exdtree-options='{"url":"system/dict/data/treeData","checkBox":true,"isPclick":true,"revertValue":"key","enableAsync":false}' name="dictName2" class="form-control email" type="text" maxlength="50" placeholder="请输入字典" >
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">字典--多层单选-弹出：</label>
+					<div class="col-sm-8">
+						<input id="dictName3Id" name="dictName3Id" type="hidden" value=""/>
+						<input id="dictName3" data-exdtree-options='{"url":"system/dict/data/treeData", "showType":"modal","isPclick":true,"revertValue":"key","enableAsync":false}' name="dictName3" class="form-control email" type="text" maxlength="50" placeholder="请输入字典" >
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">字典-多选-弹出：</label>
+					<div class="col-sm-8">
+						<input id="dictName4Id" name="dictName4Id" type="hidden" />
+						<input id="dictName4" data-exdtree-options='{"url":"system/dict/data/treeData", "showType":"modal","isPclick":true,"revertValue":"key", "checkBox":true,"enableAsync":false}' name="dictName4" class="form-control email" type="text" maxlength="50" placeholder="请输入字典" >
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">组织字典-设置取值1：</label>
+					<div class="col-sm-8">
+						<input id="factorydictNameId" name="roleId" type="hidden" value=""/>
+						<input id="factorydictName" data-exdtree-options='{"url":"system/factory/dict/treeData","isPclick":true,"revertValue":"key","enableAsync":false}' name="factorydictName" class="form-control email" type="text" maxlength="50" placeholder="请输入字典" >
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">组织字典-设置取值2：</label>
+					<div class="col-sm-8">
+						<input id="factorydictName2Id" name="roleId" type="hidden" value=""/>
+						<input id="factorydictName2" data-exdtree-options='{"url":"system/factory/dict/treeData","isPclick":true,"revertValue":"key","checkBox":true,"enableAsync":false}' name="factorydictName2" class="form-control email" type="text" maxlength="50" placeholder="请输入字典" >
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">组织字典--多层单选-弹出：</label>
+					<div class="col-sm-8">
+						<input id="factorydictName3Id" name="factorydictName3Id" type="hidden" value=""/>
+						<input id="factorydictName3" data-exdtree-options='{"url":"system/factory/dict/treeData","isPclick":true,"revertValue":"key", "showType":"modal","enableAsync":false}' name="dictName3" class="form-control email" type="text" maxlength="50" placeholder="请输入字典" >
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">组织字典-多选-弹出：</label>
+					<div class="col-sm-8">
+						<input id="factorydictName4Id" name="factorydictName4Id" type="hidden" />
+						<input id="factorydictName4" data-exdtree-options='{"url":"system/factory/dict/treeData","isPclick":true,"revertValue":"key", "showType":"modal", "checkBox":true,"enableAsync":false}' name="factorydictName4" class="form-control email" type="text" maxlength="50" placeholder="请输入字典" >
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label"><span style="color: red; ">*</span><a href="javascript:;" onclick="loadUserNameExTree();">点我</a>-手动加载：</label>
+					<div class="col-sm-8">
+						<input id="userName7Id" name="userId7" type="hidden" value=""/>
+						<input id="userName7" name="userName7" placeholder="请输入用户名称" class="form-control" value="" type="text" maxlength="30" required>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label"><span style="color: red; ">*</span><a href="javascript:;" onclick="changeExTreeRoot('#userName8');">点我</a>-变更根节点：</label>
+					<div class="col-sm-8">
+						<input id="userName8Id" name="userId8" type="hidden" value=""/>
+						<input id="userName8" name="userName8" data-exdTree-options='{"url":"system/user/treeData","rootData":{"id":333,"root":true}}' placeholder="请输入用户名称" class="form-control" value="" type="text" maxlength="30" required>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label"><span style="color: red; ">*</span><a href="javascript:;" onclick="validateChecked();">点我加载</a>-复选校验：</label>
+					<div class="col-sm-8">
+						<input id="userName17Id" name="userId7" type="hidden" value="13838345915"/>
+						<input id="userName17" name="userName7" placeholder="请输入用户名称" class="form-control" value="13838345915" type="text" maxlength="30" required>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label"><span style="color: red; ">*</span><a href="javascript:;" onclick="validateSelect();">点我加载</a>-单选校验：</label>
+					<div class="col-sm-8">
+						<input id="userName18Id" name="userId8" type="hidden" value=""/>
+						<input id="userName18" name="userName8" placeholder="请输入用户名称" class="form-control" value="" type="text" maxlength="30" required>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label"><span style="color: red; ">*</span>成员-异步-无默认值：</label>
+					<div class="col-sm-8">
+						<input id="factoryUserNameId" name="factoryUserId" type="hidden" value=""/>
+						<input id="factoryUserName" name="factoryUserName" data-exdTree-options='{"url":"system/factory/user/treeData","rootData":{"root":true}}' placeholder="请输入用户名称" class="form-control" value="" type="text" maxlength="30" required>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label"><span style="color: red; ">*</span>成员-异步-单选-默认：</label>
+					<div class="col-sm-8">
+						<input id="factoryUserName2Id" name="factoryUserId2" type="hidden" value="jishu"/>
+						<input id="factoryUserName2" name="factoryUserName2" data-exdTree-options='{"url":"system/factory/user/treeData","rootData":{"root":true}}' placeholder="请输入用户名称" class="form-control" value="技术" type="text" maxlength="30" required>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+		<h4 class="form-header h4" style="margin:15px">参数说明</h4>
+			<div class="col-sm-12">
+				<table id="bootstrap-table" class="table table-hover table-bordered" style="border: 0px solid;">
+					<thead>
+						<tr>
+							<th tabindex="0">
+								<div class="th-inner ">参数KEY</div>
+							</th>
+							<th tabindex="0">
+								<div class="th-inner ">参数名称</div>
+							</th>
+							<th tabindex="0" width="80px">
+								<div class="th-inner ">参数类型</div>
+							</th>
+							<th tabindex="0" width="80px">
+								<div class="th-inner ">是否必选</div>
+							</th>
+							<th tabindex="0">
+								<div class="th-inner ">默认值</div>
+							</th>
+							<th tabindex="0">
+								<div class="th-inner ">可选值</div>
+							</th>
+							<th tabindex="0">
+								<div class="th-inner ">其他说明</div>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr data-index="0">
+							<td>url</td>
+							<td>请求链接</td>
+							<td>String</td>
+							<td>必选</td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr data-index="0">
+							<td>title</td>
+							<td>标题</td>
+							<td>String</td>
+							<td>非必选</td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr data-index="0">
+							<td>rootData</td>
+							<td>tree的根节点请求数据</td>
+							<td>json</td>
+							<td>非必选</td>
+							<td></td>
+							<td></td>
+							<td>根据后台实现方法参数要求配置</td>
+						</tr>
+						<tr data-index="0">
+							<td>valueId</td>
+							<td>接收返回值的dom的id</td>
+							<td>String</td>
+							<td>非必选</td>
+							<td>当前dom的id + “Id”</td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr data-index="0">
+							<td>valueTypeId</td>
+							<td>接收返回值类型的dom的id</td>
+							<td>String</td>
+							<td>非必选</td>
+							<td>当前dom的id + “TypeId”</td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr data-index="0">
+							<td>showType</td>
+							<td>显示模式</td>
+							<td>String</td>
+							<td>非必选</td>
+							<td>select</td>
+							<td> modal、select</td>
+							<td>modal 模态框、select 下拉</td>
+						</tr>
+						<tr data-index="0">
+							<td>isPclick</td>
+							<td>父节点是否可选</td>
+							<td>String</td>
+							<td>非必选</td>
+							<td>false</td>
+							<td>true/false</td>
+							<td>true（父节点可选）false（父节点不可选）</td>
+						</tr>
+						<tr data-index="0">
+							<td>checkBox</td>
+							<td>开启多选并显示复选框</td>
+							<td>String</td>
+							<td>非必选</td>
+							<td>false</td>
+							<td>true、false</td>
+							<td></td>
+						</tr>
+						<tr data-index="0">
+							<td>enableMulti</td>
+							<td>单选的多层模式</td>
+							<td>String</td>
+							<td>非必选</td>
+							<td>false</td>
+							<td>true/false</td>
+							<td></td>
+						</tr>
+						<tr data-index="0">
+							<td>multiSeparator</td>
+							<td>单选的多层模式的分隔符</td>
+							<td>String</td>
+							<td>非必选</td>
+							<td>/</td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr data-index="0">
+							<td>enableAsync</td>
+							<td>加载方式</td>
+							<td>String</td>
+							<td>非必选</td>
+							<td>true</td>
+							<td>true/false</td>
+							<td>异步为 true，同步为 false</td>
+						</tr>
+						<tr data-index="0">
+							<td>expandLevel</td>
+							<td>展开层级</td>
+							<td>String</td>
+							<td>非必选</td>
+							<td>0</td>
+							<td></td>
+							<td>树图展开层级</td>
+						</tr>
+						<tr data-index="0">
+							<td>revertKey</td>
+							<td>返回值id</td>
+							<td>String</td>
+							<td>非必选</td>
+							<td>key</td>
+							<td></td>
+							<td>返回treenode的属性 并赋值为valueId，默认为 key</td>
+						<tr data-index="0">
+							<td>revertValue</td>
+							<td>返回值value</td>
+							<td>String</td>
+							<td>非必选</td>
+							<td>value</td>
+							<td></td>
+							<td>返回treenode的属性 并赋值为 当前dom对象 用于显示，默认为 value</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</form>
+</div>
+
+
+<th:block th:include="include :: footer" />
+<th:block th:include="include :: select2-js" />
+<th:block th:include="include :: ztree-js" />
+<script>
+	//js手动加载
+	function loadUserNameExTree(){
+		var exdTreeOptions = {
+			id: "userName7",
+			valueId: "userName7Id",
+			url: ctx + "system/user/treeData"
+		};
+		$.exdTree.init(exdTreeOptions);
+	}
+
+	// 校验选中
+	function validateChecked(){
+		var exdTreeOptions = {
+			id: "userName17",
+			valueId: "userName17Id",
+			checkBox: true,
+			url: ctx + "system/user/treeData",
+			beforeCheck: function(treeId, treeNode) {
+				if(!treeNode.isParent){
+					$.modal.msg("选中：key="+treeNode.key);
+					console.log(JSON.stringify(treeNode));
+				}else{
+					return false;
+				}
+			}
+		};
+		$.exdTree.init(exdTreeOptions);
+	}
+
+	// 校验选择
+	function validateSelect(){
+		var exdTreeOptions = {
+			id: "userName18",
+			valueId: "userName18Id",
+			url: ctx + "system/user/treeData",
+			beforeClick: function(treeId, treeNode, clickFlag) {
+				if(!treeNode.isParent){
+					$.modal.msg("选择：key="+treeNode.key);
+					console.log(JSON.stringify(treeNode));
+				}else{
+					return false;
+				}
+			}
+		};
+		$.exdTree.init(exdTreeOptions);
+	}
+
+	// js变更根节点
+	function changeExTreeRoot(element){
+		var exdTreeId = $(element).attr("id") + "MyTree";
+		var exdTreeOptions = $.exdTree._option[exdTreeId];
+		exdTreeOptions.rootData.id = 296;
+		$.exdTree.reInit(exdTreeId, exdTreeOptions);
+	}
+
+	// 初始化加载
+	$(function() {
+		$.exdTree.initialize();
+	});
+</script>
+</body>
+</html>

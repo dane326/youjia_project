@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gsh.system.mapper.SysDataTracesLogMapper">
+    
+    <resultMap type="SysDataTracesLog" id="SysDataTracesLogResult">
+        <result property="id"    column="id"    />
+        <result property="opMethod"    column="op_method"    />
+        <result property="opObjectId"    column="op_object_id"    />
+        <result property="opObjectName"    column="op_object_name"    />
+        <result property="opForeginId"    column="op_foregin_id"    />
+        <result property="opForeginName"    column="op_foregin_name"    />
+        <result property="opContent"    column="op_content"    />
+        <result property="oldObject"    column="old_object"    />
+        <result property="newObject"    column="new_object"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createByName"    column="create_by_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="createByDeptid"    column="create_by_deptid"    />
+        <result property="createByDeptname"    column="create_by_deptname"    />
+    </resultMap>
+
+    <sql id="selectSysDataTracesLogVo">
+        select id, op_method, op_object_id, op_object_name, op_foregin_id, op_foregin_name, op_content, old_object, new_object, deleted, create_by, create_by_name, create_time, remark, create_by_deptid, create_by_deptname from sys_data_traces_log
+    </sql>
+
+    <select id="selectSysDataTracesLogList" parameterType="SysDataTracesLog" resultMap="SysDataTracesLogResult">
+        <include refid="selectSysDataTracesLogVo"/>
+        <where>
+            <choose>
+                <when test="opObjectId != null and opObjectName != null  and opObjectName != ''">
+                    and ((op_object_name = #{opObjectName} and op_object_id = #{opObjectId})
+                        or
+                         (op_foregin_name = #{opObjectName} and op_foregin_id = #{opObjectId}))
+                </when>
+                <otherwise>
+                    <if test="opObjectId != null "> and op_object_id = #{opObjectId}</if>
+                    <if test="opObjectName != null  and opObjectName != ''"> and op_object_name like concat('%', #{opObjectName}, '%')</if>
+                    <if test="opForeginId != null "> and op_foregin_id = #{opForeginId}</if>
+                    <if test="opForeginName != null  and opForeginName != ''"> and op_foregin_name like concat('%', #{opForeginName}, '%')</if>
+                </otherwise>
+            </choose>
+            <if test="opMethod != null  and opMethod != ''"> and op_method = #{opMethod}</if>
+            <if test="opContent != null  and opContent != ''"> and op_content = #{opContent}</if>
+            <if test="oldObject != null  and oldObject != ''"> and old_object = #{oldObject}</if>
+            <if test="newObject != null  and newObject != ''"> and new_object = #{newObject}</if>
+            <if test="deleted != null  and deleted != ''"> and deleted = #{deleted}</if>
+            <if test="createByName != null  and createByName != ''"> and create_by_name like concat('%', #{createByName}, '%')</if>
+            <if test="createByDeptid != null "> and create_by_deptid = #{createByDeptid}</if>
+            <if test="createByDeptname != null  and createByDeptname != ''"> and create_by_deptname like concat('%', #{createByDeptname}, '%')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != ''"><!-- 开始时间检索 -->
+                and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginCreateTime},'%y%m%d')
+            </if>
+            <if test="params.endCreateTime != null and params.endCreateTime != ''"><!-- 结束时间检索 -->
+                and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endCreateTime},'%y%m%d')
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectSysDataTracesLogById" parameterType="Long" resultMap="SysDataTracesLogResult">
+        <include refid="selectSysDataTracesLogVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysDataTracesLog" parameterType="SysDataTracesLog" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_data_traces_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="opMethod != null  and opMethod != ''">op_method,</if>
+            <if test="opObjectId != null ">op_object_id,</if>
+            <if test="opObjectName != null  and opObjectName != ''">op_object_name,</if>
+            <if test="opForeginId != null ">op_foregin_id,</if>
+            <if test="opForeginName != null  and opForeginName != ''">op_foregin_name,</if>
+            <if test="opContent != null  and opContent != ''">op_content,</if>
+            <if test="oldObject != null  and oldObject != ''">old_object,</if>
+            <if test="newObject != null  and newObject != ''">new_object,</if>
+            <if test="deleted != null  and deleted != ''">deleted,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createByName != null  and createByName != ''">create_by_name,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="createByDeptid != null ">create_by_deptid,</if>
+            <if test="createByDeptname != null  and createByDeptname != ''">create_by_deptname,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="opMethod != null  and opMethod != ''">#{opMethod},</if>
+            <if test="opObjectId != null ">#{opObjectId},</if>
+            <if test="opObjectName != null  and opObjectName != ''">#{opObjectName},</if>
+            <if test="opForeginId != null ">#{opForeginId},</if>
+            <if test="opForeginName != null  and opForeginName != ''">#{opForeginName},</if>
+            <if test="opContent != null  and opContent != ''">#{opContent},</if>
+            <if test="oldObject != null  and oldObject != ''">#{oldObject},</if>
+            <if test="newObject != null  and newObject != ''">#{newObject},</if>
+            <if test="deleted != null  and deleted != ''">#{deleted},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createByName != null  and createByName != ''">#{createByName},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="createByDeptid != null ">#{createByDeptid},</if>
+            <if test="createByDeptname != null  and createByDeptname != ''">#{createByDeptname},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysDataTracesLog" parameterType="SysDataTracesLog">
+        update sys_data_traces_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="opMethod != null  and opMethod != ''">op_method = #{opMethod},</if>
+            <if test="opObjectId != null ">op_object_id = #{opObjectId},</if>
+            <if test="opObjectName != null  and opObjectName != ''">op_object_name = #{opObjectName},</if>
+            <if test="opForeginId != null ">op_foregin_id = #{opForeginId},</if>
+            <if test="opForeginName != null  and opForeginName != ''">op_foregin_name = #{opForeginName},</if>
+            <if test="opContent != null  and opContent != ''">op_content = #{opContent},</if>
+            <if test="oldObject != null  and oldObject != ''">old_object = #{oldObject},</if>
+            <if test="newObject != null  and newObject != ''">new_object = #{newObject},</if>
+            <if test="deleted != null  and deleted != ''">deleted = #{deleted},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createByName != null  and createByName != ''">create_by_name = #{createByName},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="createByDeptid != null ">create_by_deptid = #{createByDeptid},</if>
+            <if test="createByDeptname != null  and createByDeptname != ''">create_by_deptname = #{createByDeptname},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysDataTracesLogById" parameterType="Long">
+        delete from sys_data_traces_log where id = #{id}
+    </delete>
+
+    <delete id="deleteSysDataTracesLogByIds" parameterType="String">
+        delete from sys_data_traces_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="logicDeleteSysDataTracesLogById" parameterType="Long">
+        update   sys_data_traces_log  set deleted='1' where id = #{id}
+    </update>
+
+    <update id="logicDeleteSysDataTracesLogByIds" parameterType="String">
+        update   sys_data_traces_log  set deleted='1' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

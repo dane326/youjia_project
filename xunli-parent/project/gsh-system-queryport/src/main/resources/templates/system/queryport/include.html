@@ -1,0 +1,18 @@
+<!-- jquery-ui-css -->
+<div th:fragment="jquery-ui-css">
+	<link th:href="@{/system/queryport/css/jquery-ui.min.css}" rel="stylesheet"/>
+</div>
+
+<!-- jquery-ui-js -->
+<div th:fragment="jquery-ui-js">
+	<script th:src="@{/js/jquery-ui-1.10.4.min.js}"></script>
+</div>
+
+<!-- 查询视图js -->
+<div th:fragment="queryport-js">
+	<script th:src="@{/system/queryport/js/queryport-ui.js?v=1.0.0}"></script>
+	<script th:src="@{/system/queryport/js/xchart.js?v=1.0.0}"></script>
+	<script th:src="@{/ajax/libs/report/echarts/echarts-all.js}"></script>
+	<script th:src="@{/system/queryport/js/tablesMergeCell.js}"></script>
+</div>
+

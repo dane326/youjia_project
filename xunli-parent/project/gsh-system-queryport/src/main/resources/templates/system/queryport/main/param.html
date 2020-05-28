@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('查询视图字段配置')" />
+    <th:block th:include="include :: select2-css" />
+    <style type="text/css">
+        .select-table table{table-layout:fixed;}.select-table .table td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}.form-control{padding:3px 6px 4px;height:30px;}table .icheckbox-blue{top:0px;left:6px;}.form-control.select2-hidden-accessible{position:static!important;}.select-table table label.error{position: inherit;}select + label.error{z-index:1;right:40px;}
+    </style>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <form id="form-param-edit" class="form-horizontal">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <div class="ibox-content" style="padding: 15px 15px 5px 0px;">
+                    <a class="btn btn-info" onclick="submitHandler('edit');"><i class="fa"></i>1.配置基本信息</a>&nbsp;
+                    <a class="btn btn-info" onclick="submitHandler('column');"><i class="fa"></i>2.配置显示列信息</a>&nbsp;
+                    <a class="btn btn-primary"><i class="fa"></i>3.配置参数信息</a>&nbsp;
+                    <a class="btn btn-default" onclick="submitHandler('chart');" th:if="${#strings.contains(queryportMain.showType, 'shape')}"><i class="fa"></i>4.配置视图信息</a>&nbsp;
+            </div>
+                <div class="ibox-content" style="padding: 15px 15px 5px 0px;">
+                    <p>第三步：配置查询视图的参数信息，参数来源于查询配置。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-param-table" ></table>
+            </div>
+
+            <div class="col-sm-12">
+                <div style="text-align: right;">
+                    <br>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="submitHandler('column')"><i class="fa fa-reply"></i>上一步</button>
+                    <button type="button" class="btn btn-sm btn-success" onclick="submitHandler('display')"  th:if="${queryportMain.showType eq 'list'}"><i class="fa fa-check"></i>保存 并查看结果</button>&nbsp;
+                    <button type="button" class="btn btn-sm btn-success" onclick="submitHandler('chart')" th:if="${#strings.contains(queryportMain.showType, 'shape')}"><i class="fa fa-check"></i>保存 并配置图表</button>&nbsp;
+                    <button type="button" class="btn btn-sm btn-danger" onclick="closeItem()"><i class="fa fa-remove"></i>关 闭 </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer" />
+<th:block th:include="include :: select2-js" />
+<th:block th:include="include :: bootstrap-table-reorder-js" />
+<th:block th:include="include :: bootstrap-typeahead-js" />
+<script th:src="@{/js/jquery.tmpl.js}"></script>
+<script th:inline="javascript">
+    var prefix = ctx + "system/queryport";
+    var mainId = "[[${mainId}]]";
+
+    $(function() {
+        var options = {
+            id: "bootstrap-param-table",
+            url: prefix + "/param/list?mainId="+mainId,
+            exportUrl: prefix + "/export",
+            modalName: "查询视图字段配置",
+            sortName: "sort",
+            sortOrder: "desc",
+            pagination: false,
+            showSearch: false,
+            showRefresh: true,
+            showToggle: true,
+            showColumns: true,
+            onLoadSuccess: onLoadSuccess,
+            onReorderRow: function onReorderRow(data) {
+                for (var i = 0; i < data.length; i++) {
+                    $("#queryportParams_sort_" + data[i].id).val(i+1);
+                }
+            },
+            columns: [{
+                title: "序号",
+                width: "5%",
+                formatter: function (value, row, index) {
+                    // id隐藏域
+                    var idHtml = $.common.sprintf("<input type='hidden' name='queryportParams[%s].id' value='%s'>", index, row.id);
+                    var mainIdHtml = $.common.sprintf("<input type='hidden' name='queryportParams[%s].mainId' value='%s'>", index, row.mainId);
+                    // 排序隐藏域
+                    var sortHtml = $.common.sprintf("<input class='form-control' type='text' name='queryportParams[%s].displayOrder' value='%s' id='queryportParams_sort_%s'>", index, index, row.id);
+                    return idHtml + mainIdHtml + sortHtml;
+                },
+                cellStyle: function (value, row, index) {
+                    return {css: {"cursor": "move"}};
+                }
+            },
+            {
+                field : 'ename',
+                title : '英文名称',
+                formatter: function (value, row, index) {
+                    return $.common.sprintf("<input class='form-control' type='text' name='queryportParams[%s].ename' required value='%s'>", index, value);
+                }
+            },
+            {
+                field : 'cname',
+                title : '中文名称',
+                formatter: function (value, row, index) {
+                    return $.common.sprintf("<input class='form-control' type='text' name='queryportParams[%s].cname' required value='%s'>", index, value);
+                }
+            },
+            {
+                field : 'viewFlag',
+                title : '显示',
+                width: "5%",
+                formatter: function (value, row, index) {
+                    var isCheck = value == 'Y' ? 'checked' : '';
+                    return $.common.sprintf("<label class='check-box'><input type='checkbox' name='queryportParams[%s].viewFlag' value='Y' %s></label>", index, isCheck);
+                }
+            },
+            {
+                field : 'allowBlank',
+                title : '为空',
+                width: "5%",
+                formatter: function (value, row, index) {
+                    var isCheck = value == 'Y' ? 'checked' : '';
+                    return $.common.sprintf("<label class='check-box'><input type='checkbox' name='queryportParams[%s].allowBlank' value='Y' %s></label>", index, isCheck);
+                }
+            },
+            {
+                field : 'inputMode',
+                title : '输入方式',
+                formatter: function (value, row, index) {
+                    var data = [{index: index, inputMode: value,columnName:'queryportParams'}];
+                    return $("#inputModeTpl").tmpl(data).html();
+                }
+            },
+            {
+                field : 'paramType',
+                title : '参数类型',
+                formatter: function (value, row, index) {
+                    var data = [{index: index, paramType: value,columnName:'queryportParams'}];
+                    return $("#paramTypeTpl").tmpl(data).html();
+                }
+            },
+            {
+                field : 'typeParam1',
+                title : '类型参数1',
+                formatter: function (value, row, index) {
+                    return $.common.sprintf("<input class='form-control' type='text' name='queryportParams[%s].typeParam1' value='%s'>", index, value);
+                }
+            },
+            {
+                field : 'typeParam2',
+                title : '类型参数2',
+                formatter: function (value, row, index) {
+                    return $.common.sprintf("<input class='form-control' type='text' name='queryportParams[%s].typeParam2' value='%s'>", index, value);
+                }
+            },
+            {
+                field : 'typeParam3',
+                title : '类型参数3',
+                visible: false,
+                formatter: function (value, row, index) {
+                    return $.common.sprintf("<input class='form-control' type='text' name='queryportParams[%s].typeParam3' value='%s'>", index, value);
+                }
+            },
+            {
+                field : 'typeParam4',
+                title : '类型参数4',
+                visible: false,
+                formatter: function (value, row, index) {
+                    return $.common.sprintf("<input class='form-control' type='text' name='queryportParams[%s].typeParam4' value='%s'>", index, value);
+                }
+            },
+            {
+                field : 'defaultValue',
+                title : '默认值',
+                formatter: function (value, row, index) {
+                    var data = [{index: index, defaultValue: value,columnName:'queryportParams'}];
+                    return $("#defaultValueTpl").tmpl(data).html();
+                }
+            }]
+        };
+        $.table.init(options);
+    });
+
+    // 当所有数据被加载时触发处理函数
+    function onLoadSuccess(data){
+        $.fn.select2.defaults.set( "theme", "bootstrap" );
+        $("select.form-control").each(function () {
+            $(this).select2().on("change", function () {
+                $(this).valid();
+            })
+        })
+        $(".check-box").each(function() {
+            $(this).iCheck({
+                checkboxClass: 'icheckbox-blue'
+            })
+        })
+    }
+    function submitHandler(step) {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/param/save", $('#form-param-edit').serialize(), function (result) {
+                if(result.code == '0'){
+                    $.modal.msgSuccess(result.msg);
+                    location.href = prefix +  "/" + step + "/" + mainId;
+                }else{
+                    $.modal.msgError(result.msg);
+                }
+            });
+        }
+    }
+
+</script>
+</body>
+</html>
+
+<!-- 转换类型 -->
+<script id="defaultValueTpl" type="text/x-jquery-tmpl">
+<div>
+<select class='form-control' name='${columnName}[${index}].defaultValue'>
+    <option value="" {{if defaultValue===""}}selected{{/if}}>无</option>
+    <option value="current-user-id" {{if defaultValue==="current-user-id"}}selected{{/if}}>当前用户ID</option>
+    <option value="current-user-dept-id" {{if defaultValue==="current-user-dept-id"}}selected{{/if}}>当前用户部门ID</option>
+    <option value="current-user-parent-dept-id" {{if defaultValue==="current-user-parent-dept-id"}}selected{{/if}}>当前用户父部门ID</option>
+    <option value="current-user-login-name" {{if defaultValue==="current-user-login-name"}}selected{{/if}}>当前用户登录名称</option>
+    <option value="current-date" {{if defaultValue==="current-date"}}selected{{/if}}>当前日期</option>
+    <option value="current-time" {{if defaultValue==="current-time"}}selected{{/if}}>当前时间</option>
+    <option value="yesterday-date" {{if defaultValue==="yesterday-date"}}selected{{/if}}>昨天日期</option>
+    <option value="current-month-first-date" {{if defaultValue==="current-month-first-date"}}selected{{/if}}>当月1号</option>
+    <option value="next-month-first-date" {{if defaultValue==="next-month-first-date"}}selected{{/if}}>下月1号</option>
+    <option value="previous-month-first-date" {{if defaultValue==="previous-month-first-date"}}selected{{/if}}>前月1号</option>
+</select>
+</div>
+</script>
+
+<!-- 转换类型 -->
+<script id="paramTypeTpl" type="text/x-jquery-tmpl">
+<div>
+<select class='form-control' name='${columnName}[${index}].paramType'>
+    <option value="string" {{if paramType==="string"}}selected{{/if}}>文本</option>
+    <option value="integer" {{if paramType==="integer"}}selected{{/if}}>整数</option>
+    <option value="double" {{if paramType==="double"}}selected{{/if}}>小数</option>
+    <option value="date" {{if paramType==="date"}}selected{{/if}}>日期</option>
+    <option value="time" {{if paramType==="time"}}selected{{/if}}>时间</option>
+</select>
+</div>
+</script>
+
+<script id="inputModeTpl" type="text/x-jquery-tmpl">
+<div>
+<select class='form-control' name='${columnName}[${index}].inputMode'>
+    <option value="text" {{if inputMode==="text"}}selected{{/if}}>文本框</option>
+    <option value="integer" {{if inputMode==="integer"}}selected{{/if}}>数字输入框</option>
+    <option value="dictSelect" {{if inputMode==="dictSelect"}}selected{{/if}}>字典下拉</option>
+    <option value="dictSelectMulti" {{if inputMode==="dictSelectMulti"}}selected{{/if}}>字典下拉多选</option>
+    <option value="dictRadio" {{if inputMode==="dictRadio"}}selected{{/if}}>字典单选框</option>
+    <option value="dictCheckBox" {{if inputMode==="dictCheckBox"}}selected{{/if}}>字典复选框</option>
+    <option value="codeDictSelect" {{if inputMode==="codeDictSelect"}}selected{{/if}}>code字典下拉</option>
+    <option value="codeDictSelectMulti" {{if inputMode==="codeDictSelectMulti"}}selected{{/if}}>code字典下拉多选</option>
+    <option value="codeDictRadio" {{if inputMode==="codeDictRadio"}}selected{{/if}}>code字典单选框</option>
+    <option value="codeDictCheckBox" {{if inputMode==="codeDictCheckBox"}}selected{{/if}}>code字典复选框</option>
+    <option value="userTree" {{if inputMode==="userTree"}}selected{{/if}}>系统用户树单选</option>
+    <option value="userTreeMulti" {{if inputMode==="userTreeMulti"}}selected{{/if}}>系统用户树多选</option>
+    <option value="deptTree" {{if inputMode==="deptTree"}}selected{{/if}}>系统部门树单选</option>
+    <option value="deptTreeMulti" {{if inputMode==="deptTreeMulti"}}selected{{/if}}>系统部门树多选</option>
+    <option value="roleTree" {{if inputMode==="roleTree"}}selected{{/if}}>系统角色树单选</option>
+    <option value="roleTreeMulti" {{if inputMode==="roleTreeMulti"}}selected{{/if}}>系统角色树多选</option>
+    <option value="factoryDeptTree" {{if inputMode==="factoryDeptTree"}}selected{{/if}}>组织部门树单选</option>
+    <option value="factoryDeptTreeMulti" {{if inputMode==="factoryDeptTreeMulti"}}selected{{/if}}>组织部门树多选</option>
+    <option value="factoryUserTree" {{if inputMode==="factoryUserTree"}}selected{{/if}}>组织成员树单选</option>
+    <option value="factoryUserTreeMulti" {{if inputMode==="factoryUserTreeMulti"}}selected{{/if}}>组织成员树多选</option>
+    <option value="factoryRoleTree" {{if inputMode==="factoryRoleTree"}}selected{{/if}}>组织角色树单选</option>
+    <option value="factoryRoleTreeMulti" {{if inputMode==="factoryRoleTreeMulti"}}selected{{/if}}>组织角色树多选</option>
+    <option value="area" {{if inputMode==="area"}}selected{{/if}}>区域</option>
+    <option value="date" {{if inputMode==="date"}}selected{{/if}}>日期选择</option>
+    <option value="time" {{if inputMode==="time"}}selected{{/if}}>时间</option>
+</select>
+</div>
+</script>
+<!-- 参数输入方式 -->

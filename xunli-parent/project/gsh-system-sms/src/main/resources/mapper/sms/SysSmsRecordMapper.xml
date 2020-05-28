@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gsh.system.sms.mapper.SysSmsRecordMapper">
+    
+    <resultMap type="SysSmsRecord" id="SysSmsRecordResult">
+        <result property="id"    column="id"    />
+        <result property="smsConfId"    column="sms_conf_id"    />
+        <result property="smsConfName"    column="sms_conf_name"    />
+        <result property="successTime"    column="success_time"    />
+        <result property="successFlag"    column="success_flag"    />
+        <result property="smsType"    column="sms_type"    />
+        <result property="smsContent"    column="sms_content"    />
+        <result property="receiverLoginName"    column="receiver_login_name"    />
+        <result property="receiverMobile"    column="receiver_mobile"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createByName"    column="create_by_name"    />
+        <result property="createByDeptid"    column="create_by_deptid"    />
+        <result property="createByDeptname"    column="create_by_deptname"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateByName"    column="update_by_name"    />
+        <result property="updateByDeptid"    column="update_by_deptid"    />
+        <result property="updateByDeptname"    column="update_by_deptname"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="factoryCode"    column="factory_code"    />
+    </resultMap>
+
+    <sql id="selectSysSmsRecordVo">
+        select id, sms_conf_id, sms_conf_name, success_time, success_flag, sms_type, sms_content, receiver_login_name, receiver_mobile, create_by, create_by_name, create_by_deptid, create_by_deptname, create_time, update_by, update_by_name, update_by_deptid, update_by_deptname, update_time, remark, deleted, factory_code from sys_sms_record
+    </sql>
+
+    <select id="selectSysSmsRecordList" parameterType="SysSmsRecord" resultMap="SysSmsRecordResult">
+        <include refid="selectSysSmsRecordVo"/>
+        <where>  
+            <if test="smsConfId != null "> and sms_conf_id = #{smsConfId}</if>
+            <if test="smsConfName != null  and smsConfName != ''"> and sms_conf_name like concat('%', #{smsConfName}, '%')</if>
+            <if test="successTime != null "> and success_time = #{successTime}</if>
+            <if test="successFlag != null "> and success_flag = #{successFlag}</if>
+            <if test="smsType != null  and smsType != ''"> and sms_type = #{smsType}</if>
+            <if test="smsContent != null  and smsContent != ''"> and sms_content = #{smsContent}</if>
+            <if test="receiverLoginName != null  and receiverLoginName != ''"> and receiver_login_name like concat('%', #{receiverLoginName}, '%')</if>
+            <if test="receiverMobile != null  and receiverMobile != ''"> and receiver_mobile = #{receiverMobile}</if>
+            <if test="createByName != null  and createByName != ''"> and create_by_name like concat('%', #{createByName}, '%')</if>
+            <if test="createByDeptid != null "> and create_by_deptid = #{createByDeptid}</if>
+            <if test="createByDeptname != null  and createByDeptname != ''"> and create_by_deptname like concat('%', #{createByDeptname}, '%')</if>
+            <if test="updateByName != null  and updateByName != ''"> and update_by_name like concat('%', #{updateByName}, '%')</if>
+            <if test="updateByDeptid != null "> and update_by_deptid = #{updateByDeptid}</if>
+            <if test="updateByDeptname != null  and updateByDeptname != ''"> and update_by_deptname like concat('%', #{updateByDeptname}, '%')</if>
+            <if test="deleted != null  and deleted != ''"> and deleted = #{deleted}</if>
+            <if test="factoryCode != null"> and factory_code = #{factoryCode}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysSmsRecordById" parameterType="Long" resultMap="SysSmsRecordResult">
+        <include refid="selectSysSmsRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysSmsRecord" parameterType="SysSmsRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_sms_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="smsConfId != null ">sms_conf_id,</if>
+            <if test="smsConfName != null  and smsConfName != ''">sms_conf_name,</if>
+            <if test="successTime != null ">success_time,</if>
+            <if test="successFlag != null ">success_flag,</if>
+            <if test="smsType != null  and smsType != ''">sms_type,</if>
+            <if test="smsContent != null  and smsContent != ''">sms_content,</if>
+            <if test="receiverLoginName != null  and receiverLoginName != ''">receiver_login_name,</if>
+            <if test="receiverMobile != null  and receiverMobile != ''">receiver_mobile,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createByName != null  and createByName != ''">create_by_name,</if>
+            <if test="createByDeptid != null ">create_by_deptid,</if>
+            <if test="createByDeptname != null  and createByDeptname != ''">create_by_deptname,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateByName != null  and updateByName != ''">update_by_name,</if>
+            <if test="updateByDeptid != null ">update_by_deptid,</if>
+            <if test="updateByDeptname != null  and updateByDeptname != ''">update_by_deptname,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="deleted != null  and deleted != ''">deleted,</if>
+            <if test="factoryCode != null">factory_code,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="smsConfId != null ">#{smsConfId},</if>
+            <if test="smsConfName != null  and smsConfName != ''">#{smsConfName},</if>
+            <if test="successTime != null ">#{successTime},</if>
+            <if test="successFlag != null ">#{successFlag},</if>
+            <if test="smsType != null  and smsType != ''">#{smsType},</if>
+            <if test="smsContent != null  and smsContent != ''">#{smsContent},</if>
+            <if test="receiverLoginName != null  and receiverLoginName != ''">#{receiverLoginName},</if>
+            <if test="receiverMobile != null  and receiverMobile != ''">#{receiverMobile},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createByName != null  and createByName != ''">#{createByName},</if>
+            <if test="createByDeptid != null ">#{createByDeptid},</if>
+            <if test="createByDeptname != null  and createByDeptname != ''">#{createByDeptname},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateByName != null  and updateByName != ''">#{updateByName},</if>
+            <if test="updateByDeptid != null ">#{updateByDeptid},</if>
+            <if test="updateByDeptname != null  and updateByDeptname != ''">#{updateByDeptname},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="deleted != null  and deleted != ''">#{deleted},</if>
+            <if test="factoryCode != null">#{factoryCode},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysSmsRecord" parameterType="SysSmsRecord">
+        update sys_sms_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="smsConfId != null ">sms_conf_id = #{smsConfId},</if>
+            <if test="smsConfName != null  and smsConfName != ''">sms_conf_name = #{smsConfName},</if>
+            <if test="successTime != null ">success_time = #{successTime},</if>
+            <if test="successFlag != null ">success_flag = #{successFlag},</if>
+            <if test="smsType != null  and smsType != ''">sms_type = #{smsType},</if>
+            <if test="smsContent != null  and smsContent != ''">sms_content = #{smsContent},</if>
+            <if test="receiverLoginName != null  and receiverLoginName != ''">receiver_login_name = #{receiverLoginName},</if>
+            <if test="receiverMobile != null  and receiverMobile != ''">receiver_mobile = #{receiverMobile},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createByName != null  and createByName != ''">create_by_name = #{createByName},</if>
+            <if test="createByDeptid != null ">create_by_deptid = #{createByDeptid},</if>
+            <if test="createByDeptname != null  and createByDeptname != ''">create_by_deptname = #{createByDeptname},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateByName != null  and updateByName != ''">update_by_name = #{updateByName},</if>
+            <if test="updateByDeptid != null ">update_by_deptid = #{updateByDeptid},</if>
+            <if test="updateByDeptname != null  and updateByDeptname != ''">update_by_deptname = #{updateByDeptname},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="deleted != null  and deleted != ''">deleted = #{deleted},</if>
+            <if test="factoryCode != null">factory_code = #{factoryCode},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysSmsRecordById" parameterType="Long">
+        delete from sys_sms_record where id = #{id}
+    </delete>
+
+    <delete id="deleteSysSmsRecordByIds" parameterType="String">
+        delete from sys_sms_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="logicDeleteSysSmsRecordById" parameterType="Long">
+        update   sys_sms_record  set deleted='1' where id = #{id}
+    </update>
+
+    <update id="logicDeleteSysSmsRecordByIds" parameterType="String">
+        update   sys_sms_record  set deleted='1' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

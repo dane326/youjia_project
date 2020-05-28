@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增角色')" />
+    <th:block th:include="include :: ztree-css-ext" />
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-role-add">
+        <input name="factoryCode" type="hidden" th:value="${factoryCode}" />
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">角色名称：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="roleName" id="roleName" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">显示顺序：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="roleSort" id="roleSort" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">备注：</label>
+            <div class="col-sm-8">
+                <input id="remark" name="remark" class="form-control" type="text">
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer" />
+<th:block th:include="include :: ztree-js" />
+<script type="text/javascript">
+    $("#form-role-add").validate({
+        rules:{
+            onkeyup: false,
+            roleName:{
+                remote: {
+                    url: ctx + "system/factory/role/checkRoleNameUnique",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        "roleName" : function() {
+                            return $.common.trim($("#roleName").val());
+                        }
+                    },
+                    dataFilter: function(data, type) {
+                        return $.validate.unique(data);
+                    }
+                }
+            },
+            roleSort:{
+                digits:true
+            },
+        },
+        messages: {
+            "roleName": {
+                remote: "角色名称已经存在"
+            }
+        },
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            add();
+        }
+    }
+
+    function add() {
+        var factoryCode = $("input[name='factoryCode']").val();
+        var roleName = $("input[name='roleName']").val();
+        var roleKey = "not_use";
+        var roleSort = $("input[name='roleSort']").val();
+        var status = 0;
+        var remark = $("input[name='remark']").val();
+        var menuIds = "";
+        $.ajax({
+            cache : true,
+            type : "POST",
+            url : ctx + "system/customerrole/addRole",
+            data : {
+                "factoryCode": factoryCode,
+                "roleName": roleName,
+                "roleKey": roleKey,
+                "roleSort": roleSort,
+                "status": status,
+                "remark": remark,
+                "menuIds": menuIds
+            },
+            async : false,
+            error : function(request) {
+                $.modal.alertError("系统错误");
+            },
+            success : function(data) {
+                $.operate.successCallback(data);
+            }
+        });
+    }
+</script>
+</body>
+</html>

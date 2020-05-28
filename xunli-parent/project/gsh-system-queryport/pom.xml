@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>gsh</artifactId>
+        <groupId>com.gsh</groupId>
+        <version>4.2.0.0.0126</version>
+    </parent>
+
+    <artifactId>gsh-system-queryport</artifactId>
+    <packaging>jar</packaging>
+
+    <properties>
+        <product.name>gsh-system-queryport</product.name>
+    </properties>
+
+    <description>
+        查询视图
+    </description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.gsh</groupId>
+            <artifactId>gsh-system</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gsh</groupId>
+            <artifactId>gsh-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gsh</groupId>
+            <artifactId>gsh-framework</artifactId>
+        </dependency>
+
+    </dependencies>
+
+</project>

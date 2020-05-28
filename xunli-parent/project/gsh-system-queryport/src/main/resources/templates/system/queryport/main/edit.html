@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改查询视图配置')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-queryport-edit" th:object="${queryportMain}">
+            <input name="id" th:field="*{id}" type="hidden">
+             <div class="form-group">    
+                <label class="col-sm-2 control-label"><span style="color: red; ">*</span>名称：</label>
+                <div class="col-sm-10">
+                    <input name="name" th:field="*{name}" class="form-control" type="text" required>
+                </div>
+             </div>
+             <div class="form-group">
+                <label class="col-sm-2 control-label"><span style="color: red; ">*</span>首次加载：</label>
+                <div class="col-sm-4">
+                    <div class="custom-from-exdselect" id="isFirstLoadSelect" th:attr="data-exdselect-value=*{ifFirstLoad}" data-exdselect-options='{
+						"parentDict" :"sys_yes_no",
+						"selectType":"radio",
+						"checkName" : "ifFirstLoad"}'>
+                    </div>
+                </div>
+                 <label class="col-sm-2 control-label"><span style="color: red; ">*</span>状态：</label>
+                 <div class="col-sm-4">
+                     <div class="custom-from-exdselect" id="statusSelect" th:attr="data-exdselect-value=*{status}" data-exdselect-options='{
+						"parentDict" :"sys_normal_disable",
+						"selectType":"radio",
+						"checkName" : "status"}'>
+                     </div>
+                 </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span style="color: red; ">*</span>类型：</label>
+                <div class="col-sm-4">
+                    <div class="custom-from-exdselect" id="typeSelect" th:attr="data-exdselect-value=*{type}" data-exdselect-options='{
+						"parentDict" :"sys_queryport_type",
+						"selectType":"radio",
+						"checkName" : "type"}'>
+                    </div>
+                </div>
+                <label class="col-sm-2 control-label"><span style="color: red; ">*</span>展示形式：</label>
+                <div class="col-sm-4">
+                    <div class="custom-from-exdselect" id="showTypeSelect" th:attr="data-exdselect-value=*{showType}" data-exdselect-options='{
+						"parentDict" :"sys_queryport_showType",
+						"selectType":"checkBox",
+						"checkName" : "showType"}'>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span style="color: red; ">*</span>是否分页：</label>
+                <div class="col-sm-4">
+                    <div class="custom-from-exdselect" id="paginationSelect" th:attr="data-exdselect-value=*{pagination}" data-exdselect-options='{
+						"parentDict" :"sys_yes_no",
+						"selectType":"radio",
+						"checkName" : "pagination"}'>
+                    </div>
+                </div>
+
+                <label class="col-sm-2 control-label"><span style="color: red; ">*</span>是否验证权限：</label>
+                <div class="col-sm-4">
+                    <div class="custom-from-exdselect" id="isPermittedSelect" th:attr="data-exdselect-value=*{isPermitted}" data-exdselect-options='{
+                        "parentDict" :"sys_yes_no",
+                        "selectType":"radio",
+                        "checkName" : "isPermitted"}'>
+                    </div>
+                    <span class="help-block m-b-none" th:if="${#strings.contains(queryportMain.isPermitted, 'Y')}"><i class="fa fa-info-circle"></i>权限标识: system:queryport:display:[[*{id}]]</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span style="color: red; ">*</span>模块：</label>
+                <div class="col-sm-4">
+                    <input name="module" th:field="*{module}" class="form-control" type="text" required>
+                </div>
+
+                <label class="col-sm-2 control-label">合并列：</label>
+                <div class="col-sm-4">
+                    <input name="mergecols" th:field="*{mergecols}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span style="color: red; ">*</span>语句：</label>
+                <div class="col-sm-10">
+                    <textarea name="statement" class="form-control" rows="8" required>[[*{statement}]]</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">说明：</label>
+                <div class="col-sm-10">
+                    <textarea name="adescribe" class="form-control">[[*{adescribe}]]</textarea>
+                </div>
+            </div>
+            <!--<div class="form-group">
+                <label class="col-sm-2 control-label">算法说明：</label>
+                <div class="col-sm-10">
+                    <textarea name="algorithm" class="form-control">[[*{algorithm}]]</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">查询列：</label>
+                <div class="col-sm-10">
+                    <textarea name="expressionColumn" class="form-control">[[*{expressionColumn}]]</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">导出列：</label>
+                <div class="col-sm-10">
+                    <textarea name="expressionExportColumn" class="form-control">[[*{expressionExportColumn}]]</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">查询表：</label>
+                <div class="col-sm-10">
+                    <textarea name="expressionFrom" class="form-control">[[*{expressionFrom}]]</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">查询条件：</label>
+                <div class="col-sm-10">
+                    <textarea name="expressionWhere" class="form-control">[[*{expressionWhere}]]</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">分组条件：</label>
+                <div class="col-sm-10">
+                    <input name="expressionGroupby" th:field="*{expressionGroupby}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">分组过滤：</label>
+                <div class="col-sm-10">
+                    <input name="expressionHaving" th:field="*{expressionHaving}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">排序：</label>
+                <div class="col-sm-10">
+                    <input name="expressionOrderby" th:field="*{expressionOrderby}" class="form-control" type="text">
+                </div>
+            </div>-->
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div style="text-align: right;">
+                        <br>
+                        <button type="button" class="btn btn-sm btn-success" onclick="submitHandler()"><i class="fa fa-check"></i>保存 并配置字段</button>&nbsp;
+                        <button type="button" class="btn btn-sm btn-danger" onclick="closeItem()"><i class="fa fa-remove"></i>关 闭 </button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "system/queryport";
+        var mainId = "[[${queryportMain.id}]]";
+        $("#form-queryport-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-queryport-edit').serialize(), function (result) {
+                    if(result.code == 0){
+                        location.href = prefix + "/column/" + mainId;
+                    }
+                });
+            }
+        }
+
+        $(function() {
+            $.exdSelect.initialize();
+        })
+    </script>
+</body>
+</html>

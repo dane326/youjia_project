@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gsh.system.mapper.SysFactoryLabelMapper">
+    
+    <resultMap type="SysFactoryLabel" id="SysFactoryLabelResult">
+        <result property="lableId"    column="lable_id"    />
+        <result property="factoryCode"    column="factory_code"    />
+        <result property="lableCode"    column="lable_code"    />
+        <result property="lableName"    column="lable_name"    />
+        <result property="lableSort"    column="lable_sort"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="createByDeptid"    column="dept_id"    />
+    </resultMap>
+
+    <sql id="selectSysFactoryLabelVo">
+        select lable_id, factory_code, lable_code, lable_name, lable_sort, status, create_by, create_time, update_by,
+        update_time, remark, deleted from sys_factory_label
+    </sql>
+
+    <select id="selectSysFactoryLabelList" parameterType="SysFactoryLabel" resultMap="SysFactoryLabelResult">
+        <include refid="selectSysFactoryLabelVo"/>
+        <where>  
+            <if test="lableCode != null  and lableCode != ''"> and lable_code = #{lableCode}</if>
+            <if test="lableName != null  and lableName != ''"> and lable_name like concat('%', #{lableName}, '%')</if>
+            <if test="lableSort != null "> and lable_sort = #{lableSort}</if>
+            <if test="createBy != null "> and create_by = #{createBy}</if>
+            <if test="factoryCode != null and factoryCode != ''"> and factory_code = #{factoryCode}</if>
+            <!-- 数据范围过滤 -->
+            ${params.dataScope}
+            and status =1 and deleted=0
+        </where>
+    </select>
+    
+    <select id="selectSysFactoryLabelById" parameterType="Long" resultMap="SysFactoryLabelResult">
+        <include refid="selectSysFactoryLabelVo"/>
+        where lable_id = #{lableId} and status =1 and deleted =0
+    </select>
+
+    <select id="selectSysFactoryLabelByName" resultMap="SysFactoryLabelResult">
+        <include refid="selectSysFactoryLabelVo"/>
+        where lable_name = #{lableName}
+    </select>
+        
+    <insert id="insertSysFactoryLabel" parameterType="SysFactoryLabel" useGeneratedKeys="true" keyProperty="lableId">
+        insert into sys_factory_label
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="lableId != null ">lable_id,</if>
+            <if test="factoryCode != null ">factory_code,</if>
+            <if test="lableCode != null  and lableCode != ''">lable_code,</if>
+            <if test="lableName != null  and lableName != ''">lable_name,</if>
+            <if test="lableSort != null ">lable_sort,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="deleted != null  and deleted != ''">deleted,</if>
+            <if test="createByDeptid != null ">dept_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="lableId != null ">#{lableId},</if>
+            <if test="factoryCode != null ">#{factoryCode},</if>
+            <if test="lableCode != null  and lableCode != ''">#{lableCode},</if>
+            <if test="lableName != null  and lableName != ''">#{lableName},</if>
+            <if test="lableSort != null ">#{lableSort},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="deleted != null  and deleted != ''">#{deleted},</if>
+            <if test="createByDeptid != null ">#{createByDeptid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysFactoryLabel" parameterType="SysFactoryLabel">
+        update sys_factory_label
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="lableCode != null  and lableCode != ''">lable_code = #{lableCode},</if>
+            <if test="factoryCode != null  and factoryCode != ''">factory_code = #{factoryCode},</if>
+            <if test="lableName != null  and lableName != ''">lable_name = #{lableName},</if>
+            <if test="lableSort != null ">lable_sort = #{lableSort},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="deleted != null  and deleted != ''">deleted = #{deleted},</if>
+        </trim>
+        where lable_id = #{lableId}
+    </update>
+
+    <delete id="deleteSysFactoryLabelById" parameterType="Long">
+        delete from sys_factory_label where lable_id = #{lableId}
+    </delete>
+
+    <delete id="deleteSysFactoryLabelByIds" parameterType="String">
+        delete from sys_factory_label where lable_id in 
+        <foreach item="lableId" collection="array" open="(" separator="," close=")">
+            #{lableId}
+        </foreach>
+    </delete>
+
+    <select id="selectLabelsByUserId" parameterType="Long" resultMap="SysFactoryLabelResult">
+		SELECT p.*
+		FROM sys_user u
+			 LEFT JOIN sys_user_label up ON u.user_id = up.user_id
+			 LEFT JOIN sys_factory_label p ON up.label_id = p.lable_id
+		WHERE up.user_id = #{userId}
+	</select>
+    <select id="selectLabelsByPaperId" parameterType="String" resultMap="SysFactoryLabelResult">
+		select DISTINCT sfl.* from aiexam_paper_user apu,sys_factory_user sfu,sys_factory_user_label sful,sys_factory_label sfl
+		 where apu.acount_id=sfu.user_id and sfu.user_id=sful.user_id and sfl.lable_id=sful.label_id and apu.deleted='0'
+		 and apu.paper_id=#{paperid}
+	</select>
+
+    <update id="logicDeleteSysFactoryLabelById" parameterType="Long">
+        update   sys_factory_label  set deleted='1' where lable_id = #{lableId}
+    </update>
+
+    <update id="logicDeleteSysFactoryLabelByIds" parameterType="String">
+        update   sys_factory_label  set deleted='1' where lable_id in
+        <foreach item="lableId" collection="array" open="(" separator="," close=")">
+            #{lableId}
+        </foreach>
+    </update>
+    
+</mapper>

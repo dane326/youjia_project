@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gsh.system.portalet.mapper.PortaletPageMapper">
+    
+    <resultMap type="PortaletPage" id="PortaletPageResult">
+        <result property="id"    column="id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="cnName"    column="cn_name"    />
+        <result property="resType"    column="res_type"    />
+        <result property="systemCode"    column="system_code"    />
+        <result property="systemName"    column="system_name"    />
+        <result property="moduleCode"    column="module_code"    />
+        <result property="moduleName"    column="module_name"    />
+        <result property="resId"    column="res_id"    />
+        <result property="width"    column="width"    />
+        <result property="height"    column="height"    />
+        <result property="row"    column="row"    />
+        <result property="col"    column="col"    />
+        <result property="sortNo"    column="sort_no"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createByName"    column="create_by_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <association property="portaletRes"    column="res_id" javaType="PortaletRes" resultMap="resResult" />
+    </resultMap>
+    
+    <resultMap id="resResult" type="PortaletRes">
+        <result property="id"    column="res_id"    />
+        <result property="resName"    column="res_name"    />
+        <result property="url"    column="res_url"    />
+        <result property="width"    column="res_width"    />
+        <result property="height"    column="res_height"    />
+        <result property="queryportId"    column="queryport_id"    />
+        <result property="imgUrl"    column="img_url"    />
+        <result property="imgWidth"    column="img_width"    />
+        <result property="imgHeight"    column="img_height"    />
+        <result property="html"    column="res_html"    />
+    </resultMap>
+
+    <sql id="selectPortaletPageVo">
+        select sp.id, sp.parent_id, sp.cn_name, sp.res_type, sp.system_code, sp.system_name, sp.module_code, sp.module_name, sp.res_id, sp.width, sp.height, sp.row, sp.col, sp.sort_no, sp.deleted, sp.create_by, sp.create_by_name, sp.create_time, sp.update_by, sp.update_time,
+        sr.res_name, sr.url res_url, sr.width res_width, sr.height res_height, sr.queryport_id, sr.img_url, sr.img_width, sr.img_height, sr.html res_html
+        from sys_portalet_page sp
+        left join sys_portalet_res sr on sr.id = sp.res_id
+    </sql>
+
+    <select id="selectPortaletPageList" parameterType="PortaletPage" resultMap="PortaletPageResult">
+        <include refid="selectPortaletPageVo"/>
+        <where>  
+            <if test="parentId != null "> and sp.parent_id = #{parentId}</if>
+            <if test="cnName != null  and cnName != ''"> and sp.cn_name like concat('%', #{cnName}, '%')</if>
+            <if test="resType != null  and resType != ''"> and sp.res_type = #{resType}</if>
+            <if test="systemCode != null  and systemCode != ''"> and sp.system_code = #{systemCode}</if>
+            <if test="systemName != null  and systemName != ''"> and sp.system_name like concat('%', #{systemName}, '%')</if>
+            <if test="moduleCode != null  and moduleCode != ''"> and sp.module_code = #{moduleCode}</if>
+            <if test="moduleName != null  and moduleName != ''"> and sp.module_name like concat('%', #{moduleName}, '%')</if>
+            <if test="resId != null "> and sp.res_id = #{resId}</if>
+            <if test="width != null "> and sp.width = #{width}</if>
+            <if test="height != null "> and sp.height = #{height}</if>
+            <if test="row != null "> and sp.row = #{row}</if>
+            <if test="col != null "> and sp.col = #{col}</if>
+            <if test="sortNo != null "> and sp.sort_no = #{sortNo}</if>
+            <if test="deleted != null  and deleted != ''"> and sp.deleted = #{deleted}</if>
+            <if test="createByName != null  and createByName != ''"> and sp.create_by_name like concat('%', #{createByName}, '%')</if>
+            <if test="createTime != null "> and sp.create_time = #{createTime}</if>
+            <if test="params.userRoleKeys != null and params.userRoleKeys.size() > 0">
+            	and sp.module_code in
+            	<foreach item="roleKey" collection="params.userRoleKeys" open="(" separator="," close=")">
+		        	#{roleKey}
+		        </foreach>
+            </if>
+        </where>
+        order by sp.parent_id, sp.sort_no
+    </select>
+    
+    <select id="selectPortaletPageById" parameterType="Long" resultMap="PortaletPageResult">
+        <include refid="selectPortaletPageVo"/>
+        where sp.id = #{id}
+    </select>
+    
+    <select id="selectMaxSortNoByParentId" parameterType="Long" resultType="Long">
+        select max(sort_no) sort_no
+        from sys_portalet_page
+        where parent_id = #{parentId}
+    </select>
+        
+    <insert id="insertPortaletPage" parameterType="PortaletPage" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_portalet_page
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null ">parent_id,</if>
+            <if test="cnName != null  and cnName != ''">cn_name,</if>
+            <if test="resType != null  and resType != ''">res_type,</if>
+            <if test="systemCode != null  and systemCode != ''">system_code,</if>
+            <if test="systemName != null  and systemName != ''">system_name,</if>
+            <if test="moduleCode != null  and moduleCode != ''">module_code,</if>
+            <if test="moduleName != null  and moduleName != ''">module_name,</if>
+            <if test="resId != null ">res_id,</if>
+            <if test="width != null ">width,</if>
+            <if test="height != null ">height,</if>
+            <if test="row != null ">row,</if>
+            <if test="col != null ">col,</if>
+            <if test="sortNo != null ">sort_no,</if>
+            <if test="deleted != null  and deleted != ''">deleted,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createByName != null  and createByName != ''">create_by_name,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null ">#{parentId},</if>
+            <if test="cnName != null  and cnName != ''">#{cnName},</if>
+            <if test="resType != null  and resType != ''">#{resType},</if>
+            <if test="systemCode != null  and systemCode != ''">#{systemCode},</if>
+            <if test="systemName != null  and systemName != ''">#{systemName},</if>
+            <if test="moduleCode != null  and moduleCode != ''">#{moduleCode},</if>
+            <if test="moduleName != null  and moduleName != ''">#{moduleName},</if>
+            <if test="resId != null ">#{resId},</if>
+            <if test="width != null ">#{width},</if>
+            <if test="height != null ">#{height},</if>
+            <if test="row != null ">#{row},</if>
+            <if test="col != null ">#{col},</if>
+            <if test="sortNo != null ">#{sortNo},</if>
+            <if test="deleted != null  and deleted != ''">#{deleted},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createByName != null  and createByName != ''">#{createByName},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePortaletPage" parameterType="PortaletPage">
+        update sys_portalet_page
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null ">parent_id = #{parentId},</if>
+            <if test="cnName != null  and cnName != ''">cn_name = #{cnName},</if>
+            <if test="resType != null  and resType != ''">res_type = #{resType},</if>
+            <if test="systemCode != null  and systemCode != ''">system_code = #{systemCode},</if>
+            <if test="systemName != null  and systemName != ''">system_name = #{systemName},</if>
+            <if test="moduleCode != null  and moduleCode != ''">module_code = #{moduleCode},</if>
+            <if test="moduleName != null  and moduleName != ''">module_name = #{moduleName},</if>
+            <if test="resId != null ">res_id = #{resId},</if>
+            <if test="width != null ">width = #{width},</if>
+            <if test="height != null ">height = #{height},</if>
+            <if test="row != null ">row = #{row},</if>
+            <if test="col != null ">col = #{col},</if>
+            <if test="sortNo != null ">sort_no = #{sortNo},</if>
+            <if test="deleted != null  and deleted != ''">deleted = #{deleted},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createByName != null  and createByName != ''">create_by_name = #{createByName},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePortaletPageById" parameterType="Long">
+        delete from sys_portalet_page where id = #{id}
+    </delete>
+
+    <delete id="deletePortaletPageByIds" parameterType="String">
+        delete from sys_portalet_page where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="logicDeletePortaletPageById" parameterType="Long">
+        update   sys_portalet_page  set deleted='1' where id = #{id}
+    </update>
+
+    <update id="logicDeletePortaletPageByIds" parameterType="String">
+        update   sys_portalet_page  set deleted='1' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

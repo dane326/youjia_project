@@ -1,0 +1,164 @@
+{
+	"code": 1,
+	"data": [
+		{
+			"child": [
+				{
+					"child": [],
+					"html": "",
+					"id": "271",
+					"name": "项目部213",
+					"open": "false"
+				},
+				{
+					"child": [
+						{
+							"child": [
+								{
+									"child": [],
+									"html": "",
+									"id": "290",
+									"name": "教研组",
+									"open": "false"
+								},
+								{
+									"child": [],
+									"html": "",
+									"id": "291",
+									"name": "图书馆",
+									"open": "false"
+								}
+							],
+							"html": "",
+							"id": "276",
+							"name": "教研处",
+							"open": "false"
+						},
+						{
+							"child": [],
+							"html": "",
+							"id": "277",
+							"name": "教务处",
+							"open": "false"
+						},
+						{
+							"child": [
+								{
+									"child": [],
+									"html": "",
+									"id": "281",
+									"name": "高一年级",
+									"open": "false"
+								},
+								{
+									"child": [],
+									"html": "",
+									"id": "282",
+									"name": "高二年级",
+									"open": "false"
+								},
+								{
+									"child": [],
+									"html": "",
+									"id": "283",
+									"name": "高三年级",
+									"open": "false"
+								}
+							],
+							"html": "",
+							"id": "278",
+							"name": "高中部",
+							"open": "false"
+						},
+						{
+							"child": [
+								{
+									"child": [],
+									"html": "",
+									"id": "284",
+									"name": "七年级",
+									"open": "false"
+								},
+								{
+									"child": [],
+									"html": "",
+									"id": "285",
+									"name": "八年级",
+									"open": "false"
+								},
+								{
+									"child": [],
+									"html": "",
+									"id": "286",
+									"name": "九年级",
+									"open": "false"
+								}
+							],
+							"html": "",
+							"id": "279",
+							"name": "初中部",
+							"open": "false"
+						},
+						{
+							"child": [
+								{
+									"child": [],
+									"html": "",
+									"id": "287",
+									"name": "一年级",
+									"open": "false"
+								},
+								{
+									"child": [],
+									"html": "",
+									"id": "288",
+									"name": "二年级",
+									"open": "false"
+								},
+								{
+									"child": [],
+									"html": "",
+									"id": "289",
+									"name": "三年级",
+									"open": "false"
+								},
+								{
+									"child": [],
+									"html": "",
+									"id": "292",
+									"name": "四年级",
+									"open": "false"
+								},
+								{
+									"child": [],
+									"html": "",
+									"id": "293",
+									"name": "五年级",
+									"open": "false"
+								},
+								{
+									"child": [],
+									"html": "",
+									"id": "294",
+									"name": "六年级",
+									"open": "false"
+								}
+							],
+							"html": "",
+							"id": "280",
+							"name": "小学部",
+							"open": "false"
+						}
+					],
+					"html": "",
+					"id": "273",
+					"name": "中华女子学院",
+					"open": "false"
+				}
+			],
+			"id": "100",
+			"name": "XXX科技有限公司",
+			"open": "true"
+		}
+	]
+}

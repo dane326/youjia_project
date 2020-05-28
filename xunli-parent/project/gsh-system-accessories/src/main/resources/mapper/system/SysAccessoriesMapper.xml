@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gsh.system.mapper.SysAccessoriesMapper">
+    
+    <resultMap type="SysAccessories" id="SysAccessoriesResult">
+        <result property="id" column="id" />
+		<result property="moduleName" column="module_name" />
+		<result property="fileName" column="file_name" />
+		<result property="extension" column="extension" />
+		<result property="path" column="path" />
+		<result property="content" column="content" jdbcType="BLOB"/>
+		<result property="createBy" column="create_by" />
+		<result property="createTime" column="create_time" />
+		<result property="updateBy" column="update_by" />
+		<result property="updateTime" column="update_time" />
+		<result property="remark" column="remark" />
+		<result property="deleted" column="deleted" />
+    </resultMap>
+
+    <sql id="selectSysAccessoriesVo">
+        select id, module_name, file_name, extension, path, content, create_by, create_time, update_by, update_time, remark, deleted from sys_accessories
+    </sql>
+
+    <select id="selectSysAccessoriesList" parameterType="SysAccessories" resultMap="SysAccessoriesResult">
+        <include refid="selectSysAccessoriesVo"/>
+        <where>  
+            <if test="moduleName != null  and moduleName != ''"> and module_name like concat('%', #{moduleName}, '%')</if>
+            <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="extension != null  and extension != ''"> and extension = #{extension}</if>
+            <if test="path != null  and path != ''"> and path like concat('%', #{path}, '%')</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="createBy != null  and createBy != ''"> and createBy like concat('%', #{createBy}, '%')</if>
+            <if test="updateBy != null  and updateBy != ''"> and updateBy like concat('%', #{updateBy}, '%')</if>
+            <if test="deleted != null  and deleted != ''"> and deleted = #{deleted}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysAccessoriesById" parameterType="Long" resultMap="SysAccessoriesResult">
+        <include refid="selectSysAccessoriesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysAccessories" parameterType="SysAccessories" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_accessories
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="moduleName != null  and moduleName != ''">module_name,</if>
+            <if test="fileName != null  and fileName != ''">file_name,</if>
+            <if test="extension != null  and extension != ''">extension,</if>
+            <if test="path != null  and path != ''">path,</if>
+            <if test="content != null ">content,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="deleted != null  and deleted != ''">deleted,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="moduleName != null  and moduleName != ''">#{moduleName},</if>
+            <if test="fileName != null  and fileName != ''">#{fileName},</if>
+            <if test="extension != null  and extension != ''">#{extension},</if>
+            <if test="path != null  and path != ''">#{path},</if>
+            <if test="content != null ">#{content},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="deleted != null  and deleted != ''">#{deleted},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysAccessories" parameterType="SysAccessories">
+        update sys_accessories
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="moduleName != null  and moduleName != ''">module_name = #{moduleName},</if>
+            <if test="fileName != null  and fileName != ''">file_name = #{fileName},</if>
+            <if test="extension != null  and extension != ''">extension = #{extension},</if>
+            <if test="path != null  and path != ''">path = #{path},</if>
+            <if test="content != null ">content = #{content},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="deleted != null  and deleted != ''">deleted = #{deleted},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysAccessoriesById" parameterType="Long">
+        delete from sys_accessories where id = #{id}
+    </delete>
+
+    <delete id="deleteSysAccessoriesByIds" parameterType="String">
+        delete from sys_accessories where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectSysAccessoriesByIds" parameterType="String" resultMap="SysAccessoriesResult">
+        <include refid="selectSysAccessoriesVo"/> where
+         1=1 and deleted = '0' and
+         id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <update id="logicDeleteSysAccessoriesById" parameterType="Long">
+        update   sys_accessories  set deleted='1' where id = #{id}
+    </update>
+
+    <update id="logicDeleteSysAccessoriesByIds" parameterType="String">
+        update   sys_accessories  set deleted='1' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

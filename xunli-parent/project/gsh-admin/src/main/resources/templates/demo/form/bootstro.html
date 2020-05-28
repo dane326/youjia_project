@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <th:block th:include="include :: header('向导DEMO')" />
+    <th:block th:include="include::bootstro-css"/>
+    <style>
+        div.content{
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 content">
+                    <button class="btn btn-success" type="button" id="demo">查看功能向导
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-5 content">
+                     <div class="bootstro"
+                          data-bootstro-title="第一步"
+                          data-bootstro-content="这里是标注元素的属性列举说明；元素上设置的属性最高"
+                          data-bootstro-width="400px"
+                          data-bootstro-placement="left"
+                          data-bootstro-step="0"
+                          data-bootstro-html="true"
+                          data-bootstro-nextButtonText="第二步">
+                         <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px; color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">
+                             Bootstro requires&nbsp;<a href="http://twitter.github.com/bootstrap/" style="box-sizing: border-box; background: transparent; color: rgb(66, 139, 202); text-decoration-line: none;">bootstrap</a>&nbsp;&amp;&nbsp;<a href="http://twitter.github.com/bootstrap/javascript.html#popovers" style="box-sizing: border-box; background: transparent; color: rgb(66, 139, 202); text-decoration-line: none;">bootstrap popover</a>
+                         </p>
+                         <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px; color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">
+                             <em class="icon-ok" style="box-sizing: border-box;"></em>Add class&nbsp;<strong style="box-sizing: border-box;">.bootstro</strong>&nbsp;to any element that you&#39;d like to be highlighted
+                         </p>
+                         <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px; color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">
+                             <em class="icon-ok" style="box-sizing: border-box;"></em>Specify the highlighted (intro&#39;ed) element&#39;s popover with data-bootstro-* prefix, where * can be one of the bootstrap popover&#39;s&nbsp;<a href="http://twitter.github.com/bootstrap/javascript.html#popovers" style="box-sizing: border-box; background: transparent; color: rgb(66, 139, 202); text-decoration-line: none;">options</a>.
+                         </p>
+                         <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                             <em class="icon-ok" style="box-sizing: border-box;"></em>At the bare minium, you should probably provide&nbsp;<strong style="box-sizing: border-box;">data-bootstro-title</strong>&nbsp;and&nbsp;<strong style="box-sizing: border-box;">data-bootstro-content</strong>.
+                         </p>
+                         <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                             <strong style="box-sizing: border-box;">data-bootstro-title</strong>&nbsp;: Title of the popover [optional, defaulted to &#39;&#39;]
+                         </p>
+                         <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                             <strong style="box-sizing: border-box;">data-bootstro-content</strong>&nbsp;: Content of the popover [optional, defaulted to &#39;&#39;]
+                         </p>
+                         <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                             <strong style="box-sizing: border-box;">data-bootstro-placement</strong>&nbsp;: Placement position [top,bottom,left,right] of the popover [optional, defaulted to &#39;top&#39;]
+                         </p>
+                         <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                             <strong style="box-sizing: border-box;">data-bootstro-width</strong>&nbsp;: If you like to bypass bootstrap&#39;s default popover&nbsp;<a href="https://github.com/twitter/bootstrap/issues/1730" style="box-sizing: border-box; background: transparent; color: rgb(66, 139, 202); text-decoration-line: none;">un-settable</a>&nbsp;width, specify it like&nbsp;<strong style="box-sizing: border-box;">data-bootstro-width=&#39;500px&#39;</strong>. Don&#39;t forget the &#39;px&#39; suffix [optional]
+                         </p>
+                         <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                             <strong style="box-sizing: border-box;">data-bootstro-nextButtonText</strong>&nbsp;: Next button HTML text. For example, in stead of &quot;Next&quot;, you can specify
+                         </p>
+                         <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                             <strong style="box-sizing: border-box;">data-bootstro-html</strong>&nbsp;: true|false . Whether or not the popover content will be displayed as HTML or text. Refer to popovers html option.
+                         </p>
+                         <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                             <strong style="box-sizing: border-box;">data-bootstro-step</strong>&nbsp;: The stack index of the intro&#39;ed popover.
+                         </p>
+                         <p>
+                             <em class="icon-warning-sign" style="box-sizing: border-box;"></em>Heads up! If you specify data-bootstro-step for at least one .bootstro element, then you must provide data-bootstro-step for all .bootstro elements on the page.&nbsp;<br/>Otherwise, just leave out data-bootstro-step attribute altogether, and the popovers will follow their natural order
+                         </p>
+                         <p>
+                             <br/>
+                         </p>
+
+                     </div>
+                </div>
+                <div class="col-sm-7 content">
+                    <div class="bootstro"
+                         data-bootstro-title="第二步"
+                         data-bootstro-content="这里是bootstro提供的方法"
+                         data-bootstro-width="400px"
+                         data-bootstro-placement="bottom"
+                         data-bootstro-step="1"
+                         data-bootstro-html="true">
+
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px; color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">
+                            To extend bootstro, you can just assign bootstro.yourfunction = {}. Bootstro&#39;s using the prototype written in jqueryenterprise.com&#39;s&nbsp;<a href="http://enterprisejquery.com/2010/10/how-good-c-habits-can-encourage-bad-javascript-habits-part-1/" style="box-sizing: border-box; background: transparent; color: rgb(66, 139, 202); text-decoration-line: none;">blog</a>
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px; color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">
+                            <em class="icon-ok" style="box-sizing: border-box;"></em>bootstro&#39;s public methods
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <strong style="box-sizing: border-box;">bootstro.start(selector, options)</strong>&nbsp;: Init &amp; Start the popover show
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <strong style="box-sizing: border-box;">bootstro.go_to(i)</strong>&nbsp;: Show the popover at the stack index i
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <strong style="box-sizing: border-box;">bootstro.stop()</strong>&nbsp;: Stop slide show
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <strong style="box-sizing: border-box;">bootstro.next()</strong>&nbsp;: Go to next popover
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <strong style="box-sizing: border-box;">bootstro.prev()</strong>&nbsp;: Go to previous popover
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <strong style="box-sizing: border-box;">bootstro.bind()</strong>&nbsp;: Initialize &amp; bind handlers for keypress, click on the nav events
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <strong style="box-sizing: border-box;">bootstro.unbind()</strong>&nbsp;: Unbind all the initialized bootstro handlers
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <br/>
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            With that, probably Bootstro can be easily customized to show all the popovers at once, not just a slideshow
+                        </p>
+                        <p>
+                            <br/>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 content">
+                    <div class="bootstro"
+                         data-bootstro-title="第三步"
+                         data-bootstro-content="这里是构造器属性"
+                         data-bootstro-width="400px"
+                         data-bootstro-placement="top"
+                         data-bootstro-step="2"
+                         data-bootstro-html="true">
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px; color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">
+                            Include&nbsp;<a href="https://github.com/clu3/bootstro.js/blob/master/bootstro.js" style="box-sizing: border-box; background: transparent; color: rgb(66, 139, 202); text-decoration-line: none;">bootstro.js</a>&nbsp;(after bootstrap.js) &amp;&nbsp;<a href="https://github.com/clu3/bootstro.js/blob/master/bootstro.css" style="box-sizing: border-box; background: transparent; color: rgb(66, 139, 202); text-decoration-line: none;">bootstro.css</a>. There are minified versions too
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px; color: rgb(51, 51, 51); font-family: &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 14px; white-space: normal; background-color: rgb(255, 255, 255);">
+                            <em class="icon-ok" style="box-sizing: border-box;"></em>Call
+                        </p>
+                        <pre style="box-sizing: border-box; font-family: Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace; font-size: 13px; white-space: pre-wrap; padding: 9.5px; margin-top: 0px; margin-bottom: 10px; line-height: 1.42857; word-break: break-all; word-wrap: break-word; background-color: rgb(245, 245, 245); border: 1px solid rgb(204, 204, 204); border-radius: 4px;">         	$(document).ready(function(){
+         		bootstro.start(selector, options);
+        	});         	</pre>
+                        <p>
+                            where selector is any jquery selector, defaulted to&nbsp;<strong style="box-sizing: border-box;">&#39;.bootstro&#39;</strong>
+                        </p>
+                        <h5 style="box-sizing: border-box; font-weight: 500; line-height: 1.1; color: inherit; margin-top: 10px; margin-bottom: 10px; font-size: 14px;">
+                            Options
+                        </h5>
+                        <p>
+                            You can pass an options object to overwrite bootstro&#39;s defaults.<br/><br/>
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <strong style="box-sizing: border-box;">nextButton</strong>: HTML for the next button. It must include a class &#39;bootstro-next-btn&#39;. defaulted to
+                        </p>
+                        <pre style="box-sizing: border-box; font-family: Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace; font-size: 13px; white-space: pre-wrap; padding: 9.5px; margin-top: 0px; margin-bottom: 10px; line-height: 1.42857; word-break: break-all; word-wrap: break-word; background-color: rgb(245, 245, 245); border: 1px solid rgb(204, 204, 204); border-radius: 4px;">&lt; button class=&quot;btn btn-primary btn-mini bootstro-next-btn&quot;&gt;Next »&lt; /button&gt;</pre>
+                        <p>
+                            Pass &#39;&#39; if you don&#39;t want the buttons (and just using nav keys)
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <br/>
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <strong style="box-sizing: border-box;">nextButtonText</strong>: If you don&#39;t want to specify the whole length button text for&nbsp;<strong style="box-sizing: border-box;">nextButton</strong>, this is a simplified version. You just need to specify the test &quot;Next »&quot; and the final button will be wrapped into
+                        </p>
+                        <pre style="box-sizing: border-box; font-family: Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace; font-size: 13px; white-space: pre-wrap; padding: 9.5px; margin-top: 0px; margin-bottom: 10px; line-height: 1.42857; word-break: break-all; word-wrap: break-word; background-color: rgb(245, 245, 245); border: 1px solid rgb(204, 204, 204); border-radius: 4px;">&lt; button class=&quot;btn btn-primary btn-mini bootstro-next-btn&quot;&gt;Next »&lt; /button&gt;</pre>
+                        <p>
+                            Note that, nextButton will override nextButtonText.
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <br/>
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <strong style="box-sizing: border-box;">prevButton</strong>: HTML for the prev button. It must include a class &#39;bootstro-prev-btn&#39;. defaulted to
+                        </p>
+                        <pre style="box-sizing: border-box; font-family: Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace; font-size: 13px; white-space: pre-wrap; padding: 9.5px; margin-top: 0px; margin-bottom: 10px; line-height: 1.42857; word-break: break-all; word-wrap: break-word; background-color: rgb(245, 245, 245); border: 1px solid rgb(204, 204, 204); border-radius: 4px;">&lt; button class=&quot;btn btn-primary btn-mini bootstro-prev-btn&quot;&gt;Next «&lt; /button&gt;</pre>
+                        <p>
+                            Pass &#39;&#39; if you don&#39;t want the buttons (and just using nav keys)
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <br/>
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <strong style="box-sizing: border-box;">prevButtonText</strong>: See nextButtonText
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <strong style="box-sizing: border-box;">finishButton</strong>: HTML for the prev button. It must include a class &#39;bootstro-finish-btn&#39;. defaulted to
+                        </p>
+                        <pre style="box-sizing: border-box; font-family: Menlo, Monaco, Consolas, &quot;Courier New&quot;, monospace; font-size: 13px; white-space: pre-wrap; padding: 9.5px; margin-top: 0px; margin-bottom: 10px; line-height: 1.42857; word-break: break-all; word-wrap: break-word; background-color: rgb(245, 245, 245); border: 1px solid rgb(204, 204, 204); border-radius: 4px;">&lt; button class=&quot;btn btn-mini btn-success bootstro-finish-btn&quot;&gt;&lt; i class=&quot;icon-ok&quot; &gt;&lt; /i&gt; Ok I got it, get back to the site&lt; /button&gt;</pre>
+                        <p>
+                            Pass &#39;&#39; if you don&#39;t want the buttons (and just using nav keys)
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <br/>
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <strong style="box-sizing: border-box;">prevButtonText</strong>: See nextButtonText
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <strong style="box-sizing: border-box;">stopOnBackdropClick</strong>: true|false. If true, show will stop onclick on the backdrop. Defaulted to&nbsp;<strong style="box-sizing: border-box;">true</strong>. Try stopOnBackdropClick=false&nbsp;<a class="demo_stopOn" href="http://clu3.github.io/bootstro.js/#" style="box-sizing: border-box; background: transparent; color: rgb(66, 139, 202); text-decoration-line: none;">here</a>
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <strong style="box-sizing: border-box;">stopOnEsc</strong>: true|false. If true, show will stop onclick on Esc keypress. Defaulted to&nbsp;<strong style="box-sizing: border-box;">true</strong>. Try stopOnEsc=false&nbsp;<a class="demo_stopOn" href="http://clu3.github.io/bootstro.js/#" style="box-sizing: border-box; background: transparent; color: rgb(66, 139, 202); text-decoration-line: none;">here</a>
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <strong style="box-sizing: border-box;">margin</strong>: How far the intro&#39;ed element should stay away from the top. This is to avoid some elements being partically hidden under Twitter bootstrap&#39;s top nav bar (See&nbsp;<a href="https://github.com/clu3/bootstro.js/issues/2" style="box-sizing: border-box; background: transparent; color: rgb(66, 139, 202); text-decoration-line: none;">issue #2</a>)
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <strong style="box-sizing: border-box;">onComplete</strong>: Callback function when show&#39;s reached the final &quot;slide&quot;. Param {idx : activeIndex}
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <strong style="box-sizing: border-box;">onExit</strong>: Callback function when show&#39;s destroyed and screen returns to normal.&nbsp;<br/>Function Param {idx : activeIndex}, where activeIndex is the index of the element when the show stopped
+                        </p>
+                        <p style="box-sizing: border-box; margin-top: 0px; margin-bottom: 10px;">
+                            <strong style="box-sizing: border-box;">onStep</strong>: Callback function when show&#39;s destroyed and screen returns to normal.&nbsp;<br/>Function params: {idx: activeIndex, direction: [next|prev]}, where activeIndex is the index of active element, direction is the direction of the show when stepping to this element, which can be &#39;next&#39; or &#39;prev&#39;
+                        </p>
+                        <p>
+                            <br/>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include::bootstro-js"/>
+    <script>
+        $(document).ready(function(){
+            $("#demo").click(function(){
+                bootstro.start(".bootstro", {
+                    onComplete : function(params){
+                        alert("完成向导");
+                    },
+                    onExit : function(params) {
+                        alert("退出向导");
+                    },
+                    nextButton: '<button class ="btn btn-primary btn-mini bootstro-next-btn">下一个»</button>',
+                    prevButton: '<button class ="btn btn-primary btn-mini bootstro-prev-btn">上一个«</button>',
+                    finishButton: '<button class="btn btn-mini btn-success bootstro-finish-btn"><i class="icon-ok" ></i> 我清楚了</button>'
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>

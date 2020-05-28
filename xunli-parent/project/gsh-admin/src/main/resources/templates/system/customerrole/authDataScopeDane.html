@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('角色数据权限')" />
+    <link th:href="@{/gsh/css/checkboxdane.css}" rel="stylesheet"/>
+</head>
+<body class="white-bg">
+<div style="margin: 10px">
+    <div class="all-checkbox">
+        功能视图：&nbsp;&nbsp;<label class="all-checked"> <span class="ui-checkboxdane"></span>
+        <input type="checkbox" name="all-checked" value="">
+        <input type="hidden" name="isChecked" id="isChecked" th:value="${isChecked}">
+        <input type="hidden" name="roleName" id="roleName" th:value="${role.roleName}">
+        <input type="hidden" name="roleKey" id="roleKey" th:value="${role.roleKey}">
+        <input type="hidden" name="roleSort" id="roleSort" th:value="${role.roleSort}">
+        <input type="hidden" name="status" id="status" th:value="${role.status}">
+        <input type="hidden" name="remark" id="remark" th:value="${role.remark}">
+        全选 </label>
+        <button class="btn btn-primary btn-xs dropdown-toggle" type="button" onclick="edit()">
+            <i class="fa fa-check"></i>提交</button>
+        <div class="title borderRight  center_dane">
+            <div class="borderLeft" style="width:20.05%;">模块</div>
+            <div style="width:20%;">菜单</div>
+            <div style="width:20%;">功能</div>
+        </div>
+        <div id="auth_contianer" style="visibility: hidden;">
+            <div class="div-checkbox" th:each="fristLevel : ${fristLevelList}"  >
+                <div class="levelDIV check-absolute main" id="dxbox">
+                    <p class="check-boxdane check-absolute _border_">
+                        <label class="check-absolute absolute-center"> <span class="ui-checkboxdane" th:id="${fristLevel.menuId}" ></span>
+                            <input type="checkbox" th:name="menuiddane+${fristLevel.menuId}"  class="absolute-center" th:value="${fristLevel.menuId}" >
+                            [[${fristLevel.menuName}]] </label>
+                    </p>
+                    <div class="levelDIV check-absolute second">
+                        <div class="levelDIV" th:each="temp : ${tempMap.get(fristLevel.menuId)}" >
+                            <p class="check-boxdane check-block _border_">
+                                <label> <span class="ui-checkboxdane" th:id="${temp.menuid}"></span>
+                                    <input type="checkbox" th:name="menuiddane+${temp.menuid}"  th:value="${temp.menuid}">
+                                    [[${temp.menuname}]] </label>
+                            </p>
+                            <div class="levelDIV check-absolute _border_ third"  >
+                                <p class="check-boxdane check-align-left row-of-three" th:each="thirdfunc : ${functionMap.get(temp.menuid+'')}">
+                                    <label> <span class="ui-checkboxdane" th:id="${thirdfunc.menuid}"></span>
+                                        <input type="checkbox" th:name="menuiddane+${thirdfunc.menuid}"  th:value="${thirdfunc.menuid}">
+                                        [[${thirdfunc.menuname}]] </label>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <br/>
+</div>
+<th:block th:include="include :: footer" />
+<script type="text/javascript">
+    jQuery(document).ready(function($) {
+        $.modal.loading("数据加载中");
+        //判断是否全选
+        function isAllChecked(){
+            $(".all-checkbox").each(function() {
+                var $self = $(this)   ,
+                    all   = $(this).find(":checkbox").not("[name='sales_group_id'],:disabled") ,
+                    allChecked = $(this).find(":checked").not("[name='all-checked']") ,
+                    thisAllCheckBtn = $(this).find(".all-checked [name='all-checked']");
+
+                thisAllCheckBtn.on("click",function(){
+                    if($(this).get(0).checked){
+                        $(this).prev("span.ui-checkboxdane").addClass('active');
+                        $self.find(".levelDIV").find('input:checkbox').not(":disabled").prop('checked' ,true)
+                            .closest('p.check-boxdane').find('span.ui-checkboxdane').addClass('active');
+
+                    }else{
+                        $(this).prev("span.ui-checkboxdane").removeClass('active');
+                        $self.find(".levelDIV").find('input:checkbox').not(":disabled").prop('checked' ,false)
+                            .closest('p.check-boxdane').find('span.ui-checkboxdane').removeClass('active');
+                    }
+                });
+                if(all.length === allChecked.length){
+                    thisAllCheckBtn.prop('checked' ,true).prev("span.ui-checkboxdane").addClass('active');
+                }else{
+                    thisAllCheckBtn.prop('checked' ,false).prev("span.ui-checkboxdane").removeClass('active');
+                }
+            });
+
+        };
+        isAllChecked();
+        function countCheckboxDOM(obj){
+            obj.each(function(){
+                var _this_ = $(this)
+                if(!_this_.parent().hasClass("vertical-checkbox")){
+                    // Init
+                    var IsLevelTwo   = _this_.closest(".all-checkbox").hasClass('level-two');
+                    var hei          = _this_;
+                    //var sed          = _this_.find(".second > .levelDIV > p.check-boxdane");
+                    var sed          = IsLevelTwo?_this_.find(".second > .levelDIV"):_this_.find(".second > .levelDIV .third");
+                    var levelNum     = IsLevelTwo?_this_.find(".second"):_this_.find(".third");
+                    var levelNumWid  = levelNum.height();
+
+                    // Function
+                    hei.css("height",levelNumWid * sed.length);
+
+                    if(IsLevelTwo){
+                        sed.each(function() {
+                            var i = $(this).index();
+                            sed.eq(i).css("height",sed.get(i).clientHeight);
+                            var total = 0;
+                            for(var j = 0 ; j < sed.length ;  j++){
+                                total += sed.get(j).clientHeight;
+                            };
+
+                            hei.css("height",total);
+                        });
+                    }else{
+                        var t = 0;
+                        for(var i = 0 ; i < sed.length ; i++){
+                            var CH = sed.get(i).clientHeight > 0?sed.get(i).clientHeight:35;
+                            sed.eq(i).css("height" , CH );
+                            sed.prev("p.check-boxdane").eq(i).css("height" , sed.get(i).clientHeight + 1);
+                            if(i>0){
+                                var height = sed.eq(i-1).css("height");
+                                var top    = sed.eq(i-1).css("top");
+                                var total =  parseFloat(height.substring(0,height.length-2)) + parseFloat(top.substring(0,top.length-2));
+                                levelNum.eq(i).css("top",total);
+                            }
+                            t += levelNum.eq(i).height() + 1;
+                        }
+                        hei.css("height",t);
+                    };
+
+                    // for(var i = 0 ; i < levelNum.length ; i++){
+                    //   levelNum.eq(i).css("top",(hei.height()/sed.length)*i);
+                    // }
+                }
+            });
+        }
+
+        function setDisable(obj){
+            obj.each(function() {
+                if($(this).is(":disabled") ){
+                    if($(this).closest(".levelDIV").find("div").length > 0){
+                        $(this).closest(".levelDIV").find("input:checkbox").prop('disabled', true);
+                    }
+                    $(this).prev(".ui-checkboxdane").addClass('disabled');
+                }
+            });
+        };
+        var eachDIV      =  $(".div-checkbox") ,
+            allLevelDIV  =  eachDIV.find(".levelDIV") ,
+            CheckBox     =  eachDIV.find("[type=checkbox]") ;
+        countCheckboxDOM(eachDIV);
+        setDisable(CheckBox);
+
+        $(".div-checkbox label,.all-checked").hover(function() {
+            if(!$(this).children("input[type='checkbox']").hasClass('disabled') || !$(this).children("input[type='checkbox']").hasClass('readonly')  ){
+                $(this).children("span.ui-checkboxdane").addClass('hover');
+            }
+
+        }, function() {
+            $(this).children("span.ui-checkboxdane").removeClass('hover');
+        });
+
+        //e.currentTarget e.target
+        //从下往上选择
+        allLevelDIV.on('click', function(e) {
+            if(e.target.checked){
+                if(e.currentTarget != $(e.target).parents(".levelDIV").get(0)){
+                    var levelLen = $(e.currentTarget).children('.levelDIV').length;
+                    $(e.currentTarget).children('p.check-boxdane').find('input:checkbox').not(":disabled").prop('checked' ,true)
+                        .closest('p.check-boxdane').find('span.ui-checkboxdane').addClass('active');
+                }
+            }else{
+                if (e.currentTarget != $(e.target).parents(".levelDIV").get(0) && $(e.currentTarget).children('.levelDIV').find('input:checked').length < 1) {
+                    $(e.currentTarget).children('p').find('input:checkbox').not(":disabled").prop('checked', false)
+                        .closest('p.check-boxdane').find('span.ui-checkboxdane').removeClass('active');
+                }
+            }
+        });
+        //从上往下选择
+        CheckBox.on('click', function(event) {
+            if (!this.checked ) {
+                if($(this).closest(".levelDIV").find("div").length > 0){
+                    $(this).closest(".levelDIV").find("input:checkbox").not(":disabled").prop('checked', false)
+                        .closest('p.check-boxdane').find('span.ui-checkboxdane').removeClass('active');
+                }else{
+                    $(this).prev('span.ui-checkboxdane').removeClass('active');
+                }
+                //event.stopPropagation();
+            } else {
+                if($(this).closest(".levelDIV").find("div").length > 0){
+                    $(this).closest(".levelDIV").find("input:checkbox").not(":disabled").prop('checked', true)
+                        .closest('p.check-boxdane').find('span.ui-checkboxdane').addClass('active');
+                }else{
+                    $(this).prev('span.ui-checkboxdane').addClass('active');
+                }
+            }
+            isAllChecked();
+        });
+        $.modal.closeLoading();
+    });
+
+    $(function() {
+        //设置默认选中
+        var roleId = window.parent.document.getElementById("roleId").value;
+        if (roleId != null && roleId != "") {
+            var inputs = document.getElementsByTagName('input');
+            var isChecked = document.getElementById("isChecked").value;
+            if (isChecked != null && isChecked != "") {
+                var names = isChecked.split(",");
+                for (var i = 0; i < inputs.length; i++) {
+                    for (var n = 0; n < names.length; n++) {
+                        var menuid = names[n] + "";
+                        if (menuid == inputs[i].value) {
+                            var thisAllCheckBtn = $(this).find("[name='menuiddane" + menuid + "']");
+                            thisAllCheckBtn.prop('checked', true).prev("span.ui-checkboxdane").addClass('active');
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    //提交
+    function edit() {
+        var deptIds = "";
+        var countnum = 0;
+        $("#dxbox label").each(function(){
+            var allChecked = $(this).find("input[type=checkbox]:checked").val();
+            if(allChecked != undefined)
+            {
+                countnum ++;
+                if(deptIds == ""){
+                    deptIds = allChecked;
+                } else {
+                    deptIds += ","+allChecked;
+                }
+            }
+        });
+        if(deptIds != ""){
+            var roleId = [[${role.roleId}]];//
+            var roleName = document.getElementById("roleName").value;
+            var roleKey = document.getElementById("roleKey").value;
+            var roleSort = document.getElementById("roleSort").value;
+            var status = document.getElementById("status").value;
+            var remark = document.getElementById("remark").value;
+            $.ajax({
+                cache : true,
+                type : "POST",
+                url : ctx + "system/role/edit",
+                data : {
+                    "roleId": roleId,
+                    "menuIds": deptIds,
+                    "roleName": roleName,
+                    "roleKey": roleKey,
+                    "roleSort": roleSort,
+                    "status": status,
+                    "remark":remark
+                },
+                async : false,
+                error : function(request) {
+                    $.modal.alertError("系统错误");
+                },
+                success : function(data) {
+//                    $.operate.successCallback(data);
+                    $.modal.alertSuccess("提交成功...");
+//                    window.parent.setBackground(roleId);
+                }
+            });
+        }
+    }
+
+    $(window).load(function() {
+        $(".all-checkbox").css("visibility" , "visible");
+    });
+
+    $(function(){
+        $("#auth_contianer").css("visibility","visible");
+        initPageHeight();
+    });
+
+    function initPageHeight(){
+        var bHeight = document.body.scrollHeight;
+        var dHeight = document.documentElement.scrollHeight;
+        var height = Math.max(bHeight, dHeight);
+
+        window.parent.document.getElementById("iframe1").height= height;
+        window.parent.document.getElementById("iframe2").height= height;
+        window.parent.document.getElementById("iframe3").height= height;
+    }
+
+</script>
+</body>
+</html>

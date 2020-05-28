@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gsh.system.mapper.SysDataTracesDetailMapper">
+    
+    <resultMap type="SysDataTracesDetail" id="SysDataTracesDetailResult">
+        <result property="id"    column="id"    />
+        <result property="datatracesId"    column="datatraces_id"    />
+        <result property="fieldName"    column="field_name"    />
+        <result property="fieldCnName"    column="field_cn_name"    />
+        <result property="oldValue"    column="old_value"    />
+        <result property="newValue"    column="new_value"    />
+    </resultMap>
+
+    <sql id="selectSysDataTracesDetailVo">
+        select id, datatraces_id, field_name, field_cn_name, old_value, new_value from sys_data_traces_detail
+    </sql>
+
+    <select id="selectSysDataTracesDetailList" parameterType="SysDataTracesDetail" resultMap="SysDataTracesDetailResult">
+        <include refid="selectSysDataTracesDetailVo"/>
+        <where>  
+            <if test="datatracesId != null "> and datatraces_id = #{datatracesId}</if>
+            <if test="fieldName != null  and fieldName != ''"> and field_name like concat('%', #{fieldName}, '%')</if>
+            <if test="fieldCnName != null  and fieldCnName != ''"> and field_cn_name like concat('%', #{fieldCnName}, '%')</if>
+            <if test="oldValue != null  and oldValue != ''"> and old_value = #{oldValue}</if>
+            <if test="newValue != null  and newValue != ''"> and new_value = #{newValue}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysDataTracesDetailById" parameterType="Long" resultMap="SysDataTracesDetailResult">
+        <include refid="selectSysDataTracesDetailVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysDataTracesDetail" parameterType="SysDataTracesDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_data_traces_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="datatracesId != null ">datatraces_id,</if>
+            <if test="fieldName != null  and fieldName != ''">field_name,</if>
+            <if test="fieldCnName != null  and fieldCnName != ''">field_cn_name,</if>
+            <if test="oldValue != null  and oldValue != ''">old_value,</if>
+            <if test="newValue != null  and newValue != ''">new_value,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="datatracesId != null ">#{datatracesId},</if>
+            <if test="fieldName != null  and fieldName != ''">#{fieldName},</if>
+            <if test="fieldCnName != null  and fieldCnName != ''">#{fieldCnName},</if>
+            <if test="oldValue != null  and oldValue != ''">#{oldValue},</if>
+            <if test="newValue != null  and newValue != ''">#{newValue},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysDataTracesDetail" parameterType="SysDataTracesDetail">
+        update sys_data_traces_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="datatracesId != null ">datatraces_id = #{datatracesId},</if>
+            <if test="fieldName != null  and fieldName != ''">field_name = #{fieldName},</if>
+            <if test="fieldCnName != null  and fieldCnName != ''">field_cn_name = #{fieldCnName},</if>
+            <if test="oldValue != null  and oldValue != ''">old_value = #{oldValue},</if>
+            <if test="newValue != null  and newValue != ''">new_value = #{newValue},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysDataTracesDetailById" parameterType="Long">
+        delete from sys_data_traces_detail where id = #{id}
+    </delete>
+
+    <delete id="deleteSysDataTracesDetailByIds" parameterType="String">
+        delete from sys_data_traces_detail where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="logicDeleteSysDataTracesDetailById" parameterType="Long">
+        update   sys_data_traces_detail  set deleted='1' where id = #{id}
+    </update>
+
+    <update id="logicDeleteSysDataTracesDetailByIds" parameterType="String">
+        update   sys_data_traces_detail  set deleted='1' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gsh.system.queryport.mapper.QueryportChartMapper">
+    
+    <resultMap type="QueryportChart" id="QueryportChartResult">
+        <result property="id"    column="id"    />
+        <result property="xaxis"    column="x_axis"    />
+        <result property="yaxis"    column="y_axis"    />
+        <result property="shapeType"    column="shape_type"    />
+        <result property="title"    column="title"    />
+        <result property="legend"    column="legend"    />
+        <result property="mainId"    column="main_id"    />
+        <result property="option"    column="option"    />
+        <result property="displayOrder"    column="display_order"    />
+        <result property="height"    column="height"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+
+    </resultMap>
+
+    <sql id="selectQueryportChartVo">
+        select id, x_axis, y_axis, shape_type, title, legend, main_id,display_order,deleted,height from sys_queryport_chart
+    </sql>
+
+    <select id="selectQueryportChartList" parameterType="QueryportChart" resultMap="QueryportChartResult">
+        <include refid="selectQueryportChartVo"/>
+        <where>  
+            <if test="mainId != null "> and main_id = #{mainId}</if>
+            <if test="xaxis != null and xaxis != ''"> and x_axis = #{xaxis}</if>
+            <if test="yaxis != null and yaxis != ''"> and y_axis = #{yaxis}</if>
+            <if test="shapeType != null and shapeType != ''"> and shape_type = #{shapeType}</if>
+            <if test="title != null and title != ''"> and title = #{title}</if>
+            <if test="legend != null and legend != ''"> and legend = #{legend}</if>
+            <if test="option != null and option != ''"> and option = #{option}</if>
+            <if test="displayOrder != null and displayOrder != ''"> and display_order = #{displayOrder}</if>
+            <if test="height != null and height != ''"> and height = #{height}</if>
+            <if test="deleted != null  and deleted != ''">#{deleted},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+        </where>
+        order by display_order
+    </select>
+
+    <select id="selectQueryportChartByMainidNoCache" parameterType="Long" resultMap="QueryportChartResult">
+        <include refid="selectQueryportChartVo"/>
+        where main_Id = #{mainId} and deleted='0'
+        order by display_order
+    </select>
+    
+    <select id="selectQueryportChartById" parameterType="Long" resultMap="QueryportChartResult">
+        <include refid="selectQueryportChartVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertQueryportChart" parameterType="QueryportChart" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_queryport_chart
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mainId != null ">main_id,</if>
+            <if test="xaxis != null and xaxis != ''"> x_axis,</if>
+            <if test="yaxis != null and yaxis !=''">y_axis,</if>
+            <if test="shapeType != null and shapeType !=''">shape_type,</if>
+            <if test="title != null and title !=''">title,</if>
+            <if test="legend != null and legend !=''">legend,</if>
+            <if test="option != null and option !=''">option,</if>
+            <if test="displayOrder != null">display_order,</if>
+            <if test="deleted != null and deleted !=''">deleted,</if>
+            <if test="height != null and height !=''">height,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mainId != null ">#{mainId},</if>
+            <if test="xaxis != null and xaxis != ''"> #{xaxis},</if>
+            <if test="yaxis != null and yaxis !=''">#{yaxis},</if>
+            <if test="shapeType != null and shapeType !=''">#{shapeType},</if>
+            <if test="title != null and title !=''">#{title},</if>
+            <if test="legend != null and legend !=''">#{legend},</if>
+            <if test="option != null and option !=''">#{option},</if>
+            <if test="displayOrder != null and displayOrder !=''">#{displayOrder},</if>
+            <if test="deleted != null and deleted !=''"> #{deleted},</if>
+            <if test="height != null and height !=''"> #{height},</if>
+         </trim>
+    </insert>
+
+    <update id="updateQueryportChart" parameterType="QueryportChart">
+        update sys_queryport_chart
+        <trim prefix="SET" suffixOverrides=",">
+            main_id = #{mainId},
+            x_axis = #{xaxis},
+            y_axis = #{yaxis},
+            shape_type = #{shapeType},
+            title = #{title},
+            legend = #{legend},
+            display_order = #{displayOrder},
+            height = #{height},
+            <if test="option != null  and option != ''">option = #{option},</if>
+            <if test="deleted != null  and deleted != ''">deleted = #{deleted},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+    <delete id="deleteQueryportChartById" parameterType="Long">
+        delete from sys_queryport_chart where id = #{id}
+    </delete>
+
+    <delete id="deleteQueryportChartByIds" parameterType="String">
+        delete from sys_queryport_chart where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="logicDeleteQueryportColumnById" parameterType="Long">
+        update   sys_queryport_column  set deleted='1' where id = #{id}
+    </update>
+
+    <update id="logicDeleteQueryportColumnByIds" parameterType="String">
+        update   sys_queryport_column  set deleted='1' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

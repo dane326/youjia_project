@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('租户字典列表')" />
+    <th:block th:include="include :: layout-latest-css" />
+    <th:block th:include="include :: ztree-css" />
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row" style="float: left;width:22.5%;height: 698px">
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"  search="false"></table>
+        </div>
+    </div>
+    <!-- 右边联动部分 -->
+    <div class="row" style="float: right;width:79%">
+        <div class="col-sm-12 search-collapse">
+        	<input type="hidden" id="defaultFactoryCode" th:value="${factoryCode}">
+            <form id="formId">
+                <input type="hidden" id="factoryCode" name="factoryCode" th:value="${factoryCode}">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                        	字典标签：<input type="text" name="dictLabel"/>
+						</li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.treeTable.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+        <div class="btn-group-sm" id="toolbar" role="group">
+            <a th:if="${factoryCode == 1}" class="btn btn-success" th:onclick="addFactoryDict()" shiro:hasPermission="system:factory:dict:add">
+                <i class="fa fa-plus"></i> 新增
+            </a>
+            <a class="btn btn-primary" onclick="$.operate.edit()" shiro:hasPermission="system:factory:dict:edit">
+                <i class="fa fa-edit"></i> 修改
+            </a>
+            <a class="btn btn-info" id="expandAllBtn">
+                <i class="fa fa-exchange"></i> 展开/折叠
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-tree-table"></table>
+        </div>
+    </div>
+
+</div>
+<th:block th:include="include :: footer" />
+<th:block th:include="include :: layout-latest-js" />
+<th:block th:include="include :: ztree-js" />
+<script th:inline="javascript">
+    var addFlag = [[${@permission.hasPermi('system:factory:dict:add')}]];
+    var editFlag = [[${@permission.hasPermi('system:factory:dict:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('system:factory:dict:remove')}]];
+    var yesNoDatas = [[${@dict.getType('sys_yes_no')}]];
+    var normalDatas = [[${@dict.getType('sys_normal_disable')}]];
+    var prefix = ctx + "system/factory/dict";
+    $(function() {
+        var options = {
+            url: ctx + "system/factory/info/list",
+            sortName: "factoryDeptId",
+            id: "bootstrap-table",
+            uniqueId: 'id',
+            modalName: "部门",
+            showRefresh: false,
+            showColumns: false,
+            showSearch: false,
+            showToggle: false,
+            columns: [{
+                checkbox: false
+            },
+                {
+                    field: 'factoryName',
+                    title: '租户名称',
+                    sortable: true,
+                    formatter: function(value, row, index) {
+                        if (row.parentId != 0) {
+                            var actions = [];
+                            actions.push('<a href="javascript:void(0)" onclick="selectDept(\'' + row.id + '\')">'+value+'</a>');
+                            return actions.join('');
+                        } else {
+                            return "";
+                        }
+                    }
+
+                }]
+        };
+        $.table.init(options);
+
+        var dictOptions = {
+            id: "bootstrap-tree-table",
+            code: "dictCode",
+            parentCode: "parentCode",
+            expandColumn: "1",
+            uniqueId: "dictCode",
+            url: prefix + "/list",
+            createUrl: prefix + "/{factoryCode}/add/{id}",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove/{id}/{parentCode}",
+            exportUrl: prefix + "/export",
+            modalName: "组织字典",
+            columns: [{
+                field: 'selectItem',
+                radio: true
+            },
+            {
+                field: 'dictLabel',
+                title: '字典标签',
+                formatter: function(value, row, index) {
+                    var listClass = $.common.equals("default", row.listClass) || $.common.isEmpty(row.listClass) ? "" : "badge badge-" + row.listClass;
+                    return $.common.sprintf("<span class='%s'>%s</span>", listClass, value);
+                }
+            },
+            {
+                field: 'dictCode',
+                title: '字典编码',
+                width: '10%'
+            },
+            {
+                field: 'dictType',
+                title: '字典类型',
+            },
+            {
+                field: 'status',
+                title: '状态',
+                width: '10%',
+                formatter: function(value, row, index) {
+                    return $.table.selectDictLabel(normalDatas, value);
+                }
+            },
+            {
+                field: 'createTime',
+                title: '创建时间',
+                visible: false
+            },
+            {
+                field: 'isDefault',
+                title: '系统内置',
+                width: '10%',
+                visible: true,
+                formatter: function(value, row, index) {
+                    return $.table.selectDictLabel(yesNoDatas, value);
+                }
+            },
+            {
+                field: 'dictSort',
+                title: '排序',
+                width: '8%'
+            },
+            {
+                title: '操作',
+                formatter: function(value, row, index) {
+                    var actions = [];
+                    actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.dictCode + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                    actions.push('<a class="btn btn-info  btn-xs ' + addFlag + '" href="javascript:void(0)" onclick="addChildFactoryDict(\'' + row.factoryCode + '\',\'' + row.dictCode + '\')"></i>新增</a> ');
+                    actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="removeFactoryDict(\'' + row.dictCode + '\',\'' + row.parentCode + '\')"><i class="fa fa-remove"></i>删除</a>');
+                    return actions.join('');
+                }
+            }]
+        };
+        $.treeTable.init(dictOptions);
+
+    });
+
+    function selectDept(factoryCode){
+        debugger;
+        $("#factoryCode").val(factoryCode);
+        $.treeTable.search("formId", "bootstrap-tree-table");
+    }
+
+    function addChildFactoryDict(factoryCode, parentId){
+        var url = table.get("bootstrap-tree-table").createUrl.replace("{factoryCode}", factoryCode).replace("{id}", parentId);
+        table.set("bootstrap-tree-table");
+        $.modal.open("添加" + table.get("bootstrap-tree-table").modalName, url);
+    }
+
+    function addFactoryDict(){
+        var factoryCode = $("#factoryCode").val();
+    	if(!factoryCode){
+    		factoryCode = $("#defaultFactoryCode").val();
+    	}
+    	var url = table.get("bootstrap-tree-table").createUrl.replace("{factoryCode}", factoryCode).replace("{id}", '0');
+        table.set("bootstrap-tree-table");
+        $.modal.open("添加" + table.get("bootstrap-tree-table").modalName, url);
+    }
+
+    function removeFactoryDict(dictCode,parentCode){
+        $.modal.confirm("确定删除该条" + table.options.modalName + "信息吗？", function() {
+            var url = $.common.isEmpty(dictCode) ? table.options.removeUrl : table.options.removeUrl.replace("{id}", dictCode).replace("{parentCode}", parentCode);
+            $.operate.get(url);
+        });
+    }
+
+
+</script>
+</body>
+</html>

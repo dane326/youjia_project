@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('短信发送记录列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+         <div class="row" style="float: left;width: 22.5%;height: 698px;">
+             <div class="col-sm-12 select-table table-striped">
+                 <table id="bootstrap-dept-table" search="false"></table>
+             </div>
+         </div>
+         <!-- 右边联动部分 -->
+         <div class="row" style="float: right;width: 79%;">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>短信接口配置：</p>
+                                <input type="text" name="smsConfName"/>
+                            </li>
+                            <li class="select-time">
+                                <p>接口响应时间：</p>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginSuccessTime]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endSuccessTime]"/>
+                            </li>
+                            <li>
+                                <p>成功标记：</p>
+                                <input type="text" name="successFlag"/>
+                            </li>
+                            <li>
+                                <p>短信内容：</p>
+                                <input type="text" name="smsContent"/>
+                            </li>
+                            <li>
+                                <p>接收人名称：</p>
+                                <input type="text" name="receiverLoginName"/>
+                            </li>
+                            <li>
+                                <p>接收手机号：</p>
+                                <input type="text" name="receiverMobile"/>
+                            </li>
+                            <li>
+                                <p>创建人姓名：</p>
+                                <input type="text" name="createByName"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:sms:record:export">
+                    <i class="fa fa-download"></i> 导出
+                 </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table" ></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:sms:record:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:sms:record:remove')}]];
+        var smsTypeDatas = [[${@dict.getType('sms_type')}]];
+        var prefix = ctx + "system/sms/record";
+
+        $(function() {
+            var options = {
+                url: ctx + "system/factory/info/list",
+                sortName: "factoryDeptId",
+                id: "bootstrap-dept-table",
+                uniqueId: 'id',
+                modalName: "部门",
+                showRefresh: false,
+                showColumns: false,
+                showSearch: false,
+                showToggle: false,
+                columns: [{
+                    checkbox: false
+                },
+                    {
+                        field: 'factoryName',
+                        title: '租户名称',
+                        sortable: true,
+                        formatter: function(value, row, index) {
+                            if (row.parentId != 0) {
+                                var actions = [];
+                                actions.push('<a href="javascript:void(0)" onclick="selectDept(\'' + row.id + '\')">'+value+'</a>');
+                                return actions.join('');
+                            } else {
+                                return "";
+                            }
+                        }
+
+                    }]
+            };
+            $.table.init(options);
+
+            var recordOptions = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "短信发送记录",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'id', 
+                    title : '主键ID',
+                    visible: false
+                },
+                {
+                    field : 'smsConfId', 
+                    title : '短信接口配置ID',
+                    visible: false
+                },
+                {
+                    field : 'smsConfName', 
+                    title : '短信接口'
+                },
+                {
+                    field : 'successTime', 
+                    title : '接口响应时间'
+                },
+                {
+                    field : 'successFlag', 
+                    title : '成功标记'
+                },
+                {
+                    field : 'smsType', 
+                    title : '短信类型',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(smsTypeDatas, value);
+                     }
+                },
+                {
+                    field : 'smsContent', 
+                    title : '短信内容'
+                },
+                {
+                    field : 'receiverLoginName', 
+                    title : '接收人名称'
+                },
+                {
+                    field : 'receiverMobile', 
+                    title : '接收人手机号'
+                },
+                {
+                    field : 'createByName', 
+                    title : '创建人姓名',
+                    visible: false
+                },
+                {
+                    field : 'createTime', 
+                    title : '创建时间'
+                },
+                {
+                    field : 'createByDeptid', 
+                    title : '创建人部门ID',
+                    visible: false
+                },
+                {
+                    field : 'createByDeptname', 
+                    title : '创建人部门名称',
+                    visible: false
+                },
+                {
+                    field : 'updateByName', 
+                    title : '更新人姓名',
+                    visible: false
+                },
+                {
+                    field : 'updateByDeptid', 
+                    title : '修改人部门ID',
+                    visible: false
+                },
+                {
+                    field : 'updateByDeptname', 
+                    title : '修改人部门名称',
+                    visible: false
+                },
+                {
+                    field : 'remark', 
+                    title : '备注',
+                    visible: false
+                }]
+            };
+            $.table.init(recordOptions);
+        });
+
+        function selectDept(factoryCode){
+            $("#factoryCode").val(factoryCode);
+            $.table.search("formId", "bootstrap-table");
+        }
+    </script>
+</body>
+</html>

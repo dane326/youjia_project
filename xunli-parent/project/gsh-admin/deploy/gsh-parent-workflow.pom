@@ -1,0 +1,78 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.gsh</groupId>
+		<artifactId>gsh-parent</artifactId>
+		<version>4.1.2.0.0078</version>
+	</parent>
+	<groupId>com.gsh</groupId>
+	<artifactId>gsh-parent</artifactId>
+	<version>4.1.2.0.0078</version>
+	<packaging>pom</packaging>
+
+	<name>gsh-parent</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<oshi.version>3.9.1</oshi.version>
+	</properties>
+
+	<dependencies>
+		
+		<dependency>
+		  <groupId>com.gsh</groupId>
+		  <artifactId>gsh-process-base</artifactId>
+		  <version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gsh</groupId>
+			<artifactId>gsh-framework</artifactId>
+		</dependency>
+
+		<!--activity 包-->
+		<dependency>
+			<groupId>org.activiti</groupId>
+			<artifactId>activiti-engine</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.activiti</groupId>
+			<artifactId>activiti-spring</artifactId>
+		</dependency>
+
+		<!--activiti modeler 5.22 start -->
+		<dependency>
+			<groupId>org.activiti</groupId>
+			<artifactId>activiti-json-converter</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.activiti</groupId>
+					<artifactId>activiti-bpmn-model</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- xml解析依赖 -->
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>batik-codec</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>batik-css</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>batik-svg-dom</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>batik-svggen</artifactId>
+		</dependency>
+		
+
+	</dependencies>
+
+
+	
+</project>

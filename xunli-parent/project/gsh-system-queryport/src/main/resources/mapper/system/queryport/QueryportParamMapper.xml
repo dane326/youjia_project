@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gsh.system.queryport.mapper.QueryportParamMapper">
+    
+    <resultMap type="QueryportParam" id="QueryportParamResult">
+        <result property="id"    column="id"    />
+        <result property="mainId"    column="main_id"    />
+        <result property="viewFlag"    column="view_flag"    />
+        <result property="ename"    column="ename"    />
+        <result property="cname"    column="cname"    />
+        <result property="allowBlank"    column="allow_blank"    />
+        <result property="inputMode"    column="input_mode"    />
+        <result property="paramType"    column="param_type"    />
+        <result property="typeParam1"    column="type_param1"    />
+        <result property="typeParam2"    column="type_param2"    />
+        <result property="typeParam3"    column="type_param3"    />
+        <result property="typeParam4"    column="type_param4"    />
+        <result property="paramValue"    column="param_value"    />
+        <result property="defaultValue"    column="default_value"    />
+        <result property="displayOrder"    column="display_order"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectQueryportParamVo">
+        select id, main_id, view_flag, ename, cname, allow_blank, input_mode, param_type, type_param1, type_param2, type_param3, type_param4, param_value, default_value, display_order, deleted, create_by, create_time, update_by, update_time, remark from sys_queryport_param
+    </sql>
+
+    <select id="selectQueryportParamList" parameterType="QueryportParam" resultMap="QueryportParamResult">
+        <include refid="selectQueryportParamVo"/>
+        <where>  
+            <if test="mainId != null "> and main_id = #{mainId}</if>
+            <if test="viewFlag != null  and viewFlag != ''"> and view_flag = #{viewFlag}</if>
+            <if test="ename != null  and ename != ''"> and ename like concat('%', #{ename}, '%')</if>
+            <if test="cname != null  and cname != ''"> and cname like concat('%', #{cname}, '%')</if>
+            <if test="allowBlank != null  and allowBlank != ''"> and allow_blank = #{allowBlank}</if>
+            <if test="inputMode != null  and inputMode != ''"> and input_mode = #{inputMode}</if>
+            <if test="paramType != null  and paramType != ''"> and param_type = #{paramType}</if>
+            <if test="typeParam1 != null  and typeParam1 != ''"> and type_param1 = #{typeParam1}</if>
+            <if test="typeParam2 != null  and typeParam2 != ''"> and type_param2 = #{typeParam2}</if>
+            <if test="typeParam3 != null  and typeParam3 != ''"> and type_param3 = #{typeParam3}</if>
+            <if test="typeParam4 != null  and typeParam4 != ''"> and type_param4 = #{typeParam4}</if>
+            <if test="paramValue != null  and paramValue != ''"> and param_value = #{paramValue}</if>
+            <if test="defaultValue != null  and defaultValue != ''"> and default_value = #{defaultValue}</if>
+            <if test="displayOrder != null "> and display_order = #{displayOrder}</if>
+            <if test="deleted != null  and deleted != ''"> and deleted = #{deleted}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+        </where>
+        order by display_order
+    </select>
+    
+    <select id="selectQueryportParamById" parameterType="Long" resultMap="QueryportParamResult">
+        <include refid="selectQueryportParamVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertQueryportParam" parameterType="QueryportParam" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_queryport_param
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mainId != null ">main_id,</if>
+            <if test="viewFlag != null  and viewFlag != ''">view_flag,</if>
+            <if test="ename != null  and ename != ''">ename,</if>
+            <if test="cname != null  and cname != ''">cname,</if>
+            <if test="allowBlank != null  and allowBlank != ''">allow_blank,</if>
+            <if test="inputMode != null  and inputMode != ''">input_mode,</if>
+            <if test="paramType != null  and paramType != ''">param_type,</if>
+            <if test="typeParam1 != null  and typeParam1 != ''">type_param1,</if>
+            <if test="typeParam2 != null  and typeParam2 != ''">type_param2,</if>
+            <if test="typeParam3 != null  and typeParam3 != ''">type_param3,</if>
+            <if test="typeParam4 != null  and typeParam4 != ''">type_param4,</if>
+            <if test="paramValue != null  and paramValue != ''">param_value,</if>
+            <if test="defaultValue != null  and defaultValue != ''">default_value,</if>
+            <if test="displayOrder != null ">display_order,</if>
+            <if test="deleted != null  and deleted != ''">deleted,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mainId != null ">#{mainId},</if>
+            <if test="viewFlag != null  and viewFlag != ''">#{viewFlag},</if>
+            <if test="ename != null  and ename != ''">#{ename},</if>
+            <if test="cname != null  and cname != ''">#{cname},</if>
+            <if test="allowBlank != null  and allowBlank != ''">#{allowBlank},</if>
+            <if test="inputMode != null  and inputMode != ''">#{inputMode},</if>
+            <if test="paramType != null  and paramType != ''">#{paramType},</if>
+            <if test="typeParam1 != null  and typeParam1 != ''">#{typeParam1},</if>
+            <if test="typeParam2 != null  and typeParam2 != ''">#{typeParam2},</if>
+            <if test="typeParam3 != null  and typeParam3 != ''">#{typeParam3},</if>
+            <if test="typeParam4 != null  and typeParam4 != ''">#{typeParam4},</if>
+            <if test="paramValue != null  and paramValue != ''">#{paramValue},</if>
+            <if test="defaultValue != null  and defaultValue != ''">#{defaultValue},</if>
+            <if test="displayOrder != null ">#{displayOrder},</if>
+            <if test="deleted != null  and deleted != ''">#{deleted},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateQueryportParam" parameterType="QueryportParam">
+        update sys_queryport_param
+        <trim prefix="SET" suffixOverrides=",">
+            main_id = #{mainId},
+            view_flag = #{viewFlag},
+            ename = #{ename},
+            cname = #{cname},
+            allow_blank = #{allowBlank},
+            param_type = #{paramType},
+            input_mode = #{inputMode},
+            type_param1 = #{typeParam1},
+            type_param2 = #{typeParam2},
+            type_param3 = #{typeParam3},
+            type_param4 = #{typeParam4},
+            param_value = #{paramValue},
+            default_value = #{defaultValue},
+            display_order = #{displayOrder},
+            <if test="deleted != null  and deleted != ''">deleted = #{deleted},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteQueryportParamById" parameterType="Long">
+        delete from sys_queryport_param where id = #{id}
+    </delete>
+
+    <delete id="deleteQueryportParamByIds" parameterType="String">
+        delete from sys_queryport_param where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="logicDeleteQueryportParamById" parameterType="Long">
+        update   sys_queryport_param  set deleted='1' where id = #{id}
+    </update>
+
+    <update id="logicDeleteQueryportParamByMainId" parameterType="Long">
+        update   sys_queryport_param  set deleted='1' where main_id = #{mainId}
+    </update>
+
+    <update id="logicDeleteQueryportParamByIds" parameterType="String">
+        update   sys_queryport_param  set deleted='1' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

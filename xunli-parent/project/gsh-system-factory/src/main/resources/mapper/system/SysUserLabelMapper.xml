@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gsh.system.mapper.SysUserLabelMapper">
+    
+    <resultMap type="SysUserLabel" id="SysUserLabelResult">
+        <result property="userId"    column="user_id"    />
+        <result property="labelId"    column="label_id"    />
+    </resultMap>
+
+    <sql id="selectSysUserLabelVo">
+        select user_id, label_id from sys_user_label
+    </sql>
+
+    <select id="selectSysUserLabelList" parameterType="SysUserLabel" resultMap="SysUserLabelResult">
+        <include refid="selectSysUserLabelVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="labelId != null "> and label_id = #{labelId}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysUserLabelById" parameterType="Long" resultMap="SysUserLabelResult">
+        <include refid="selectSysUserLabelVo"/>
+        where user_id = #{userId}
+    </select>
+        
+    <insert id="insertSysUserLabel" parameterType="SysUserLabel">
+        insert into sys_user_label
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null ">user_id,</if>
+            <if test="labelId != null ">label_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null ">#{userId},</if>
+            <if test="labelId != null ">#{labelId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysUserLabel" parameterType="SysUserLabel">
+        update sys_user_label
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="labelId != null ">label_id = #{labelId},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+    <delete id="deleteSysUserLabelById" parameterType="Long">
+        delete from sys_user_label where user_id = #{userId}
+    </delete>
+
+    <delete id="deleteSysUserLabelByIds" parameterType="String">
+        delete from sys_user_label where user_id in 
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+    <update id="logicDeleteSysUserLabelById" parameterType="Long">
+        update   sys_user_label  set deleted='1' where user_id = #{userId}
+    </update>
+
+    <update id="logicDeleteSysUserLabelByIds" parameterType="String">
+        update   sys_user_label  set deleted='1' where user_id in
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </update>
+    <insert id="batchSysFactoryUserLabel" >
+        insert into sys_user_label
+        (user_id,label_id) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.userId},#{item.labelId})
+        </foreach>
+    </insert>
+</mapper>

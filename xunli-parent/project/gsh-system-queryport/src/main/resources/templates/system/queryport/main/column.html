@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('查询视图字段配置')" />
+    <th:block th:include="include :: select2-css" />
+    <style type="text/css">
+        .select-table table{table-layout:fixed;}.select-table .table td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}.form-control{padding:3px 6px 4px;height:30px;}table .icheckbox-blue{top:0px;left:6px;}.form-control.select2-hidden-accessible{position:static!important;}.select-table table label.error{position: inherit;}select + label.error{z-index:1;right:40px;}
+    </style>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <form id="form-column-edit" class="form-horizontal">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <div class="ibox-content" style="padding: 15px 15px 5px 0px;">
+                    <a class="btn btn-info" onclick="submitHandler('edit');"><i class="fa"></i>1.配置基本信息</a>&nbsp;
+                    <a class="btn btn-primary"><i class="fa"></i>2.配置显示列信息</a>&nbsp;
+                    <a class="btn btn-default" onclick="submitHandler('param');"><i class="fa"></i>3.配置参数信息</a>&nbsp;
+                    <a class="btn btn-default" onclick="submitHandler('chart');" th:if="${#strings.contains(queryportMain.showType, 'shape')}"><i class="fa"></i>4.配置视图信息</a>&nbsp;
+                </div>
+                <div class="ibox-content" style="padding: 15px 15px 5px 0px;">
+                    <p>第二步：配置查询视图的显示列信息，内容来源于查询配置。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-column-table" ></table>
+            </div>
+
+            <div class="col-sm-12">
+                <div style="text-align: right;">
+                    <br>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="submitHandler('edit');"><i class="fa fa-reply"></i>上一步</button>
+                    <button type="button" class="btn btn-sm btn-success" onclick="submitHandler('param');"><i class="fa fa-check"></i>保存 并配置参数</button>&nbsp;
+                    <button type="button" class="btn btn-sm btn-danger" onclick="closeItem();"><i class="fa fa-remove"></i>关 闭 </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer" />
+<th:block th:include="include :: select2-js" />
+<th:block th:include="include :: bootstrap-table-reorder-js" />
+<th:block th:include="include :: bootstrap-typeahead-js" />
+<script th:src="@{/js/jquery.tmpl.js}"></script>
+<script th:inline="javascript">
+    var prefix = ctx + "system/queryport";
+    var mainId = "[[${mainId}]]";
+
+    $(function() {
+        var options = {
+            id: "bootstrap-column-table",
+            url: prefix + "/column/list?mainId="+mainId,
+            exportUrl: prefix + "/export",
+            modalName: "查询视图字段配置",
+            sortName: "sort",
+            sortOrder: "desc",
+            pagination: false,
+            showSearch: false,
+            showRefresh: true,
+            showToggle: true,
+            showColumns: true,
+            onLoadSuccess: onLoadSuccess,
+            onReorderRow: function onReorderRow(data) {
+                for (var i = 0; i < data.length; i++) {
+                    $("#queryportColumns_sort_" + data[i].id).val(i+1);
+                }
+            },
+            columns: [{
+                title: "序号",
+                width: "5%",
+                formatter: function (value, row, index) {
+                    // id隐藏域
+                    var idHtml = $.common.sprintf("<input type='hidden' name='queryportColumns[%s].id' value='%s'>", index, row.id);
+                    var mainIdHtml = $.common.sprintf("<input type='hidden' name='queryportColumns[%s].mainId' value='%s'>", index, row.mainId);
+                    // 排序隐藏域
+                    var sortHtml = $.common.sprintf("<input class='form-control' type='text' name='queryportColumns[%s].displayOrder' value='%s' id='queryportColumns_sort_%s'>", index, index, row.id);
+                    return idHtml + mainIdHtml + sortHtml;
+                },
+                cellStyle: function (value, row, index) {
+                    return {css: {"cursor": "move"}};
+                }
+            },
+            {
+                field : 'ename',
+                title : '英文名称',
+                formatter: function (value, row, index) {
+                    return $.common.sprintf("<input class='form-control' type='text' name='queryportColumns[%s].ename' required value='%s'>", index, value);
+                }
+            },
+            {
+                field : 'cname',
+                title : '中文名称',
+                formatter: function (value, row, index) {
+                    return $.common.sprintf("<input class='form-control' type='text' name='queryportColumns[%s].cname' required value='%s'>", index, value);
+                }
+            },
+            {
+                field : 'viewFlag',
+                title : '显示',
+                width: "5%",
+                formatter: function (value, row, index) {
+                    var isCheck = value == 'Y' ? 'checked' : '';
+                    return $.common.sprintf("<label class='check-box'><input type='checkbox' name='queryportColumns[%s].viewFlag' value='Y' %s></label>", index, isCheck);
+                }
+            },
+            {
+                field : 'exportflag',
+                title : '导出', width: "5%",
+                formatter: function (value, row, index) {
+                    var isCheck = value == 'Y' ? 'checked' : '';
+                    return $.common.sprintf("<label class='check-box'><input type='checkbox' name='queryportColumns[%s].exportflag' value='Y' %s></label>", index, isCheck);
+                }
+            },
+            {
+                field : 'convertType',
+                title : '转换类型',
+                formatter: function (value, row, index) {
+                    var data = [{index: index, convertType: value,columnName:'queryportColumns'}];
+                    return $("#convertTypeTpl").tmpl(data).html();
+                }
+            },
+            {
+                field : 'typeParam1',
+                title : '类型参数1',
+                formatter: function (value, row, index) {
+                    return $.common.sprintf("<input class='form-control' type='text' name='queryportColumns[%s].typeParam1' value='%s'>", index, value);
+                }
+            },
+            {
+                field : 'typeParam2',
+                title : '类型参数2',
+                formatter: function (value, row, index) {
+                    return $.common.sprintf("<input class='form-control' type='text' name='queryportColumns[%s].typeParam2' value='%s'>", index, value);
+                }
+            },
+            {
+                field : 'typeParam3',
+                title : '类型参数3',
+                visible: false,
+                formatter: function (value, row, index) {
+                    return $.common.sprintf("<input class='form-control' type='text' name='queryportColumns[%s].typeParam3' value='%s'>", index, value);
+                }
+            },
+            {
+                field : 'typeParam4',
+                title : '类型参数4',
+                visible: false,
+                formatter: function (value, row, index) {
+                    return $.common.sprintf("<input class='form-control' type='text' name='queryportColumns[%s].typeParam4' value='%s'>", index, value);
+                }
+            },
+            {
+                field : 'columnLink',
+                title : '链接',
+                formatter: function (value, row, index) {
+                    return $.common.sprintf("<input class='form-control' type='text' name='queryportColumns[%s].columnLink' value='%s'>", index, value);
+                }
+            }]
+        };
+        $.table.init(options);
+    });
+
+    // 当所有数据被加载时触发处理函数
+    function onLoadSuccess(data){
+        $.fn.select2.defaults.set( "theme", "bootstrap" );
+        $("select.form-control").each(function () {
+            $(this).select2().on("change", function () {
+                $(this).valid();
+            })
+        })
+        $(".check-box").each(function() {
+            $(this).iCheck({
+                checkboxClass: 'icheckbox-blue'
+            })
+        })
+    }
+
+
+    function submitHandler(step) {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/column/save", $('#form-column-edit').serialize(), function (result) {
+                if(result.code == '0'){
+                    $.modal.msgSuccess(result.msg);
+                    location.href = prefix +  "/" + step + "/" + mainId;
+                }else{
+                    $.modal.msgError(result.msg);
+                }
+            });
+        }
+    }
+    // 选择字典处理函数
+    function selectDictTree(columnId, obj) {
+        var dictType = $.common.nullToStr($(obj).parent().find("input").val());
+        var url = ctx + "system/dict/selectDictTree/" + columnId + "/" + dictType;
+        var options = {
+            title: '选择字典类型',
+            width: "380",
+            url: url,
+            callBack: doSubmit
+        };
+        $.modal.openOptions(options);
+    }
+
+    function doSubmit(index, layero){
+        var body = layer.getChildFrame('body', index);
+        var columnId = body.find('#columnId').val();
+        var dictType = body.find('#dictType').val();
+        layer.close(index);
+        $("#columns_dict_" + columnId).val(dictType);
+    }
+</script>
+</body>
+</html>
+
+<!-- 转换类型 -->
+<script id="convertTypeTpl" type="text/x-jquery-tmpl">
+<div>
+<select class='form-control' name='${columnName}[${index}].convertType'>
+    <option value="" {{if convertType===""}}selected{{/if}}>无</option>
+    <option value="user" {{if convertType==="user"}}selected{{/if}}>用户</option>
+    <option value="dept" {{if convertType==="dept"}}selected{{/if}}>部门</option>
+    <option value="role" {{if convertType==="role"}}selected{{/if}}>角色</option>
+    <option value="dict" {{if convertType==="dict"}}selected{{/if}}>字典</option>
+    <option value="dictCode" {{if convertType==="dictCode"}}selected{{/if}}>字典编码</option>
+    <option value="area" {{if convertType==="area"}}selected{{/if}}>区域</option>
+    <option value="date" {{if convertType==="date"}}selected{{/if}}>日期</option>
+    <option value="time" {{if convertType==="time"}}selected{{/if}}>时间</option>
+</select>
+</div>
+</script>

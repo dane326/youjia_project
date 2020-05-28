@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<th:block th:include="include :: header('视图列表')" />
+    <th:block th:include="system/queryport/include :: jquery-ui-css" />
+	<th:block th:include="system/portalet/include :: portalet-css" />
+	<link th:href="@{/css/viewEdit.css}" rel="stylesheet"/>
+</head>
+</style>-->
+<body class="gray-bg">
+<div class="wrapper wrapper-content fadeInRight">
+	<div class="mainEditDiv">
+ 		<a class="btn btn-primary btn-sm"  onclick="saveAndReloadParentTab()"><i class="fa fa-check"></i>&nbsp;保存</a>
+    	<a class="btn btn-warning btn-sm" onclick="$.modal.closeTab()"><i class="fa fa-times"></i>&nbsp;关闭</a>
+	</div>
+    <ul id="sortable">
+        <li class="ui-state-default" th:id="'mine_id_' + ${portaletUser.id}" th:each="portaletUser : ${portaletUsers}" th:attr="data-width=${portaletUser.width},data-height=${portaletUser.height}" th:style="'width: ' + ${portaletUser.width} + 'px; height: ' + ${portaletUser.height} + 'px;'">
+        	<div class="ibox" th:utext="${portaletUser.portaletRes.html}"></div>
+        </li>
+        <li class="ui-state-default1 cardDefaultSize">
+        	<div class="ibox">
+        		<!-- <div class="ibox-title">
+				    <h5>添加资源</h5>
+				    <div class="ibox-tools">
+				        <a class="collapse-link">
+				            <i class="fa fa-chevron-up"></i>
+				        </a>
+				    </div>
+				</div> -->
+        		<div class="ibox-content">
+	        		<div onclick="addRes()">
+	                    <i class="fa fa-plus"></i>
+	                </div>        			
+				</div>
+        	</div>
+        </li>
+    </ul>
+</div>
+
+<th:block th:include="include :: footer" />
+<th:block th:include="include :: select2-js" />
+<th:block th:include="system/queryport/include :: queryport-js" />
+<th:block th:include="system/queryport/include :: jquery-ui-js" />
+<th:block th:include="system/portalet/include :: portalet-js" />
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		var $cardDefaultSize = $(".cardDefaultSize");
+		$cardDefaultSize.attr("data-width", $cardDefaultSize.width());
+		$cardDefaultSize.attr("data-height", $cardDefaultSize.height());
+		
+		portaletUI.initCardCollapseLink();
+		portaletUI.initCardCloseLink("确定删除该条资源信息吗？", ctx + "system/portalet/user/remove/{id}");
+		
+		portaletUI.initSortableResizable(true, true);
+	});
+	
+	function saveAndReloadParentTab(){
+		portaletUI.saveAndReloadParentTab("确定保存当前视图吗？", ctx + "system/portalet/user/edits", "/system/main");
+	}
+	
+	/*新增资源列表*/
+    function addRes() {
+    	$.modal.open("选择资源", ctx + "system/portalet/user/res/[[${userCode}]]");
+	}
+</script>
+</body>
+</html>

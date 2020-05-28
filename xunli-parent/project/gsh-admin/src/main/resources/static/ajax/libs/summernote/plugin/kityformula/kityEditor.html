@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit">
+<link rel="stylesheet" href="kityformula/assets/styles/base.css">
+<link rel="stylesheet" href="kityformula/assets/styles/ui.css">
+<link rel="stylesheet" href="kityformula/assets/styles/scrollbar.css">
+<style>
+html, body {
+	padding: 0;
+	margin: 0;
+}
+
+.kf-editor {
+	width: 798px;
+	height: 380px;
+}
+
+#loading {
+	height: 32px;
+	width: 340px;
+	line-height: 32px;
+	position: absolute;
+	top: 42%;
+	left: 50%;
+	margin-left: -170px;
+	font-family: arial, "Hiragino Sans GB", "Microsoft YaHei",
+		"WenQuanYi Micro Hei", sans-serif;
+}
+
+#loading img {
+	position: absolute;
+}
+
+#loading p {
+	display: block;
+	position: absolute;
+	left: 40px;
+	top: 0px;
+	margin: 0;
+}
+</style>
+<title></title>
+</head>
+<body>
+	<div id="kfEditorContainer" class="kf-editor">
+		<div id="tips" class="tips">sorry! 此版本仅支持IE9及以上版本的浏览器，请升级浏览器！</div>
+	</div>
+
+	<script src="kityformula/js/jquery-1.11.0.min.js"></script>
+	<script src="kityformula/js/kitygraph.all.js"></script>
+	<script src="kityformula/js/kity-formula-render.all.js"></script>
+	<script src="kityformula/js/kity-formula-parser.all.min.js"></script>
+	<script src="kityformula/js/kityformula-editor.all.min.js"></script>
+	<script>
+        jQuery(function($) {
+            if (document.body.addEventListener) {
+
+                $("#tips").html('<div id="loading"><img src="kityformula/loading.gif" alt="loading" /><p>正在加载，请耐心等待...</p></div>');
+
+                var factory = kf.EditorFactory.create($("#kfEditorContainer")[0], {
+                    render : {
+                        fontsize : 24
+                    },
+                    resource : {
+                        path : "kityformula/resource/"
+                    }
+                });
+
+                factory.ready(function(KFEditor) {
+                    $("#tips").remove();
+                    var content = parent.window[parent.window.summernote_modal].summernote_context;
+                    if(content){
+                        while(true){
+                            var content1 = content.replace("\\left(\\genfrac{}{}{0pt}{}{n}{k}\\right)", "\\left({^{n}_{k}}\\right)");
+                            content1 = content1.replace("\\binom{n}{k}","\\left({^{n}_{k}}\\right)");
+                            if(content1.length == content.length){          	
+                                break;
+                            }
+                            content = content1;
+                        }
+                    }
+                    this.execCommand("render", content || "\\placeholder");
+                    this.execCommand("focus");
+
+                    window.kfe = this;
+
+                });
+            } else {
+                $("#tips").css("color", "black");
+                $("#tips").css("padding", "10px");
+            }
+        });
+        
+        /**
+         * 确定提交
+         */
+        function submitHandler(callback) {
+            kfe.execCommand('get.image.data', function(data){
+                var latex = kfe.execCommand('get.source');
+                if(latex){
+                    while(true){
+                        var latex1 = latex.replace("\\left({^{n}_{k}}\\right)", "\\binom{n}{k}");
+                        latex1 = latex1.replace("\\left ( {^{n}_{k}} \\right )", "\\binom{n}{k}");
+                        latex1 = latex1.replace("({}_{k}^{n})", "\\binom{n}{k}");
+                        latex1 = latex1.replace("{(}{}^{n}_{k})", "\\binom{n}{k}");
+                        if(latex1.length == latex.length){          	
+                            break;
+                        }
+                        latex = latex1;
+                    }
+                }
+                var $node = $('<img class="kfformula" src="'+ data.img +'" data-latex="' + latex + '" />')[0];
+                callback($node);
+            });
+        }
+    </script>
+</body>
+</html>

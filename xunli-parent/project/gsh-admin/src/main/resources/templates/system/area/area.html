@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('地域列表')" />
+    <style>
+        .select-list li p {
+            float: left;
+            width: 75px;
+            text-align: right;
+            margin: 5px 15px 5px 0px;
+        }
+    </style>
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>地域名称：</p>
+                                <input type="text" name="areaName"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.treeTable.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:area:add">
+                    <i class="fa fa-plus"></i> 新增
+                </a>
+                <a class="btn btn-primary" onclick="$.operate.edit()" shiro:hasPermission="system:area:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-info" id="expandAllBtn">
+                    <i class="fa fa-exchange"></i> 展开/折叠
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-tree-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var addFlag = [[${@permission.hasPermi('system:area:add')}]];
+        var editFlag = [[${@permission.hasPermi('system:area:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:area:remove')}]];
+        var prefix = ctx + "system/area";
+        var areaLevelType = [[${@dict.getType('areaLevel')}]];
+        $(function() {
+            var options = {
+                code: "areaId",
+                parentCode: "parentId",
+                // expandColumn: "1",
+                uniqueId: "areaId",
+                url: prefix + "/list",
+                createUrl: prefix + "/add/{id}",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove/{id}",
+                exportUrl: prefix + "/export",
+                modalName: "地域",
+                expandAll:false,
+                expandFirst:false,
+                columns: [{
+                    field: 'selectItem', 
+                    radio: true
+                },
+                {
+                    field : 'areaName', 
+                    title : '地域名称',
+                    align: 'left'
+                },
+                {
+                    field : 'parentId',
+                    title : '父节点id',
+                    align: 'left'
+                },
+                {
+                    field : 'areaLevel',
+                    title : '地域级别',
+                    align: 'left',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(areaLevelType, value);
+                    },
+                },
+
+                {
+                    field : 'orderNum', 
+                    title : '排序码',
+                    align: 'left'
+                },
+                {
+                    field : 'remark', 
+                    title : '备注',
+                    align: 'left'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    align: 'left',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-info  btn-xs ' + addFlag + '" href="javascript:void(0)" onclick="$.operate.add(\'' + row.areaId + '\')"><i class="fa fa-plus"></i>新增</a> ');
+                        if(row.areaId!=1){
+                            actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.areaId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                            actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.areaId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        }
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.treeTable.init(options);
+        });
+    </script>
+</body>
+</html>

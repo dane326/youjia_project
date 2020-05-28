@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gsh.system.sms.mapper.SysSmsConfigMapper">
+    
+    <resultMap type="SysSmsConfig" id="SysSmsConfigResult">
+        <result property="id"    column="id"    />
+        <result property="type"    column="type"    />
+        <result property="name"    column="name"    />
+        <result property="beanName"    column="bean_name"    />
+        <result property="confParam"    column="conf_param"    />
+        <result property="surplusNum"    column="surplus_num"    />
+        <result property="methodName"    column="method_name"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createByName"    column="create_by_name"    />
+        <result property="createByDeptid"    column="create_by_deptid"    />
+        <result property="createByDeptname"    column="create_by_deptname"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateByName"    column="update_by_name"    />
+        <result property="updateByDeptid"    column="update_by_deptid"    />
+        <result property="updateByDeptname"    column="update_by_deptname"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="factoryCode"    column="factory_code"    />
+    </resultMap>
+
+    <sql id="selectSysSmsConfigVo">
+        select id, type, name, bean_name, conf_param, surplus_num, method_name, create_by, create_by_name, create_by_deptid, create_by_deptname, create_time, update_by, update_by_name, update_by_deptid, update_by_deptname, update_time, remark, deleted, factory_code from sys_sms_config
+    </sql>
+
+    <select id="selectSysSmsConfigList" parameterType="SysSmsConfig" resultMap="SysSmsConfigResult">
+        <include refid="selectSysSmsConfigVo"/>
+        <where>  
+            <if test="type != null and type != ''"> and type = #{type}</if>
+            <if test="factoryCode != null"> and factory_code = #{factoryCode}</if>
+            <if test="name != null and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="beanName != null  and beanName != ''"> and bean_name like concat('%', #{beanName}, '%')</if>
+            <if test="confParam != null  and confParam != ''"> and conf_param = #{confParam}</if>
+            <if test="surplusNum != null "> and surplus_num = #{surplusNum}</if>
+            <if test="methodName != null  and methodName != ''"> and method_name like concat('%', #{methodName}, '%')</if>
+            <if test="createByName != null  and createByName != ''"> and create_by_name like concat('%', #{createByName}, '%')</if>
+            <if test="createByDeptid != null "> and create_by_deptid = #{createByDeptid}</if>
+            <if test="createByDeptname != null  and createByDeptname != ''"> and create_by_deptname like concat('%', #{createByDeptname}, '%')</if>
+            <if test="updateByName != null  and updateByName != ''"> and update_by_name like concat('%', #{updateByName}, '%')</if>
+            <if test="updateByDeptid != null "> and update_by_deptid = #{updateByDeptid}</if>
+            <if test="updateByDeptname != null  and updateByDeptname != ''"> and update_by_deptname like concat('%', #{updateByDeptname}, '%')</if>
+            <if test="deleted != null  and deleted != ''"> and deleted = #{deleted}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysSmsConfigById" parameterType="Long" resultMap="SysSmsConfigResult">
+        <include refid="selectSysSmsConfigVo"/>
+        where id = #{id}
+    </select>
+    
+    <select id="selectSysSmsConfigUsable" parameterType="String" resultMap="SysSmsConfigResult">
+        <include refid="selectSysSmsConfigVo"/>
+        where type = #{type} and surplus_num != 0 and deleted = 0 limit 1
+    </select>
+        
+    <insert id="insertSysSmsConfig" parameterType="SysSmsConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_sms_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="type != null  and type != ''">type,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="beanName != null  and beanName != ''">bean_name,</if>
+            <if test="confParam != null  and confParam != ''">conf_param,</if>
+            <if test="surplusNum != null ">surplus_num,</if>
+            <if test="methodName != null  and methodName != ''">method_name,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createByName != null  and createByName != ''">create_by_name,</if>
+            <if test="createByDeptid != null ">create_by_deptid,</if>
+            <if test="createByDeptname != null  and createByDeptname != ''">create_by_deptname,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateByName != null  and updateByName != ''">update_by_name,</if>
+            <if test="updateByDeptid != null ">update_by_deptid,</if>
+            <if test="updateByDeptname != null  and updateByDeptname != ''">update_by_deptname,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="deleted != null  and deleted != ''">deleted,</if>
+            <if test="factoryCode != null">factory_code,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="beanName != null  and beanName != ''">#{beanName},</if>
+            <if test="confParam != null  and confParam != ''">#{confParam},</if>
+            <if test="surplusNum != null ">#{surplusNum},</if>
+            <if test="methodName != null  and methodName != ''">#{methodName},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createByName != null  and createByName != ''">#{createByName},</if>
+            <if test="createByDeptid != null ">#{createByDeptid},</if>
+            <if test="createByDeptname != null  and createByDeptname != ''">#{createByDeptname},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateByName != null  and updateByName != ''">#{updateByName},</if>
+            <if test="updateByDeptid != null ">#{updateByDeptid},</if>
+            <if test="updateByDeptname != null  and updateByDeptname != ''">#{updateByDeptname},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="deleted != null  and deleted != ''">#{deleted},</if>
+            <if test="factoryCode != null">#{factoryCode},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysSmsConfig" parameterType="SysSmsConfig">
+        update sys_sms_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="beanName != null  and beanName != ''">bean_name = #{beanName},</if>
+            <if test="confParam != null  and confParam != ''">conf_param = #{confParam},</if>
+            <if test="surplusNum != null ">surplus_num = #{surplusNum},</if>
+            <if test="methodName != null  and methodName != ''">method_name = #{methodName},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createByName != null  and createByName != ''">create_by_name = #{createByName},</if>
+            <if test="createByDeptid != null ">create_by_deptid = #{createByDeptid},</if>
+            <if test="createByDeptname != null  and createByDeptname != ''">create_by_deptname = #{createByDeptname},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateByName != null  and updateByName != ''">update_by_name = #{updateByName},</if>
+            <if test="updateByDeptid != null ">update_by_deptid = #{updateByDeptid},</if>
+            <if test="updateByDeptname != null  and updateByDeptname != ''">update_by_deptname = #{updateByDeptname},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="deleted != null  and deleted != ''">deleted = #{deleted},</if>
+            <if test="factoryCode != null">factory_code = #{factoryCode},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysSmsConfigById" parameterType="Long">
+        delete from sys_sms_config where id = #{id}
+    </delete>
+
+    <delete id="deleteSysSmsConfigByIds" parameterType="String">
+        delete from sys_sms_config where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="logicDeleteSysSmsConfigById" parameterType="Long">
+        update   sys_sms_config  set deleted='1' where id = #{id}
+    </update>
+
+    <update id="logicDeleteSysSmsConfigByIds" parameterType="String">
+        update   sys_sms_config  set deleted='1' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

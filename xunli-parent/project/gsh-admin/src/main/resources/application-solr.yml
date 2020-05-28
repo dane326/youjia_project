@@ -1,0 +1,6 @@
+#自动配置 solr 地址配置
+spring:
+  data:
+    solr:
+       host: http://192.168.11.27:8441/solr-4.7.2
+    #  host: http://192.168.11.68:8221/solr-4.7.2/resInfo

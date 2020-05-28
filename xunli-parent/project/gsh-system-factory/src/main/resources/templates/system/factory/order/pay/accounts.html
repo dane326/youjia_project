@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增订单管理')" />
+    <style>
+	    .el-input--mini {
+	        font-size: 12px;
+	    }
+	    .el-input {
+	        position: relative;
+	        font-size: 14px;
+	        display: inline-block;
+	        width: 100%;	        
+	    }
+	    .el-input--mini .el-input__inner {
+	        height: 28px;
+	        line-height: 28px;
+	    }
+	    .el-input__inner {
+	        padding: 0 0 0 5px;
+	        text-align: center;
+	    }
+	    .el-input__inner {
+	        -webkit-appearance: none;
+	        background-color: #fff;
+	        background-image: none;
+	        border-radius: 4px;
+	        border: 1px solid #dcdfe6;
+	        box-sizing: border-box;
+	        color: #606266;
+	        display: inline-block;
+	        font-size: inherit;
+	        height: 40px;
+	        line-height: 40px;
+	        outline: 0;
+	        padding: 0 15px;
+	        transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+	        width: 100%;
+	        padding-right: 0px;
+	        box-sizing: content-box;
+	    }
+	</style>
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-order-add">
+        	<input name="money" type="hidden">
+        	<input name="orderSubject" type="hidden">
+        	<input name="buyPeriod" type="hidden">
+        	<input name="orderType" type="hidden" th:value="${orderType}">
+        	<input name="buyType" type="hidden" value="new">
+        	
+            <!-- <div class="form-group">    
+                <label class="col-sm-3 control-label">购买类型：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('sys_buy_type')}">
+                        <input type="radio" th:id="${dict.dictCode}" name="buyType" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                        <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div> -->
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">增加数量：</label>
+                <div class="col-sm-8">
+                	<div class="el-input el-input--mini">
+			            <input name="orderValue" class="form-control el-input__inner" style="width: 70px;" min="1" type="number" value="1" onchange="updatePay();">
+			        </div>
+                </div>
+            </div>            
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">购买方式：</label>
+                <div class="col-sm-8">
+                    <div class="radio-box" th:each="dict : ${@dict.getType('sys_buy_method')}">
+                        <input type="radio" th:id="${dict.dictCode}" name="buyMethod" th:value="${dict.dictValue}" th:checked="${dict.default}">
+                        <label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">购买数量：</label>
+                <div class="col-sm-8">
+                    <div class="el-input el-input--mini">
+			            <input name="buyNum" class="form-control el-input__inner" style="width: 70px;" type="number" min="1" value="1" onchange="updatePay();">
+			        	<span id="buyUnit"></span>
+			        </div>
+                </div>
+            </div>
+            <div class="form-group">
+            	<label class="col-sm-2"></label>
+                <label>
+                	<i class="fa fa-info-circle" style="color: rgb(255, 103, 0); margin-right: 5px; font-size: 16px;"></i>购买后有效期至 <span id="buyPeriod"></span> （实际有效期从支付时间开始计算） 。
+                </label>
+            </div>
+            <!-- <div class="form-group">
+            	<label class="col-sm-2"></label>
+                <label>
+                	<i class="fa fa-info-circle" style="color: rgb(255, 103, 0); margin-right: 5px; font-size: 16px;"></i>提示：如需发票，请到个人中心-发票信息，自助索取。
+                </label>
+            </div> -->
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="system/factory/include :: factory-js" />
+    <script type="text/javascript">
+        var prefix = ctx + "system/factory/order"
+        var currentTimeMillis = [[${currentTimeMillis}]];
+        $("#form-order-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+            	factoryUI.payPost(prefix + "/pay", $('#form-order-add').serialize(), function(result){
+            		factoryUI.showQRcode(result);
+            	});
+            }
+        }
+        
+        function updatePay(){
+        	var buyMethod = $("input[name='buyMethod']:checked").val();
+        	var buyNum = $("input[name='buyNum'").val();
+            
+            var currentDate = new Date(currentTimeMillis);
+            if(buyMethod == 'year'){
+            	$("#buyUnit").html("年");
+                currentDate.setFullYear(currentDate.getFullYear() + parseInt(buyNum, 10));
+                $("#buyPeriod").html(currentDate.Format("yyyy-MM-dd hh:mm:ss"));
+            } else if(buyMethod == 'month'){
+            	$("#buyUnit").html("月");
+                currentDate.setMonth(currentDate.getMonth() + parseInt(buyNum, 10));
+                $("#buyPeriod").html(currentDate.Format("yyyy-MM-dd hh:mm:ss"));
+            }
+            
+            var orderValue = $("input[name='orderValue']").val();
+            var money = orderValue * 1;
+            $("input[name='buyPeriod']").val($("#buyPeriod").html());
+            $("input[name='money']").val(money);
+            $("input[name='orderSubject']").val(parent.$(".layui-layer-title").html().replace("购买","") + "(" + $("input[name='buyMethod']:checked").parent().siblings("label").html() + ")");
+            
+            parent.$(".layui-layer-btn .ui-pay-sum-text").html("¥" + factoryUI.changeDecimalPadZero(money, 2));
+        }
+        
+        $(function() {
+            $("input[name='buyMethod']").on('ifChecked', function(event){
+                updatePay();
+            });
+            
+            if(parent.$(".layui-layer-btn .ui-pay-sum").length == 0){
+                parent.$(".layui-layer-btn").append('<span class="ui-pay-sum" index="-1">总计：<span class="ui-pay-sum-text"></span></span>');
+            }
+            
+            updatePay();
+        });
+    </script>
+</body>
+</html>

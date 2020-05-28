@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改自定义portal页面')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-page-edit" th:object="${portaletPage}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <input name="parentId" th:field="*{parentId}" type="hidden">
+            <input name="cnName" th:field="*{cnName}" type="hidden">
+        	<input name="resType" th:field="*{resType}" type="hidden">           
+            <div class="form-group" th:style="'display:' + @{(${portaletPage.resType == 'sys'} ? 'block' : 'none')}">    
+                <label class="col-sm-3 control-label">系统编码：</label>
+                <div class="col-sm-8">
+                    <input name="systemCode" th:field="*{systemCode}" class="form-control" type="text" th:required="${portaletPage.resType == 'sys'}">
+                </div>
+            </div>
+            <div class="form-group" th:style="'display:' + @{(${portaletPage.resType == 'sys'} ? 'block' : 'none')}">    
+                <label class="col-sm-3 control-label">系统名称：</label>
+                <div class="col-sm-8">
+                    <input name="systemName" th:field="*{systemName}" class="form-control" type="text" th:required="${portaletPage.resType == 'sys'}">
+                </div>
+            </div>
+            <div class="form-group" th:style="'display:' + @{(${portaletPage.resType == 'module'} ? 'block' : 'none')}">    
+                <label class="col-sm-3 control-label">模块编码：</label>
+                <div class="col-sm-8">
+                    <input name="moduleCode" th:field="*{moduleCode}" class="form-control" type="text" th:required="${portaletPage.resType == 'module'}">
+                </div>
+            </div>
+            <div class="form-group" th:style="'display:' + @{(${portaletPage.resType == 'module'} ? 'block' : 'none')}">    
+                <label class="col-sm-3 control-label">模块名称：</label>
+                <div class="col-sm-8">
+                    <input name="moduleName" th:field="*{moduleName}" class="form-control" type="text" th:required="${portaletPage.resType == 'module'}">
+                </div>
+            </div>
+            <div class="form-group" th:style="'display:' + @{(${portaletPage.resType == 'res'} ? 'block' : 'none')}">    
+                <label class="col-sm-3 control-label">资源名称：</label>
+                <div class="col-sm-8">
+                    <input th:field="*{portaletRes.resName}" class="form-control" type="text" readonly>
+                    <input name="resId" th:field="*{resId}" type="hidden">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">资源类型：</label>
+                <div class="col-sm-8">
+				    <div class="radio-box" th:each="dict : ${@dict.getType('sys_portalet_resType')}">
+						<input type="radio" th:id="${dict.dictCode}" name="mineResType" th:value="${dict.dictValue}" th:field="*{resType}" disabled>
+						<label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+					</div>
+				</div>
+            </div>
+            <div class="form-group" th:style="'display:' + @{(${portaletPage.resType == 'res'} ? 'block' : 'none')}">    
+                <label class="col-sm-3 control-label">宽：</label>
+                <div class="col-sm-8">
+                    <input name="width" th:field="*{width}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group" th:style="'display:' + @{(${portaletPage.resType == 'res'} ? 'block' : 'none')}">    
+                <label class="col-sm-3 control-label">高：</label>
+                <div class="col-sm-8">
+                    <input name="height" th:field="*{height}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group" th:style="'display:' + @{(${portaletPage.resType == 'res'} ? 'block' : 'none')}">    
+                <label class="col-sm-3 control-label">行：</label>
+                <div class="col-sm-8">
+                    <input name="row" th:field="*{row}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group" th:style="'display:' + @{(${portaletPage.resType == 'res'} ? 'block' : 'none')}">    
+                <label class="col-sm-3 control-label">列：</label>
+                <div class="col-sm-8">
+                    <input name="col" th:field="*{col}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">显示顺序：</label>
+                <div class="col-sm-8">
+                    <input name="sortNo" th:field="*{sortNo}" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">状态：</label>
+                <div class="col-sm-8">
+				    <div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
+						<input type="radio" th:id="${dict.dictCode}" name="deleted" th:value="${dict.dictValue}" th:field="*{deleted}">
+						<label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+					</div>
+				</div>
+            </div>
+       	</form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "system/portalet/page";
+        $("#form-page-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+            	if('[[${portaletPage.resType}]]' == 'sys'){
+            		$("input[name='cnName']").val($("input[name='systemName']").val());
+            	} else if('[[${portaletPage.resType}]]' == 'module'){
+            		$("input[name='cnName']").val($("input[name='moduleName']").val());
+            	}
+                $.operate.save(prefix + "/edit", $('#form-page-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

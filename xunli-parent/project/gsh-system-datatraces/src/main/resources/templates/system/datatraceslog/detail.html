@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('操作日志详细')"/>
+    <th:block th:include="include :: jsonview-css"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+
+    <h3 style="">基本信息</h3>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <tbody>
+			<tr>
+				<th class="text-nowrap"  style="width: 10%">操作人</th>
+				<td th:text="${sysDataTracesLog.createByName}" style="width: 40%"></td>
+				<th class="text-nowrap" style="width: 10%">操作类型</th>
+				<td th:text="${sysDataTracesLog.opMethod}" style="width: 40%"></td>
+			</tr>
+			<tr>
+				<th class="text-nowrap" style="width: 100px">操作时间</th>
+				<td th:text="${#dates.format(sysDataTracesLog.createTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+				<th class="text-nowrap" style="width: 100px"></th>
+				<td ></td>
+			</tr>
+            <tr>
+                <th class="text-nowrap" style="width: 100px">操作对象名称</th>
+                <td id="objectName"></td>
+                <th class="text-nowrap" style="width: 100px">操作对象ID</th>
+                <td th:text="${sysDataTracesLog.opObjectId}"></td>
+            </tr>
+			<tr>
+				<th class="text-nowrap" style="width: 100px">关联对象名称</th>
+				<td id="opForeginName" th:text="${sysDataTracesLog.opForeginName}"></td>
+				<th class="text-nowrap" style="width: 100px">关联对象ID</th>
+				<td th:text="${sysDataTracesLog.opForeginId}"></td>
+			</tr>
+			<tr>
+				<th class="text-nowrap" style="width: 100px">操作内容</th>
+				<td colspan="3" th:text="${sysDataTracesLog.opContent}"></td>
+			</tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3 style="">详细信息</h3>
+    <div class="table-responsive">
+        <table class="table table-bordered" style="margin-bottom: 0px">
+            <thead>
+            <tr>
+                <th style="width: 10%">字段名</th>
+                <th style="width: 10%">中文名</th>
+                <th style="width: 40%">操作前</th>
+                <th style="width: 40%">操作后</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="detail : ${sysDataTracesDetails}">
+                <td th:text="*{detail.fieldName}"></td>
+                <td th:text="*{detail.fieldCnName}"></td>
+                <td th:id="*{detail.id+'_old'}" th:text="*{detail.oldValue}"></td>
+                <td th:id="*{detail.id+'_new'}" th:text="*{detail.newValue}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="datatraces-include :: datatraces-compare-js"/>
+<script th:inline="javascript">
+    $(function () {
+        var details = [[${sysDataTracesDetails}]];
+        $.each(details, function (k, v) {
+            CompareDomText(v.id + '_old', v.id + '_new');
+        });
+        var objectNameData = [[${@dict.getType('sys_domain_names')}]];
+        $("#objectName").html($.table.selectDictLabel(objectNameData, [[${sysDataTracesLog.opObjectName}]]));
+        $("#opForeginName").html($.table.selectDictLabel(objectNameData, [[${sysDataTracesLog.opForeginName}]]));
+    });
+</script>
+</body>
+</html>

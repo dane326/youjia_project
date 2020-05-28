@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改数据追溯日志详情')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-detail-edit" th:object="${sysDataTracesDetail}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">日志ID：</label>
+                <div class="col-sm-8">
+                    <input name="datatracesId" th:field="*{datatracesId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">字段名：</label>
+                <div class="col-sm-8">
+                    <input name="fieldName" th:field="*{fieldName}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">字段中文名：</label>
+                <div class="col-sm-8">
+                    <input name="fieldCnName" th:field="*{fieldCnName}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">旧值：</label>
+                <div class="col-sm-8">
+                    <input name="oldValue" th:field="*{oldValue}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">新值：</label>
+                <div class="col-sm-8">
+                    <input name="newValue" th:field="*{newValue}" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "system/detail";
+        $("#form-detail-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-detail-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

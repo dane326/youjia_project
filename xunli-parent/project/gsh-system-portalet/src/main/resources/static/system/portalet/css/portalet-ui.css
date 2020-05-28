@@ -1,0 +1,77 @@
+/* res */
+#imgUrlInfo.img-thumbnail{
+    display: inline-block;
+    max-width: 100%;
+    line-height: 1.42857143;
+    background-color: #fff;
+    border: 0 solid #ddd;
+    transition: all .2s ease-in-out;
+    height: 60px;
+}		
+.tip-text {
+    color: #a9a9a9
+}
+.mineOperatorButton_cls {
+	text-align: left !important;
+}
+/* res */
+
+/* page and user */
+#sortable {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+#sortable li {
+	margin: 10px;
+	padding: 0px;
+	float: left;
+	cursor: pointer;
+  	border: 0px solid;
+}
+#sortable li a{
+	font-size: 14px;
+}
+#sortable li:hover {
+	background: #FAFAFB;
+  		/* border: 1px solid #e7eaec; */
+}
+#sortable li .ibox{
+	margin-bottom: 0px;
+	overflow: hidden;
+	border: 0px solid;
+}
+
+.mainViewLi .ibox-title .close-link{
+	display: none;
+}
+.mainViewLi.noAdmin .ibox-title .wrench-link{
+	display: none;
+}
+
+.mainEditDiv{
+	line-height: 30px;
+	text-align: left;
+	margin-top: -10px;
+	padding-left: 10px;
+}
+
+.cardDefaultSize{
+	width: 350px;
+	height: 200px;
+}
+.cardDefaultSize .ibox{
+	border-radius: 4px;
+}
+.cardDefaultSize .ibox-content{
+	background-color: #FAFAFB;
+	text-align: center;
+}
+.cardDefaultSize .ibox-content i{
+	font-size: 128px;
+	line-height: 170px;
+	opacity: 0.6;
+}
+
+/* page and user */

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<th:block th:include="include :: header('视图列表')" />
+    <th:block th:include="system/queryport/include :: jquery-ui-css" />
+    <th:block th:include="include :: ztree-css" />
+    <style>
+        #sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+        #sortable>li { margin: 6px 6px 3px 3px; padding: 0px; float: left; width: 24%; height: 280px;  text-align: center; }
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content fadeInRight">
+    <ul id="sortable">
+        <li class="ui-state-default" style="width: 500px;height: 280px;">
+            <div class="ibox-content custom-private-queryport" id="113-01" data-queryport-id="124" style="width:100%;height: 100%;"></div>
+        </li>
+        <li class="ui-state-default">
+            <div class="ibox-content custom-private-queryport" id="113-02" data-queryport-id="124" style="height: 280px;"></div>
+        </li>
+        <li class="ui-state-default">
+            <div class="ibox-content custom-private-queryport" id="113-03" data-queryport-id="124" style="height: 280px;"></div>
+        </li>
+        <li class="ui-state-default">
+            <div class="ibox-content custom-private-queryport" id="113-04" data-queryport-id="124" style="height: 280px;"></div>
+        </li>
+        <li class="ui-state-default">
+            <div class="ibox-content custom-private-queryport" id="113-05" data-queryport-id="124" style="height: 280px;"></div>
+        </li>
+        <li class="ui-state-default">
+            <div class="ibox-content custom-private-queryport" id="113-06" data-queryport-id="124" style="height: 280px;"></div>
+        </li>
+        <li class="ui-state-default">
+            <div class="ibox-content custom-private-queryport" id="113-07" data-queryport-id="124" style="height: 280px;"></div>
+        </li>
+        <li class="ui-state-default">
+            <div class="ibox-content custom-private-queryport" id="113-08" data-queryport-id="124" style="height: 280px;"></div>
+        </li>
+        <li class="ui-state-default">
+            <div class="ibox-content custom-private-queryport" id="113-09" data-queryport-id="124" style="height: 280px;"></div>
+        </li>
+        <li class="ui-state-default">
+            <div class="ibox-content custom-private-queryport" id="113-10" data-queryport-id="124" style="height: 280px;"></div>
+        </li>
+        <li class="ui-state-default">
+            <div class="ibox-content custom-private-queryport" id="113-11" data-queryport-id="124" style="height: 280px;"></div>
+        </li>
+        <li class="ui-state-default">
+            <div class="ibox-content custom-private-queryport" id="113-12" data-queryport-id="124" style="height: 280px;"></div>
+        </li>
+        <li class="ui-state-default" style="width: 72%;height: 280px;">
+            <div class="ibox-content custom-private-queryport" id="123-112" data-queryport-id="123" >
+                <table id="bootstrap-queryport-table123" class="table-striped table-bordered"></table>
+                <!--<iframe src="/aiexam/system/queryport/display/122" width="565px" height="240px"></iframe>-->
+            </div>
+        </li>
+        <li class="ui-state-default" style="width: 72%;height: 280px;">
+            <div class="ibox-content custom-private-queryport" id="122-112" data-queryport-id="122" >
+                <div class="container-div">
+                    <div class="row">
+                        <div id="queryport-panel122"></div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="ui-state-default" style="width: 72%;height: 280px;overflow-x: hidden;overflow-y: auto">
+            <div class="ibox-content custom-private-queryport" id="130-112" data-queryport-id="130" >
+                <div class="container-div">
+                    <div class="row">
+                        <div id="queryport-panel130"></div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+</div>
+
+<th:block th:include="include :: footer" />
+<th:block th:include="include :: select2-js" />
+<th:block th:include="include :: ztree-js" />
+<th:block th:include="system/queryport/include :: queryport-js" />
+<th:block th:include="system/queryport/include :: jquery-ui-js" />
+<script th:src="@{/system/queryport/js/tabfield-ui.js}"></script>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+	    //排序
+        $( "#sortable" ).sortable();
+        $( "#sortable" ).disableSelection();
+        $( "#sortable" ).on( "sortstop", function( event, ui ) {
+            log.info("调整前位置：" + JSON.stringify(ui.originalPosition));
+            log.info("调整后位置：" + JSON.stringify(ui.position));
+        } );
+        //大小
+        $( ".ui-state-default" ).resizable();
+        $( ".ui-state-default" ).on( "resizestop", function( event, ui ) {
+            log.info("调整前大小：" + JSON.stringify(ui.originalSize));
+            log.info("调整后大小：" + JSON.stringify(ui.size));
+        } );
+        $.queryportui.initCustomQueryportAllChart('body');
+	});
+</script>
+</body>
+</html>

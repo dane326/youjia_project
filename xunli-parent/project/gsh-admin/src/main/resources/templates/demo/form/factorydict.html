@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('组织字典和级联组织字典示例')" />
+	<th:block th:include="include :: select2-css" />
+	<th:block th:include="include :: ztree-css" />
+</head>
+<body>
+<div class="main-content">
+		<form id="form-user-add" class="form-horizontal">
+			<div class="row">
+				<h4 class="form-header h4" style="margin:15px">组织字典和级联组织字典示例</h4>
+				<div class="col-sm-12">
+					<p>1、绑定html的dom，并给自定义属性data-factorydict-options赋值option，自定义属性data-factorydict-value赋值value</p>
+					<p>2、绑定html的dom的class 包含 custom-from-factorydict ，通过js的options加载无需指定此class;</p>
+					<p>3、在页面加载完成时执行$.factoryDict.initialize();</p>
+					<p>4、字典数据异步加载，并保存在浏览器的sessionStorage中;</p>
+				</div>
+			</div>
+
+			<div class="row">
+				<h4 class="form-header h4" style="margin:15px">示例信息</h4>
+
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">字典-无默认值：</label>
+						<div class="col-sm-8">
+							<select id="processSelect22" name="procKey" data-factorydict-options='{"parentDict" :"sys_sex"}'  class="form-control m-b custom-from-factorydict" required>
+							</select>
+							<input id="processSelect22Name" name="procName" type="hidden">
+						</div>
+					</div>
+				</div>
+
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">字典-有默认值：</label>
+						<div class="col-sm-8">
+							<select id="processSelect2" name="procKey" data-factorydict-options='{"parentDict" :"sys_sex"}' data-factorydict-value="man"  class="form-control m-b custom-from-factorydict" required>
+							</select>
+							<input id="processSelect2Name" name="procName" type="hidden">
+						</div>
+					</div>
+				</div>
+
+
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">字典-多选-无默认值：</label>
+						<div class="col-sm-8">
+							<select id="processSelectMulti" name="procKey" data-factorydict-options='{"parentDict" :"sys_sex"}' class="form-control m-b custom-from-factorydict" multiple required>
+							</select>
+							<input id="processSelectMultiName" name="procName" type="hidden">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">字典-多选-有默认值：</label>
+						<div class="col-sm-8">
+							<select id="processSelectMulti2" name="procKey" data-factorydict-options='{"parentDict" :"sys_sex"}' data-factorydict-value="man,woman" class="form-control m-b custom-from-factorydict" multiple required>
+							</select>
+							<input id="processSelectMulti2Name" name="procName" type="hidden">
+						</div>
+					</div>
+				</div>
+
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">级联1：</label>
+						<div class="col-sm-8">
+							<select id="processSelect11" name="procKey" data-factorydict-options='{"parentDict" :"factory","relateId":"processSelect12"}'  class="form-control m-b custom-from-factorydict" required>
+							</select>
+							<input id="processSelect11Name" name="procName" type="hidden">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">级联2：</label>
+						<div class="col-sm-8">
+							<select id="processSelect12" name="procKey" data-factorydict-options='{"parentDict" :"-7","relateId":"processSelect13"}'  class="form-control m-b custom-from-factorydict" required>
+							</select>
+							<input id="processSelect12Name" name="procName" type="hidden">
+						</div>
+					</div>
+				</div>
+
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">级联3：</label>
+						<div class="col-sm-8">
+							<select id="processSelect13" name="procKey" data-factorydict-options='{"parentDict" :"-7","relateId":"processDefSelect14"}' class="form-control m-b custom-from-factorydict" required>
+							</select>
+							<input id="processSelect13Name" name="procName" type="hidden">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">级联4：</label>
+						<div class="col-sm-8">
+							<select id="processDefSelect14" name="procKey" data-factorydict-options='{"parentDict" :"-7"}' class="form-control m-b custom-from-exdselect" required>
+							</select>
+							<input id="processDefSelect14Name" name="procName" type="hidden">
+						</div>
+					</div>
+				</div>
+
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">级联1-默认值：</label>
+						<div class="col-sm-8">
+							<select id="processSelect15" name="procKey" data-factorydict-options='{"parentDict" :"sys","relateId":"processSelect16"}' data-factorydict-value="sex"  class="form-control m-b custom-from-factorydict" required>
+							</select>
+							<input id="processSelect15Name" name="procName" type="hidden">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">级联2-默认值：</label>
+						<div class="col-sm-8">
+							<select id="processSelect16" name="procKey" data-factorydict-options='{"parentDict" :"-7"}' data-factorydict-value="man" class="form-control m-b custom-from-factorydict" required>
+							</select>
+							<input id="processSelect16Name" name="procName" type="hidden">
+						</div>
+					</div>
+				</div>
+
+
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">跨级-级联1-默认值：</label>
+						<div class="col-sm-8">
+							<select id="processSelect17" name="procKey" data-factorydict-options='{"parentDict" :"factory","relateId":"processSelect18","relateSuffix":"_high"}' data-factorydict-value="test"  class="form-control m-b custom-from-factorydict" required>
+							</select>
+							<input id="processSelect17Name" name="procName" type="hidden">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">跨级-级联2-默认值：</label>
+						<div class="col-sm-8">
+							<select id="processSelect18" name="procKey" data-factorydict-options='{"parentDict" :"-7"}' data-factorydict-value="2" class="form-control m-b custom-from-factorydict" required>
+							</select>
+							<input id="processSelect18Name" name="procName" type="hidden">
+						</div>
+					</div>
+				</div>
+
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label">组织字典--单选：</label>
+						<div class="col-sm-8 custom-from-factorydict" id="dictselect" th:attr="data-factorydict-value=${radiovalue}" data-factorydict-options='{
+						"parentDict" :"sys_sex",
+						"selectType":"radio",
+						"checkName" : "dict"
+					}'>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-xs-4 control-label">组织字典--多选：</label>
+						<div class="col-xs-8 custom-from-factorydict" id="dict2select" th:attr="data-exdselect-value=${checkboxvalue}" data-factorydict-options='{
+						"parentDict" :"sys_sex",
+						"selectType":"checkBox",
+						"checkName" : "dict2"
+					}'>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+			<div class="row">
+				<h4 class="form-header h4" style="margin:15px">参数说明</h4>
+				<div class="col-sm-12">
+					<table id="bootstrap-table" class="table table-hover table-bordered" style="border: 0px solid">
+						<thead>
+						<tr>
+							<th tabindex="0">
+								<div class="th-inner ">参数KEY</div>
+							</th>
+							<th tabindex="0">
+								<div class="th-inner ">参数名称</div>
+							</th>
+							<th tabindex="0" width="80px">
+								<div class="th-inner ">参数类型</div>
+							</th>
+							<th tabindex="0" width="80px">
+								<div class="th-inner ">是否必选</div>
+							</th>
+							<th tabindex="0" width="80px">
+								<div class="th-inner ">默认值</div>
+							</th>
+							<th tabindex="0">
+								<div class="th-inner ">可选值</div>
+							</th>
+							<th tabindex="0">
+								<div class="th-inner ">其他说明</div>
+							</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr data-index="0">
+							<td>id</td>
+							<td>主键id</td>
+							<td>String</td>
+							<td>必选</td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr data-index="0">
+							<td>parentDict</td>
+							<td>字典枚举类型</td>
+							<td>String</td>
+							<td>必选</td>
+							<td></td>
+							<td></td>
+							<td>被级联的组件设置为-7</td>
+						</tr>
+						<tr data-index="0">
+							<td>relateId</td>
+							<td>级联下拉列表id</td>
+							<td>json</td>
+							<td>非必选</td>
+							<td></td>
+							<td></td>
+							<td>存在下级级联填写</td>
+						</tr>
+						<tr data-index="0">
+							<td>selectType</td>
+							<td>类型</td>
+							<td>String</td>
+							<td>非必选</td>
+							<td>select</td>
+							<td>select，checkbox，radio</td>
+							<td>可选select，checkbox，radio，默认为 select，其中checkbox，radio无法级联</td>
+						</tr>
+						<tr data-index="0">
+							<td>relateSuffix</td>
+							<td>级联下拉列表后缀</td>
+							<td>String</td>
+							<td>非必选</td>
+							<td></td>
+							<td></td>
+							<td>级联是dictParent是根据value拼接，可以附加后缀，主要用于跨级</td>
+						</tr>
+						<tr data-index="0">
+							<td>defaultValue</td>
+							<td>默认值</td>
+							<td>String</td>
+							<td>非必选</td>
+							<td></td>
+							<td></td>
+							<td>设置默认选中节点</td>
+						</tr>
+						<tr data-index="0">
+							<td>checkName</td>
+							<td>选中的组件名称</td>
+							<td>String</td>
+							<td>非必选</td>
+							<td>同id一致</td>
+							<td></td>
+							<td>针对checkbox，radio生效，设置生成组件的名称</td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</form>
+</div>
+
+
+
+<th:block th:include="include :: footer" />
+<th:block th:include="include :: select2-js" />
+<th:block th:include="include :: ztree-js" />
+<script>
+	$(function() {
+		//初始化
+        $.factoryDict.initialize()
+	});
+</script>
+</body>
+</html>

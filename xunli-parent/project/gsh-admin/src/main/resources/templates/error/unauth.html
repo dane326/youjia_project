@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta charset="utf-8">
+<title>403禁止页面模板</title>
+
+    <link th:href="@{/error/403/403.css}" rel="stylesheet">
+
+</head>
+<body>
+<h1>403</h1>
+<div><p>> <span>ERROR CODE</span>: "<i>HTTP 403 Forbidden</i>"</p>
+    <p>> <span>ERROR DESCRIPTION</span>: "<i>拒绝访问。您没有访问此服务器上此页面的权限</i>"</p>
+    <p>> <span>ERROR POSSIBLY CAUSED BY</span>: [<b>管理员没有给您分配这也页面的查看权限</b>...]</p>
+    <p>> <a href="" class="btn btn-primary m-t" id="topUrl" ><u>返回首页</u>:-)</a></span></p>
+</div>
+
+
+<script>
+var str = document.getElementsByTagName('div')[0].innerHTML.toString();
+var i = 0;unauth.html
+document.getElementsByTagName('div')[0].innerHTML = "";
+
+    setTimeout(function() {
+        var se = setInterval(function() {
+            i++;
+            document.getElementsByTagName('div')[0].innerHTML = str.slice(0, i) + "|";
+            if (i == str.length) {
+                clearInterval(se);
+                document.getElementsByTagName('div')[0].innerHTML = str;
+            }
+            var contenxt = window.location.href.split(/\//g)[3];
+            document.getElementById("topUrl").setAttribute("href", "javascript:top.document.location.href='/"+contenxt+"'");
+        }, 10);
+    },0);
+
+</script>
+
+</body>
+</html>

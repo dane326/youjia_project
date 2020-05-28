@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增附件')" />
+    <th:block th:include="include :: bootstrap-fileinput-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-accessories-add">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">模块名称：</label>
+                <div class="col-sm-8">
+                    <input name="moduleName" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">附件名称：</label>
+                <div class="col-sm-8">
+                    <input name="fileName" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">扩展名：</label>
+                <div class="col-sm-8">
+                    <input name="extension" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">路径：</label>
+                <div class="col-sm-8">
+                    <input name="path" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">新增附件：</label>
+                <div class="col-sm-8">
+                    <input id="fileinput1" name="file" type="file" data-msg-placeholder="支持[jpg, png, gif]类型">
+                    <input type="hidden" id="fileNode1" name="fileNode1" value=""/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">显示有值附件：</label>
+                <div class="col-sm-8">
+                    <input id="fileinput2" name="file" type="file" data-msg-placeholder="支持[jpg, png, gif]类型">
+                    <input type="hidden" id="fileNode2" name="fileNode2" value="628,629,630"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">显示无值附件：</label>
+                <div class="col-sm-8">
+                    <input id="fileinput22" name="file" type="file" data-msg-placeholder="支持[jpg, png, gif]类型">
+                    <input type="hidden" id="fileNode22" name="fileNode22" value=""/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">编辑有值附件：</label>
+                <div class="col-sm-8">
+                    <input id="fileinput3" name="file" type="file" data-msg-placeholder="支持[jpg, png, gif]类型">
+                    <input type="hidden" id="fileNode3" name="fileNode3" value="634,635"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">编辑无值附件：</label>
+                <div class="col-sm-8">
+                    <input id="fileinput33" name="file" type="file" data-msg-placeholder="支持[jpg, png, gif]类型">
+                    <input type="hidden" id="fileNode33" name="fileNode33" value=""/>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: bootstrap-fileinput-js" />
+    <th:block th:include="include :: accessories-bootstrap-fileinput-extend-js" />
+    <script type="text/javascript">
+        var prefix = ctx + "system/accessories"
+
+        //初始化附件
+        $.fileInputExtend.init("#fileinput1","#fileNode1",{maxFileSize: 400,allowedUploadMaxFileSize:2});
+        //只显示附件，用于回显, 需要保证fileNode2有值
+        $.fileInputExtend.init("#fileinput2","#fileNode2",{readonly:true});
+        $.fileInputExtend.init("#fileinput22","#fileNode22",{readonly:true});
+        //显示附件，并可继续上传
+        $.fileInputExtend.init("#fileinput3","#fileNode3",{maxFileSize: 6000,allowedUploadMaxFileSize:4,allowedFileExtensions:["jpg", "png", "gif", "xlsx"]});
+        $.fileInputExtend.init("#fileinput33","#fileNode33",{maxFileSize: 6000,allowedUploadMaxFileSize:4,allowedFileExtensions:["jpg", "png", "gif", "xlsx"]});
+
+        $("#form-accessories-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-accessories-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

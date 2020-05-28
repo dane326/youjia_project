@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gsh.system.queryport.mapper.QueryportColumnMapper">
+    
+    <resultMap type="QueryportColumn" id="QueryportColumnResult">
+        <result property="id"    column="id"    />
+        <result property="mainId"    column="main_id"    />
+        <result property="viewFlag"    column="view_flag"    />
+        <result property="totalFlag"    column="total_flag"    />
+        <result property="ename"    column="ename"    />
+        <result property="cname"    column="cname"    />
+        <result property="exportflag"    column="exportflag"    />
+        <result property="allowBlank"    column="allow_blank"    />
+        <result property="convertType"    column="convert_type"    />
+        <result property="columnLink"    column="column_link"    />
+        <result property="typeParam1"    column="type_param1"    />
+        <result property="typeParam2"    column="type_param2"    />
+        <result property="typeParam3"    column="type_param3"    />
+        <result property="typeParam4"    column="type_param4"    />
+        <result property="displayOrder"    column="display_order"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectQueryportColumnVo">
+        select id, main_id, view_flag, total_flag, ename, cname, exportflag, allow_blank, convert_type, column_link, display_order, deleted, create_by, create_time, update_by, update_time, remark, type_param1,type_param2,type_param3,type_param4 from sys_queryport_column
+    </sql>
+
+    <select id="selectQueryportColumnList" parameterType="QueryportColumn" resultMap="QueryportColumnResult">
+        <include refid="selectQueryportColumnVo"/>
+        <where>  
+            <if test="mainId != null "> and main_id = #{mainId}</if>
+            <if test="viewFlag != null  and viewFlag != ''"> and view_flag = #{viewFlag}</if>
+            <if test="totalFlag != null  and totalFlag != ''"> and total_flag = #{totalFlag}</if>
+            <if test="ename != null  and ename != ''"> and ename like concat('%', #{ename}, '%')</if>
+            <if test="cname != null  and cname != ''"> and cname like concat('%', #{cname}, '%')</if>
+            <if test="exportflag != null  and exportflag != ''"> and exportflag = #{exportflag}</if>
+            <if test="allowBlank != null  and allowBlank != ''"> and allow_blank = #{allowBlank}</if>
+            <if test="convertType != null  and convertType != ''"> and convert_type = #{convertType}</if>
+            <if test="columnLink != null  and columnLink != ''"> and column_link = #{columnLink}</if>
+            <if test="typeParam1 != null  and typeParam1 != ''"> and type_param1 = #{typeParam1}</if>
+            <if test="typeParam2 != null  and typeParam2 != ''"> and type_param2 = #{typeParam2}</if>
+            <if test="typeParam3 != null  and typeParam3 != ''"> and type_param3 = #{typeParam3}</if>
+            <if test="typeParam4 != null  and typeParam4 != ''"> and type_param4 = #{typeParam4}</if>
+            <if test="displayOrder != null "> and display_order = #{displayOrder}</if>
+            <if test="deleted != null  and deleted != ''"> and deleted = #{deleted}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+        </where>
+        order by display_order
+    </select>
+    
+    <select id="selectQueryportColumnById" parameterType="Long" resultMap="QueryportColumnResult">
+        <include refid="selectQueryportColumnVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertQueryportColumn" parameterType="QueryportColumn" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_queryport_column
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mainId != null ">main_id,</if>
+            total_flag,
+            view_flag,
+            <if test="ename != null  and ename != ''">ename,</if>
+            <if test="cname != null  and cname != ''">cname,</if>
+            exportflag,
+            <if test="allowBlank != null  and allowBlank != ''">allow_blank,</if>
+            <if test="convertType != null  and convertType != ''">convert_type,</if>
+            <if test="columnLink != null  and columnLink != ''">column_link,</if>
+            <if test="typeParam1 != null  and typeParam1 != ''">type_param1,</if>
+            <if test="typeParam2 != null  and typeParam2 != ''">type_param2,</if>
+            <if test="typeParam3 != null  and typeParam3 != ''">type_param3,</if>
+            <if test="typeParam4 != null  and typeParam4 != ''">type_param4,</if>
+            <if test="displayOrder != null ">display_order,</if>
+            <if test="deleted != null  and deleted != ''">deleted,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mainId != null ">#{mainId},</if>
+            #{totalFlag},
+            #{viewFlag},
+            <if test="ename != null  and ename != ''">#{ename},</if>
+            <if test="cname != null  and cname != ''">#{cname},</if>
+            #{exportflag},
+            <if test="allowBlank != null  and allowBlank != ''">#{allowBlank},</if>
+            <if test="convertType != null  and convertType != ''">#{convertType},</if>
+            <if test="columnLink != null  and columnLink != ''">#{columnLink},</if>
+            <if test="typeParam1 != null  and typeParam1 != ''">#{typeParam1},</if>
+            <if test="typeParam2 != null  and typeParam2 != ''">#{typeParam2},</if>
+            <if test="typeParam3 != null  and typeParam3 != ''">#{typeParam3},</if>
+            <if test="typeParam4 != null  and typeParam4 != ''">#{typeParam4},</if>
+            <if test="displayOrder != null ">#{displayOrder},</if>
+            <if test="deleted != null  and deleted != ''">#{deleted},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateQueryportColumn" parameterType="QueryportColumn">
+        update sys_queryport_column
+        <trim prefix="SET" suffixOverrides=",">
+            main_id = #{mainId},
+            total_flag = #{totalFlag},
+            view_flag = #{viewFlag},
+            ename = #{ename},
+            cname = #{cname},
+            exportflag = #{exportflag},
+            allow_blank = #{allowBlank},
+            convert_type = #{convertType},
+            column_link = #{columnLink},
+            type_param1 = #{typeParam1},
+            type_param2 = #{typeParam2},
+            type_param3 = #{typeParam3},
+            type_param4 = #{typeParam4},
+            display_order = #{displayOrder},
+            <if test="deleted != null  and deleted != ''">deleted = #{deleted},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteQueryportColumnById" parameterType="Long">
+        delete from sys_queryport_column where id = #{id}
+    </delete>
+
+    <delete id="deleteQueryportColumnByIds" parameterType="String">
+        delete from sys_queryport_column where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="logicDeleteQueryportColumnById" parameterType="Long">
+        update   sys_queryport_column  set deleted='1' where id = #{id}
+    </update>
+
+    <update id="logicDeleteQueryportColumnByMainId" parameterType="Long">
+        update   sys_queryport_column  set deleted='1' where main_id = #{mainId}
+    </update>
+
+    <update id="logicDeleteQueryportColumnByIds" parameterType="String">
+        update   sys_queryport_column  set deleted='1' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

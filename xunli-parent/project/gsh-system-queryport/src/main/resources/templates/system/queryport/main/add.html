@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增查询视图配置')" />
+    <th:block th:include="include :: select2-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-queryport-add">
+            <div class="form-group">    
+                <label class="col-sm-2 control-label"><span style="color: red; ">*</span>名称：</label>
+                <div class="col-sm-10">
+                    <input name="name" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span style="color: red; ">*</span>首次加载：</label>
+                <div class="col-sm-4">
+                    <div class="custom-from-exdselect" id="isFirstLoadSelect" data-exdselect-value="N" data-exdselect-options='{
+						"parentDict" :"sys_yes_no",
+						"selectType":"radio",
+						"checkName" : "ifFirstLoad"}'>
+                    </div>
+                </div>
+                <label class="col-sm-2 control-label"><span style="color: red; ">*</span>状态：</label>
+                <div class="col-sm-4">
+                    <div class="custom-from-exdselect" id="statusSelect" data-exdselect-options='{
+						"parentDict" :"sys_normal_disable",
+						"selectType":"radio",
+						"checkName" : "status"}'>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-2 control-label"><span style="color: red; ">*</span>类型：</label>
+                <div class="col-sm-4">
+                    <div class="custom-from-exdselect" id="typeSelect" data-exdselect-options='{
+						"parentDict" :"sys_queryport_type",
+						"selectType":"radio",
+						"checkName" : "type"}'>
+                    </div>
+                </div>
+                <label class="col-sm-2 control-label"><span style="color: red; ">*</span>展示形式：</label>
+                <div class="col-sm-4">
+                    <div class="custom-from-exdselect" id="showTypeSelect" data-exdselect-options='{
+						"parentDict" :"sys_queryport_showType",
+						"selectType":"checkBox",
+						"checkName" : "showType"}'>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span style="color: red; ">*</span>是否分页：</label>
+                <div class="col-sm-4">
+                    <div class="custom-from-exdselect" id="paginationSelect" data-exdselect-options='{
+						"parentDict" :"sys_yes_no",
+						"selectType":"radio",
+						"checkName" : "pagination"}'>
+                    </div>
+                </div>
+
+                <label class="col-sm-2 control-label"><span style="color: red; ">*</span>是否验证权限：</label>
+                <div class="col-sm-4">
+                    <div class="custom-from-exdselect" id="isPermittedSelect" data-exdselect-value="N" data-exdselect-options='{
+						"parentDict" :"sys_yes_no",
+						"selectType":"radio",
+						"checkName" : "isPermitted"}'>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span style="color: red; ">*</span>模块：</label>
+                <div class="col-sm-4">
+                    <input name="module" class="form-control" type="text" required>
+                </div>
+                <label class="col-sm-2 control-label">合并列：</label>
+                <div class="col-sm-4">
+                    <input name="mergecols" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span style="color: red; ">*</span>语句：</label>
+                <div class="col-sm-10">
+                    <textarea name="statement" class="form-control" rows="8" required></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">说明：</label>
+                <div class="col-sm-10">
+                    <textarea name="adescribe" class="form-control"></textarea>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div style="text-align: right;">
+                        <br>
+                        <button type="button" class="btn btn-sm btn-success" onclick="submitHandler()"><i class="fa fa-check"></i>保存 并配置字段</button>&nbsp;
+                        <button type="button" class="btn btn-sm btn-danger" onclick="closeItem()"><i class="fa fa-reply-all"></i>关 闭 </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: select2-js" />
+    <script type="text/javascript">
+        var prefix = ctx + "system/queryport"
+        $("#form-queryport-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-queryport-add').serialize(), function (result) {
+                    if(result.code == 0) {
+                        location.href = prefix + "/column/" + result.data.id;
+                    }
+                });
+            }
+        }
+
+        $(function() {
+            $.exdSelect.initialize();
+        })
+    </script>
+</body>
+</html>

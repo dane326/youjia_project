@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        /*加上.root_div 防止与其他样式冲突*/
+        /*节点样式*/
+        .root_div .node-my {
+            margin: 0px 20px;
+            color: #fff;
+            background: blue;
+        }
+        /*竖线条样式*/
+        .root_div .vertical-line-my {
+            background: violet;
+            height: 20px;
+            width: 1px;
+        }
+        /*横线条样式*/
+        .root_div .transverse-line-my {
+            background: violet;
+            height: 1px;
+        }
+    </style>
+    <th:block th:include="include :: header('组织结构图')" />
+    <th:block th:include="include :: orgCharts-css" />
+</head>
+
+<body onload="draw();">
+
+<div style="background: #eee;height: 50px;width: 100%;text-align: center;line-height: 50px;">部门及人员结构展示</div>
+
+<div style="display: flex;flex-direction: row;">
+
+    <div style="width: 50px;height: 800px;padding: 2px;text-align: center;">
+        主题
+        <div onclick="changeTheme('normal')" style="width: 30px;height: 30px;background: #3caee4;margin: 5px auto;cursor: pointer;"></div>
+        <div onclick="changeTheme('red')" style="width: 30px;height: 30px;background: red;margin: 5px auto;cursor: pointer;"></div>
+        <div onclick="changeTheme('green')" style="width: 30px;height: 30px;background: #1ce45a;margin: 5px auto;cursor: pointer;"></div>
+        <div onclick="changeTheme('black')" style="width: 30px;height: 30px;background: #000000;margin: 5px auto;cursor: pointer;"></div>
+        <div onclick="changeTheme('gray')" style="width: 30px;height: 30px;background: #6f6f6f;margin: 5px auto;cursor: pointer;"></div>
+    </div>
+    <div style="flex:1;overflow: hidden;display: block;text-align: center;">
+        <div id="org_charts"></div>
+    </div>
+</div>
+</body>
+<th:block th:include="include :: orgCharts-js" />
+<th:block th:include="include :: footer" />
+<script type="application/javascript" th:inline="javascript">
+    var addFlag = [[${@permission.hasPermi('system:factory:dept:add')}]];
+    var editFlag = [[${@permission.hasPermi('system:factory:dept:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('system:factory:dept:remove')}]];
+    var datas = [[${@dict.getType('sys_normal_disable')}]];
+    var prefix = ctx + "system/factory/dept"
+    var orgCharts=new OrgCharts();
+    function draw() {
+        var  menu=new Array();
+        if(addFlag!="hidden"){
+            menu.push("add");
+        }
+        if(editFlag!="hidden"){
+            menu.push("edit");
+        }
+        if(removeFlag!="hidden"){
+            menu.push("delete");
+        }
+        //初始化组件
+        orgCharts.init({
+            id: "org_charts", //必填
+            theme: '', //可选
+            menu:menu,//右键菜单项
+            success: function() { //可选
+
+            },
+            error: function(e) { //可选
+
+            },
+            onClick: function(el, data) { //点击方法  el被点击的元素  data对应传入数据
+
+            },
+            onAdd:function(data,tab){//添加回调 data为点击的数据  tab为标记点,用于插入新数据
+                // var myData=new Object();
+                // myData.name=prompt("输入name","新节点");
+                // myData.child=[];
+                // if(myData.name!=null){
+                //     orgCharts.addNodes(myData,tab);
+                // }
+               $.modal.open("新增部门",prefix+"/add"+"/"+data.id);
+            },
+            onEdit:function(data){//编辑回调 data为点击的数据  tab为标记点,用于插入新数据
+                $.modal.open("新增部门",prefix+"/edit"+"/"+data.id);
+            },
+            onDelete:function(data,parentData,tabs){
+                var resultFlag=true;
+                $.modal.confirm("确定删除这个组织信息吗？", function() {
+                    var url = prefix+"/remove"+"/"+data.id;
+                    var config = {
+                        url: url,
+                        type: "get",
+                        dataType: "json",
+                        async: false,
+                        beforeSend: function () {
+                            $.modal.loading("处理中，请稍后...");
+                        },
+                        success: function(result) {
+                            if (result.code == web_status.SUCCESS) {
+                                $.modal.msgSuccess(result.msg);
+                            }  else if (result.code == web_status.WARNING) {
+                                resultcode=false;
+                                $.modal.alertWarning(result.msg);
+                                resultFlag=false;
+                            }  else {
+                                resultcode=false;
+                                $.modal.alertError(result.msg);
+                                resultFlag=false;
+                            }
+                            $.modal.closeLoading();
+                        }
+                    };
+                    $.ajax(config);
+                    if(resultFlag){
+                        parentData.child.splice(tabs[tabs.length - 1], 1);
+                        orgCharts.draw();
+                    }
+                });
+            }
+        });
+
+        //加载方式1 网络地址加载
+        /*orgCharts.drawByUrl({
+            url: '[[@{/data.json}]]', //必选  返回格式参考 data/data.json
+            success: function() { //可选
+                //console.log("绘制化完成");
+            },
+            error: function(e) { //可选
+                //console.log('绘制失败');
+            }
+        });*/
+        ///加载方式2 数据加载
+        $.modal.loading("数据加载中...");
+        orgCharts.drawByData({
+				data: [[${orgTreeJson}]],
+				success: function() {//可选
+                    $.modal.msgSuccess("加载成功");
+                    $.modal.closeLoading();
+				},
+				error: function(e) {//可选
+                    $.modal.msgSuccess("加载失败");
+                    $.modal.closeLoading();
+				}
+			});
+
+    }
+    /**
+     * 设置主题  主题类型normal ,red ,green ,black ,gray
+     * @param theme
+     */
+    function changeTheme(theme) {
+        orgCharts.setTheme(theme);
+    }
+</script>
+<script th:inline="javascript">
+
+</script>
+</html>
+

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('自定义portal页面列表')" />
+    <th:block th:include="include :: ztree-css" />
+    <th:block th:include="system/portalet/include :: portalet-css" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+								系统名称：<input type="text" name="systemName"/>
+                            </li>
+                            <li>
+								模块名称：<input type="text" name="moduleName"/>
+                            </li>
+                            <li>
+								资源编码：<input type="text" name="resId"/>
+                            </li>
+                            <li>
+								状态：<select name="deleted" th:with="type=${@dict.getType('sys_normal_disable')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:selected="${dict.default}"></option>
+								</select>
+							</li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.treeTable.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add(0)" shiro:hasPermission="system:portalet:page:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:portalet:page:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+                <a class="btn btn-info" id="expandAllBtn">
+                    <i class="fa fa-exchange"></i> 展开/折叠
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-tree-table" ></table>
+            </div>
+            
+            <input id="modulePageId" type="hidden"/>
+            <input id="mineResInputIdOver" type="hidden"/>
+            <input id="mineResInputId" type="hidden"/>
+			<input id="mineResInput" type="hidden">
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: ztree-js" />
+    <script th:inline="javascript">
+    	var addFlag = [[${@permission.hasPermi('system:portalet:page:add')}]];
+        var editFlag = [[${@permission.hasPermi('system:portalet:page:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:portalet:page:remove')}]];
+        var deletedDatas = [[${@dict.getType('sys_normal_disable')}]];
+        var resTypeDatas = [[${@dict.getType('sys_portalet_resType')}]];
+        var prefix = ctx + "system/portalet/page";
+
+        $(function() {
+        	/* var exdTreeOptions = {
+       			id: "mineResInput",
+       			valueId: "mineResInputId",
+       			title: '选择资源',
+       			showType: "modal",
+       			checkBox: true,
+       			expandLevel: 2,
+       			url: ctx + 'system/portalet/res/treeData?parentNoCheckFlag=true',
+       			beforeCheck: function(treeId, treeNode) {
+    				if(treeNode.isParent || $.common.split(treeNode.key, '|')[1] !== 'res'){
+    					return false;
+    				}
+    			}
+       		};
+       		$.exdTree.init(exdTreeOptions);       		
+       		$("#mineResInputmyModal .modal-footer .btn-success").off('click').on('click', function(){
+       			var options = $.exdTree._option["mineResInputMyTree"];
+       			var value = $('#'+options.valueId).val()
+                if(!value){
+                    $.modal.msgWarning("请选择资源");
+                    return false;
+                }
+                
+       			var data = { "ids": value };
+                $.operate.submit(ctx + "system/portalet/page/" + $("#modulePageId").val() + "/addRes", "post", "json", data, function(){
+                	$('#' + options.id + 'myModal').modal('hide');
+                });
+       		}); */
+        		
+            var options = {
+           		code: "id",
+       		    parentCode: "parentId",
+       		    uniqueId: "id",
+       		    expandColumn: 1, 
+       		    expandAll: true,
+   		        expandFirst: true,
+                url: prefix + "/list",
+                createUrl: prefix + "/add/{id}",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove/{id}",
+                exportUrl: prefix + "/export",
+                modalName: "自定义portal页面",
+                ajaxParams: $.common.formToJSON('formId'),
+                columns: [{
+                    checkbox: true,
+                    width: '1px'
+                },
+                {
+                    field : 'cnName', 
+                    title : '名称',
+                    width : '250px'
+                },
+                {
+                    field : 'id', 
+                    title : '编码',
+                },
+                {
+                    field : 'parentId', 
+                    title : '父Id',
+                    visible: false
+                },                
+                {
+                    field : 'resType', 
+                    title : '类别',
+                    formatter: function(value, item, index) {
+		            	return $.table.selectDictLabel(resTypeDatas, value);
+		            }
+                },
+                {
+                    field : 'systemCode', 
+                    title : '系统编码',
+                    visible: false
+                },
+                {
+                    field : 'systemName', 
+                    title : '系统名称',
+                    formatter: function(value, item, index) {
+		            	return value ? value : "-";
+		            }
+                },
+                {
+                    field : 'moduleCode', 
+                    title : '模块编码',
+                    visible: false
+                },
+                {
+                    field : 'moduleName', 
+                    title : '模块名称',
+                    formatter: function(value, item, index) {
+		            	return value ? value : "-";
+		            }
+                },
+                {
+                    field : 'resId', 
+                    title : '资源编码',
+                    formatter: function(value, item, index) {
+		            	return value ? value : "-";
+		            }
+                },
+                {
+                    field : 'width', 
+                    title : '宽',
+                    visible: false
+                },
+                {
+                    field : 'height', 
+                    title : '高',
+                    visible: false
+                },
+                {
+                    field : 'row', 
+                    title : '行',
+                    visible: false
+                },
+                {
+                    field : 'col', 
+                    title : '列',
+                    visible: false
+                },
+                {
+                    field : 'sortNo', 
+                    title : '显示顺序'
+                },
+                {
+                    field : 'deleted', 
+                    title : '状态',
+		            formatter: function(value, item, index) {
+		            	return $.table.selectDictLabel(deletedDatas, value);
+		            }
+                },
+                {
+                	field : 'mineOperatorButton',
+                    title: '操作',
+                    align: 'left',
+                    width: '220px',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        if('module' == row.resType){
+	                        actions.push('<a class="btn btn-info btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="mainView(\'' + row.id + '\')"><i class="fa fa-search"></i>预览</a> ');
+                        }
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        if('sys' == row.resType){
+	                        actions.push('<a class="btn btn-info  btn-xs ' + addFlag + '" href="javascript:void(0)" onclick="$.operate.add(\'' + row.id + '\')"><i class="fa fa-plus"></i>新增</a> ');
+                        } else if('module' == row.resType){
+	                        actions.push('<a class="btn btn-info  btn-xs ' + addFlag + '" href="javascript:void(0)" onclick="addRes(\'' + row.id + '\')"><i class="fa fa-plus"></i>资源</a> ');
+                        }
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.treeTable.init(options);
+        });
+        
+        /*新增资源列表*/
+        function addRes(id) {
+        	$.modal.open("选择资源", prefix + '/res/' + id);
+        	
+		   	/* $("#modulePageId").val(id);
+		   	
+        	var rows = [];
+        	$.each($("#bootstrap-tree-table").data("bootstrap.tree.table").data_list["_n_" + id],function(index,value){
+        		rows.push(value.resId);
+	       	});
+        	$("#mineResInputIdOver").val($.common.join(rows, ','));
+        	DynamicUpdateNodeCheck();
+
+		   	$("#mineResInputId").val('');
+		    $.exdTree.selectByIdName("mineResInputMyTree");
+		    $("#mineResInput").trigger("click"); */
+		}
+        
+        function filter(node) {
+        	var ids = $.common.split($("#mineResInputIdOver").val(), ',');
+        	if($.inArray(node.id + '', ids) > -1){
+        		node.nocheck = true;
+        		return true;
+        	}
+        	// 恢复上一次设置后复选框不可用的场景
+        	var ids = $.common.split($("#mineResInputId").val(), ',');
+        	if($.inArray(node.id + '', ids) > -1){
+        		node.nocheck = false;
+        		return true;
+        	}
+        	return false;
+        }
+        ///动态设置zTree的所有节点有checkbox
+        function DynamicUpdateNodeCheck() {
+            var zTree = $.fn.zTree.getZTreeObj("mineResInputMyTree");
+            //根据过滤机制获得zTree的所有节点            
+            var nodes = zTree.getNodesByFilter(filter);
+            //遍历每一个节点然后动态更新nocheck属性值
+            for (var i = 0; i < nodes.length; i++) {
+                zTree.updateNode(nodes[i]);
+            }
+        }
+        
+        function mainView(id) {
+        	$.modal.openTab("模块portal页面", prefix + '/main/view/' + id);
+		}
+    </script>
+</body>
+</html>

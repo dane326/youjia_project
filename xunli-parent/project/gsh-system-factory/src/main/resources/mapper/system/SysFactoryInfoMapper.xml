@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gsh.system.mapper.SysFactoryInfoMapper">
+    
+    <resultMap type="SysFactoryInfo" id="SysFactoryInfoResult">
+        <result property="id"    column="id"    />
+        <result property="factoryDeptId"    column="factory_dept_id"    />
+        <result property="loginName"    column="login_name"    />
+        <result property="factoryName"    column="factory_name"    />
+        <result property="systemName"    column="system_name"    />
+        <result property="secretKey"    column="secret_key"    />
+        <result property="feLogo"    column="fe_logo"    />
+        <result property="platformLogo"    column="platform_logo"    />
+        <result property="sysLogo"    column="sys_logo"    />
+        <result property="accountsNum"    column="accounts_num"    />
+        <result property="onlineusersNum"    column="onlineusers_num"    />
+        <result property="versionType"    column="version_type"    />
+        <result property="versionName"    column="version_name"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="deleted"    column="deleted"    />
+    </resultMap>
+
+    <sql id="selectSysFactoryInfoVo">
+        select id, login_name, factory_dept_id, factory_name, system_name, secret_key, fe_logo, platform_logo, sys_logo, accounts_num, onlineusers_num, version_type, version_name, create_by, create_time, update_by, update_time, remark, deleted from sys_factory_info
+    </sql>
+
+    <select id="selectSysFactoryInfoList" parameterType="SysFactoryInfo" resultMap="SysFactoryInfoResult">
+        <include refid="selectSysFactoryInfoVo"/>
+        <where>  
+            <if test="loginName != null  and loginName != ''"> and login_name like concat('%', #{loginName}, '%')</if>
+            <if test="factoryDeptId != null"> and factory_dept_id = #{factoryDeptId}</if>
+            <if test="factoryName != null  and factoryName != ''"> and factory_name like concat('%', #{factoryName}, '%')</if>
+            <if test="systemName != null  and systemName != ''"> and system_name like concat('%', #{systemName}, '%')</if>
+            <if test="secretKey != null  and secretKey != ''"> and secret_key = #{secretKey}</if>
+            <if test="feLogo != null  and feLogo != ''"> and fe_logo = #{feLogo}</if>
+            <if test="platformLogo != null  and platformLogo != ''"> and platform_logo = #{platformLogo}</if>
+            <if test="sysLogo != null  and sysLogo != ''"> and sys_logo = #{sysLogo}</if>
+            <if test="accountsNum != null  and accountsNum != ''"> and accounts_num = #{accountsNum}</if>
+            <if test="onlineusersNum != null  and onlineusersNum != ''"> and onlineusers_num = #{onlineusersNum}</if>
+            <if test="versionType != null  and versionType != ''"> and version_type = #{versionType}</if>
+            <if test="versionName != null  and versionName != ''"> and version_name = #{versionName}</if>
+            <if test="deleted != null  and deleted != ''"> and deleted = #{deleted}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysFactoryInfoById" parameterType="Long" resultMap="SysFactoryInfoResult">
+        <include refid="selectSysFactoryInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectAllSysFactoryInfo" resultMap="SysFactoryInfoResult">
+        select id from sys_factory_info  where deleted='0'
+    </select>
+        
+    <insert id="insertSysFactoryInfo" parameterType="SysFactoryInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_factory_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="loginName != null  and loginName != ''">login_name,</if>
+            <if test="factoryDeptId != null">factory_dept_id,</if>
+            <if test="factoryName != null  and factoryName != ''">factory_name,</if>
+            <if test="systemName != null  and systemName != ''">system_name,</if>
+            <if test="secretKey != null  and secretKey != ''">secret_key,</if>
+            <if test="feLogo != null  and feLogo != ''">fe_logo,</if>
+            <if test="platformLogo != null  and platformLogo != ''">platform_logo,</if>
+            <if test="sysLogo != null  and sysLogo != ''">sys_logo,</if>
+            <if test="accountsNum != null  and accountsNum != ''">accounts_num,</if>
+            <if test="onlineusersNum != null  and onlineusersNum != ''">onlineusers_num,</if>
+            <if test="versionType != null  and versionType != ''">version_type,</if>
+            <if test="versionName != null  and versionName != ''">version_name,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="deleted != null  and deleted != ''">deleted,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="loginName != null  and loginName != ''">#{loginName},</if>
+            <if test="factoryDeptId != null">#{factoryDeptId},</if>
+            <if test="factoryName != null  and factoryName != ''">#{factoryName},</if>
+            <if test="systemName != null  and systemName != ''">#{systemName},</if>
+            <if test="secretKey != null  and secretKey != ''">#{secretKey},</if>
+            <if test="feLogo != null  and feLogo != ''">#{feLogo},</if>
+            <if test="platformLogo != null  and platformLogo != ''">#{platformLogo},</if>
+            <if test="sysLogo != null  and sysLogo != ''">#{sysLogo},</if>
+            <if test="accountsNum != null  and accountsNum != ''">#{accountsNum},</if>
+            <if test="onlineusersNum != null  and onlineusersNum != ''">#{onlineusersNum},</if>
+            <if test="versionType != null  and versionType != ''">#{versionType},</if>
+            <if test="versionName != null  and versionName != ''">#{versionName},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="deleted != null  and deleted != ''">#{deleted},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysFactoryInfo" parameterType="SysFactoryInfo">
+        update sys_factory_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="loginName != null  and loginName != ''">login_name = #{loginName},</if>
+            <if test="factoryDeptId != null">factory_dept_id = #{factoryDeptId},</if>
+            <if test="factoryName != null  and factoryName != ''">factory_name = #{factoryName},</if>
+            <if test="systemName != null  and systemName != ''">system_name = #{systemName},</if>
+            <if test="secretKey != null  and secretKey != ''">secret_key = #{secretKey},</if>
+            <if test="feLogo != null  and feLogo != ''">fe_logo = #{feLogo},</if>
+            <if test="platformLogo != null  and platformLogo != ''">platform_logo = #{platformLogo},</if>
+            <if test="sysLogo != null  and sysLogo != ''">sys_logo = #{sysLogo},</if>
+            <if test="accountsNum != null  and accountsNum != ''">accounts_num = #{accountsNum},</if>
+            <if test="onlineusersNum != null  and onlineusersNum != ''">onlineusers_num = #{onlineusersNum},</if>
+            <if test="versionType != null  and versionType != ''">version_type = #{versionType},</if>
+            <if test="versionName != null  and versionName != ''">version_name = #{versionName},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="deleted != null  and deleted != ''">deleted = #{deleted},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysFactoryInfoById" parameterType="Long">
+        delete from sys_factory_info where id = #{id}
+    </delete>
+
+    <delete id="deleteSysFactoryInfoByIds" parameterType="String">
+        delete from sys_factory_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="logicDeleteSysFactoryInfoById" parameterType="Long">
+        update   sys_factory_info  set deleted='1' where id = #{id}
+    </update>
+
+    <update id="logicDeleteSysFactoryInfoByIds" parameterType="String">
+        update   sys_factory_info  set deleted='1' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

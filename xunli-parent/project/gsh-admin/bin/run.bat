@@ -1,0 +1,1 @@
+start C:\install\java\jdk1.8.0_131\bin\java.exe -Xms256m -Xmx1024m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=512m  -agentlib:C:\OUR-PCI-LVDS\xunli-parent\doc\XunliByteCodeDecode -cp app/gsh-admin.jar com.gsh.GshApplication %cd%

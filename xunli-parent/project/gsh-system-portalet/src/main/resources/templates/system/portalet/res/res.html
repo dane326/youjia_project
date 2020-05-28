@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('可配置资源信息列表')" />
+    <th:block th:include="include :: select2-css" />
+    <th:block th:include="system/portalet/include :: portalet-css" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+								 系统名称：<input type="text" name="systemName"/>
+                            </li>
+                            <li>
+								模块名称：<input type="text" name="moduleName"/>
+                            </li>
+                            <li>
+								名称：<input type="text" name="name"/>
+                            </li>
+                            <li>
+								状态：<select name="deleted" th:with="type=${@dict.getType('sys_normal_disable')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:selected="${dict.default}"></option>
+								</select>
+							</li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.treeTable.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add(0)" shiro:hasPermission="system:portalet:res:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:portalet:res:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+                <a class="btn btn-info" id="expandAllBtn">
+                    <i class="fa fa-exchange"></i> 展开/折叠
+                </a>
+                <a class="btn btn-primary" onclick="$.modal.openTab('自定义portal页面', ctx + 'system/portalet/page')" shiro:hasPermission="system:portalet:page:view">
+                    <i class="fa fa-link"></i> 自定义portal页面
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-tree-table" ></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+    	var addFlag = [[${@permission.hasPermi('system:portalet:res:add')}]];
+        var editFlag = [[${@permission.hasPermi('system:portalet:res:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:portalet:res:remove')}]];
+        var deletedDatas = [[${@dict.getType('sys_normal_disable')}]];
+        var resTypeDatas = [[${@dict.getType('sys_portalet_resType')}]];
+        var prefix = ctx + "system/portalet/res";
+
+        $(function() {
+            var options = {
+            	code: "id",
+    		    parentCode: "parentId",
+    		    uniqueId: "id",
+    		    expandColumn: 1, 
+    		    expandAll: true,
+		        expandFirst: true,
+                url: prefix + "/list",
+                createUrl: prefix + "/add/{id}",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove/{id}",
+                exportUrl: prefix + "/export",
+                modalName: "可配置资源",
+                ajaxParams: $.common.formToJSON('formId'),
+                columns: [{
+                	/* field: 'selectItem', */
+                    checkbox: true,
+                    width: '1px'
+                },
+                {
+                    field : 'cnName', 
+                    title : '名称'
+                },
+                {
+                    field : 'id', 
+                    title : '编码'
+                },
+                /* {
+                    field : 'parentId', 
+                    title : '父Id',
+                    visible: false
+                }, */                
+                {
+                    field : 'resType', 
+                    title : '类别',
+                    formatter: function(value, item, index) {
+		            	return $.table.selectDictLabel(resTypeDatas, value);
+		            }
+                },
+                /* {
+                    field : 'systemCode', 
+                    title : '系统编码',
+                    visible: false
+                },
+                {
+                    field : 'systemName', 
+                    title : '系统名称',
+                    visible: false,
+                    formatter: function(value, item, index) {
+		            	return value ? value : "-";
+		            }
+                },
+                {
+                    field : 'moduleCode', 
+                    title : '模块编码',
+                    visible: false
+                },
+                {
+                    field : 'moduleName', 
+                    title : '模块名称',
+                    visible: false,
+                    formatter: function(value, item, index) {
+		            	return value ? value : "-";
+		            }
+                },
+                {
+                    field : 'resName', 
+                    title : '名称',
+                    visible: false
+                },
+                {
+                    field : 'url', 
+                    title : 'url',
+                    visible: false
+                },
+                {
+                    field : 'width', 
+                    title : '宽',
+                    visible: false
+                },
+                {
+                    field : 'height', 
+                    title : '高',
+                    visible: false
+                }, */
+                {
+                    field : 'queryportId', 
+                    title : '视图',
+                    formatter: function(value, item, index) {
+		            	return value ? value : "-";
+		            }
+                },
+                /* {
+                    field : 'imgWidth', 
+                    title : '宽',
+                    visible: false
+                },
+                {
+                    field : 'imgHeight', 
+                    title : '高',
+                    visible: false
+                }, */
+                {
+                    field : 'imgUrl', 
+                    title : '图片',
+	                formatter: function(value, row, index) {
+	                    if(value) {
+	                        return $.common.sprintf("<img style='height: %spx;width: %spx' src='%s'/>", 25, row.imgWidth * 25 / row.imgHeight, ctx + value);
+	                    } else {
+	                    	return "-";
+	                    }
+	                }
+                },
+                {
+                    field : 'sortNo', 
+                    title : '显示顺序'
+                },
+                {
+                    field : 'deleted', 
+                    title : '状态',
+		            formatter: function(value, item, index) {
+		            	return $.table.selectDictLabel(deletedDatas, value);
+		            }
+                },
+                {
+                	field : 'mineOperatorButton', 
+                    title: '操作',
+                    align: 'left',
+                    width: '165px',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        if('res' === row.resType){
+                        	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.editFull(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        } else {
+	                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        }
+                        if('res' !== row.resType){
+	                        actions.push('<a class="btn btn-info  btn-xs ' + addFlag + '" href="javascript:void(0)" onclick="$.operate.add(\'' + row.id + '\')"><i class="fa fa-plus"></i>新增</a> ');
+                        }
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.treeTable.init(options);
+        });
+    </script>
+</body>
+</html>

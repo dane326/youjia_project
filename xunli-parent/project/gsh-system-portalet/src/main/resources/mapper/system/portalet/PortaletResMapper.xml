@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gsh.system.portalet.mapper.PortaletResMapper">
+    
+    <resultMap type="PortaletRes" id="PortaletResResult">
+        <result property="id"    column="id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="cnName"    column="cn_name"    />
+        <result property="resType"    column="res_type"    />
+        <result property="systemCode"    column="system_code"    />
+        <result property="systemName"    column="system_name"    />
+        <result property="moduleCode"    column="module_code"    />
+        <result property="moduleName"    column="module_name"    />
+        <result property="resName"    column="res_name"    />
+        <result property="url"    column="url"    />
+        <result property="width"    column="width"    />
+        <result property="height"    column="height"    />
+        <result property="queryportId"    column="queryport_id"    />
+        <result property="imgUrl"    column="img_url"    />
+        <result property="imgWidth"    column="img_width"    />
+        <result property="imgHeight"    column="img_height"    />
+        <result property="html"    column="html"    />
+        <result property="sortNo"    column="sort_no"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createByName"    column="create_by_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPortaletResVo">
+        select id, parent_id, cn_name, res_type, system_code, system_name, module_code, module_name, res_name, url, width, height, queryport_id, img_url, img_width, img_height, html, sort_no, deleted, create_by, create_by_name, create_time, update_by, update_time from sys_portalet_res
+    </sql>
+
+    <select id="selectPortaletResList" parameterType="PortaletRes" resultMap="PortaletResResult">
+        <include refid="selectPortaletResVo"/>
+        <where>  
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="cnName != null  and cnName != ''"> and cn_name like concat('%', #{cnName}, '%')</if>
+            <if test="resType != null  and resType != ''"> and res_type = #{resType}</if>
+            <if test="systemCode != null  and systemCode != ''"> and system_code = #{systemCode}</if>
+            <if test="systemName != null  and systemName != ''"> and system_name like concat('%', #{systemName}, '%')</if>
+            <if test="moduleCode != null  and moduleCode != ''"> and module_code = #{moduleCode}</if>
+            <if test="moduleName != null  and moduleName != ''"> and module_name like concat('%', #{moduleName}, '%')</if>
+            <if test="resName != null  and resName != ''"> and res_name like concat('%', #{resName}, '%')</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="width != null "> and width = #{width}</if>
+            <if test="height != null "> and height = #{height}</if>
+            <if test="queryportId != null  and queryportId != ''"> and queryport_id = #{queryportId}</if>
+            <if test="imgUrl != null  and imgUrl != ''"> and img_url = #{imgUrl}</if>
+            <if test="imgWidth != null "> and img_width = #{imgWidth}</if>
+            <if test="imgHeight != null "> and img_height = #{imgHeight}</if>
+            <if test="html != null  and html != ''"> and html = #{html}</if>
+            <if test="sortNo != null "> and sort_no = #{sortNo}</if>
+            <if test="deleted != null  and deleted != ''"> and deleted = #{deleted}</if>
+            <if test="createByName != null  and createByName != ''"> and create_by_name like concat('%', #{createByName}, '%')</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="params.filterModulePageId != null and params.filterModulePageId != ''"> and id not in (select res_id from sys_portalet_page where parent_id = #{params.filterModulePageId})</if>
+            <if test="params.filterUserCode != null and params.filterUserCode != ''"> and id not in (select res_id from sys_portalet_user where user_code = #{params.filterUserCode})</if>
+        </where>
+        order by parent_id, sort_no
+    </select>
+    
+    <select id="selectPortaletResById" parameterType="Long" resultMap="PortaletResResult">
+        <include refid="selectPortaletResVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPortaletRes" parameterType="PortaletRes" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_portalet_res
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null ">parent_id,</if>
+            <if test="cnName != null  and cnName != ''">cn_name,</if>
+            <if test="resType != null  and resType != ''">res_type,</if>
+            <if test="systemCode != null  and systemCode != ''">system_code,</if>
+            <if test="systemName != null  and systemName != ''">system_name,</if>
+            <if test="moduleCode != null  and moduleCode != ''">module_code,</if>
+            <if test="moduleName != null  and moduleName != ''">module_name,</if>
+            <if test="resName != null  and resName != ''">res_name,</if>
+            <if test="url != null  and url != ''">url,</if>
+            <if test="width != null ">width,</if>
+            <if test="height != null ">height,</if>
+            <if test="queryportId != null  and queryportId != ''">queryport_id,</if>
+            <if test="imgUrl != null  and imgUrl != ''">img_url,</if>
+            <if test="imgWidth != null ">img_width,</if>
+            <if test="imgHeight != null ">img_height,</if>
+            <if test="html != null  and html != ''">html,</if>
+            <if test="sortNo != null ">sort_no,</if>
+            <if test="deleted != null  and deleted != ''">deleted,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createByName != null  and createByName != ''">create_by_name,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null ">#{parentId},</if>
+            <if test="cnName != null  and cnName != ''">#{cnName},</if>
+            <if test="resType != null  and resType != ''">#{resType},</if>
+            <if test="systemCode != null  and systemCode != ''">#{systemCode},</if>
+            <if test="systemName != null  and systemName != ''">#{systemName},</if>
+            <if test="moduleCode != null  and moduleCode != ''">#{moduleCode},</if>
+            <if test="moduleName != null  and moduleName != ''">#{moduleName},</if>
+            <if test="resName != null  and resName != ''">#{resName},</if>
+            <if test="url != null  and url != ''">#{url},</if>
+            <if test="width != null ">#{width},</if>
+            <if test="height != null ">#{height},</if>
+            <if test="queryportId != null  and queryportId != ''">#{queryportId},</if>
+            <if test="imgUrl != null  and imgUrl != ''">#{imgUrl},</if>
+            <if test="imgWidth != null ">#{imgWidth},</if>
+            <if test="imgHeight != null ">#{imgHeight},</if>
+            <if test="html != null  and html != ''">#{html},</if>
+            <if test="sortNo != null ">#{sortNo},</if>
+            <if test="deleted != null  and deleted != ''">#{deleted},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createByName != null  and createByName != ''">#{createByName},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePortaletRes" parameterType="PortaletRes">
+        update sys_portalet_res
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null ">parent_id = #{parentId},</if>
+            <if test="cnName != null  and cnName != ''">cn_name = #{cnName},</if>
+            <if test="resType != null  and resType != ''">res_type = #{resType},</if>
+            <if test="systemCode != null  and systemCode != ''">system_code = #{systemCode},</if>
+            <if test="systemName != null  and systemName != ''">system_name = #{systemName},</if>
+            <if test="moduleCode != null  and moduleCode != ''">module_code = #{moduleCode},</if>
+            <if test="moduleName != null  and moduleName != ''">module_name = #{moduleName},</if>
+            <if test="resName != null  and resName != ''">res_name = #{resName},</if>
+            <if test="url != null  and url != ''">url = #{url},</if>
+            <if test="width != null ">width = #{width},</if>
+            <if test="height != null ">height = #{height},</if>
+            <if test="queryportId != null  and queryportId != ''">queryport_id = #{queryportId},</if>
+            <if test="imgUrl != null  and imgUrl != ''">img_url = #{imgUrl},</if>
+            <if test="imgWidth != null ">img_width = #{imgWidth},</if>
+            <if test="imgHeight != null ">img_height = #{imgHeight},</if>
+            <if test="html != null  and html != ''">html = #{html},</if>
+            <if test="sortNo != null ">sort_no = #{sortNo},</if>
+            <if test="deleted != null  and deleted != ''">deleted = #{deleted},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createByName != null  and createByName != ''">create_by_name = #{createByName},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePortaletResById" parameterType="Long">
+        delete from sys_portalet_res where id = #{id}
+    </delete>
+
+    <delete id="deletePortaletResByIds" parameterType="String">
+        delete from sys_portalet_res where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="logicDeletePortaletResById" parameterType="Long">
+        update   sys_portalet_res  set deleted='1' where id = #{id}
+    </update>
+
+    <update id="logicDeletePortaletResByIds" parameterType="String">
+        update   sys_portalet_res  set deleted='1' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

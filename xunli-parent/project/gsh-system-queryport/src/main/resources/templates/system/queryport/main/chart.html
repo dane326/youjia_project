@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('视图配置')" />
+    <th:block th:include="include :: select2-css" />
+    <style type="text/css">
+        .select-table table{table-layout:fixed;}.select-table .table td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}.form-control{padding:3px 6px 4px;height:30px;}table .icheckbox-blue{top:0px;left:6px;}.form-control.select2-hidden-accessible{position:static!important;}.select-table table label.error{position: inherit;}select + label.error{z-index:1;right:40px;}
+    </style>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <form id="form-chart-edit" class="form-horizontal">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <div class="ibox-content" style="padding: 15px 15px 5px 0px;">
+                    <a class="btn btn-info" onclick="submitHandler('edit');"><i class="fa"></i>1.配置基本信息</a>&nbsp;
+                    <a class="btn btn-info" onclick="submitHandler('column');"><i class="fa"></i>2.配置显示列信息</a>&nbsp;
+                    <a class="btn btn-info" onclick="submitHandler('param');"><i class="fa"></i>3.配置参数信息</a>&nbsp;
+                    <a class="btn btn-primary"><i class="fa"></i>4.配置视图信息</a>&nbsp;
+                </div>
+                <div class="ibox-content" style="padding: 15px 15px 5px 0px;">
+                    <p>第四步：配置查询视图的chart信息，可配置多个，单个chart可显示多列数据。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <button type="button" class="btn btn-sm btn-primary"  th:onclick="'addRow(\'bootstrap-chart-table\')'">新增</button>
+            </div>
+
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-chart-table" ></table>
+            </div>
+            <div class="col-sm-12">
+                <div style="text-align: right;">
+                    <br>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="submitHandler('column')"><i class="fa fa-reply"></i>上一步</button>
+                    <button type="button" class="btn btn-sm btn-success" onclick="submitHandler('display')"><i class="fa fa-check"></i>保存 并查看结果</button>&nbsp;
+                    <button type="button" class="btn btn-sm btn-danger" onclick="closeItem()"><i class="fa fa-remove"></i>关 闭 </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<th:block th:include="include :: footer" />
+<th:block th:include="include :: select2-js" />
+<th:block th:include="include :: bootstrap-table-reorder-js" />
+<th:block th:include="include :: bootstrap-typeahead-js" />
+<script th:src="@{/js/jquery.tmpl.js}"></script>
+<script th:inline="javascript">
+    var prefix = ctx + "system/queryport";
+    var mainId = "[[${queryportMain.id}]]";
+    var queryportColumns=[[${queryportMain.QueryportColumns}]];
+
+    $(function() {
+        console.log(queryportColumns);
+        var options = {
+            id: "bootstrap-chart-table",
+            url: prefix + "/chart/list?mainId="+mainId,
+            exportUrl: prefix + "/export",
+            modalName: "图形配置",
+            sortName: "sort",
+            sortOrder: "desc",
+            pagination: false,
+            showSearch: false,
+            showRefresh: true,
+            showToggle: true,
+            showColumns: true,
+            onLoadSuccess: onLoadSuccess,
+            onReorderRow: function onReorderRow(data) {
+                console.log(11111);
+                for (var i = 0; i < data.length; i++) {
+                    $("#queryportCharts_sort_" + data[i].id).val(i+1);
+                }
+            },
+            columns: [{
+                    title: "序号",
+                    width: "5%",
+                    formatter: function (value, row, index) {
+                        // id隐藏域
+                        var idHtml = $.common.sprintf("<input type='hidden' name='queryportCharts[%s].id' value='%s'>", index, row.id);
+                        var mainIdHtml = $.common.sprintf("<input type='hidden' name='queryportCharts[%s].mainId' value='%s'>", index, row.mainId);
+                        // 排序隐藏域
+                        var sortHtml = $.common.sprintf("<input class='form-control' type='text' name='queryportCharts[%s].displayOrder' value='%s' id='queryportCharts_sort_%s'>", index, index, row.id);
+                        return idHtml + mainIdHtml + sortHtml;
+                    },
+                    cellStyle: function (value, row, index) {
+                        return {css: {"cursor": "move"}};
+                    }
+                },
+                {
+                    field : 'title',
+                    title : '标题',
+                    width : '10%',
+                    formatter: function (value, row, index) {
+                        return $.common.sprintf("<input class='form-control' type='text' name='queryportCharts[%s].title' required value='%s'>", index, value);
+                    }
+                },
+
+                {
+                    field : 'shapeType',
+                    title : '图形类型',
+                    width : '8%',
+                    formatter: function (value, row, index) {
+                        var data = [{index: index, shapeType: value,columnName:'queryportCharts'}];
+                        return $("#shapeTypeTpl").tmpl(data).html();
+                    }
+                },
+
+                {
+                    field : 'height',
+                    title : '高度',
+                    width : '8%',
+                    formatter: function (value, row, index) {
+                        return $.common.sprintf("<input class='form-control' type='text' name='queryportCharts[%s].height' required value='%s'>", index, value);
+                    }
+                },
+                {
+                    field : 'xaxis',
+                    title : 'X轴',
+                    width : '15%',
+                    formatter: function (value, row, index) {
+                        var data = [{queryportColumns: queryportColumns, index: index, xaxis: value,columnName:'queryportCharts'}];
+                        return $("#xaxisTpl").tmpl(data).html();
+                    }
+                },
+                {
+                    field : 'yaxis',
+                    title : 'y轴',
+                    width : '30%',
+                    formatter: function (value, row, index) {
+                        var data = [{queryportColumns: queryportColumns, index: index, yaxis: value,columnName:'queryportCharts'}];
+                        return $("#yaxisTpl").tmpl(data).html();
+                    }
+                },
+                {
+                    field: '',
+                    title: '操作',
+                    width: "5%",
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var html = "<button type=\"button\" class=\"btn btn-xs btn-danger\" onclick=\"delRow('bootstrap-chart-table'," + row.id + ")\">删除</button>";
+                        return html;
+                    }
+                }
+                ]
+        };
+        $.table.init(options);
+    });
+
+    // 当所有数据被加载时触发处理函数
+    function onLoadSuccess(data){
+        $.fn.select2.defaults.set( "theme", "bootstrap" );
+        $("select.form-control").each(function () {
+            $(this).select2().on("change", function () {
+                $(this).valid();
+            })
+        })
+        $(".check-box").each(function() {
+            $(this).iCheck({
+                checkboxClass: 'icheckbox-blue'
+            })
+        })
+    }
+
+    function submitHandler(step) {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/chart/save", $('#form-chart-edit').serialize(), function (result) {
+                if(result.code == '0'){
+                    $.modal.msgSuccess(result.msg);
+                    location.href = prefix +  "/" + step + "/" + mainId;
+                }else{
+                    $.modal.msgError(result.msg);
+                }
+            });
+        }
+    }
+    var columnId = -1;
+	    function addRow(tableId) {
+			if (!$.validate.form()) {
+				return false;
+			}
+	    	var row ={"id":columnId,"mainId":[[${queryportMain.id}]],"title":[[${queryportMain.name}]],"height":"450px","shapeType":"","xaxis":"","yaxis":""};
+			//直接插入会丢失新填写的数据，这里先更新后插入
+			updateRows(tableId);
+			columnId--;
+			$("#"+tableId).bootstrapTable("insertRow",{index: 0, row: row})
+			//初始化所有控件
+			onLoadSuccess();
+	    }
+
+	    function updateRows(tableId) {
+			var allRows = $("#" + tableId).bootstrapTable("getData");
+			var params = new Array();
+			for (var rowIndex=0; rowIndex<allRows.length; rowIndex++) {
+				var obj = new Object();
+				var newRow  = $('#' + tableId +' tr[data-index="'+rowIndex+'"] td');
+				for (var i = 0; i < newRow.length; i++) {
+					var td = $(newRow[i]).find('input');
+					$.each(td, function (i, v) {
+						//这里需要截取名字
+						var key = $(v).attr("name");
+						if ($(v).attr("type") == "checkbox") {
+							if ($(v).is(':checked')) {
+								obj[key] = $(v).val();
+							} else {
+								obj[key] = '0';
+							}
+						} else {
+							obj[key] = $(v).val();
+						}
+					})
+					var tdSelect = $(newRow[i]).find('select');
+					$.each(tdSelect, function (i, v) {
+						//这里需要截取名字
+						var key = $(v).attr("name");
+						obj[key] = $(v).val();
+					})
+				}
+				params.push({index:rowIndex,row:obj});
+			}
+			$("#" + tableId).bootstrapTable("updateRow", params);
+		}
+		function delRow(tableId,columnId) {
+			$.modal.confirm("确认要删除吗",function(){
+				if(columnId<0){
+					$("#"+tableId).bootstrapTable("remove",{field: 'id', values: [columnId]});
+					onLoadSuccess();
+				}else{
+					$.operate.post(prefix+"/chart/delete",{ids:columnId});
+				}
+			})
+		}
+</script>
+</body>
+</html>
+
+<!-- 图形形状 -->
+<script id="shapeTypeTpl" type="text/x-jquery-tmpl">
+<div>
+<select class='form-control' name='${columnName}[${index}].shapeType'>
+    <option value="line" {{if shapeType==="line"}}selected{{/if}}>折线图</option>
+    <option value="pie" {{if shapeType==="pie"}}selected{{/if}}>扇形图</option>
+    <option value="bar" {{if shapeType==="bar"}}selected{{/if}}>柱状图</option>
+</select>
+</div>
+</script>
+
+<!-- x轴数据 -->
+<script id="xaxisTpl" type="text/x-jquery-tmpl">
+<div>
+ <select class='form-control' name='${columnName}[${index}].xaxis' required>
+     {{each(i,column) queryportColumns}}
+        <option value=${column.id} {{if xaxis== column.id}}selected{{/if}}>${column.cname}</option>
+     {{/each}}
+</select>
+</div>
+</script>
+
+<!-- y轴数据 -->
+<script id="yaxisTpl" type="text/x-jquery-tmpl">
+<div>
+<select class='form-control' multiple='multiple' name='${columnName}[${index}].yaxis' required>
+     {{each(i,column) queryportColumns}}
+            <option value=${column.id} {{if yaxis.search(column.id)!=-1 }}selected{{/if}}>${column.cname}</option>
+     {{/each}}
+</select>
+</div>
+</script>

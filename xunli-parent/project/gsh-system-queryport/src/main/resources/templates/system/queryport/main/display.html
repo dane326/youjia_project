@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('视图列表')" />
+    <th:block th:include="include :: select2-css" />
+    <th:block th:include="include :: ztree-css" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div id="queryport-panel" th:id="${'queryport-panel'+queryportMain.id}"></div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+     <th:block th:include="include :: select2-js" />
+     <th:block th:include="include :: ztree-js" />
+     <th:block th:include="system/queryport/include :: queryport-js" />
+     <script th:src="@{/system/queryport/js/tabfield-ui.js}"></script>
+    <script th:inline="javascript">
+        $(function() {
+            $.queryportui.init([[${queryportMain}]],"#queryport-panel"+[[${queryportMain.id}]]);
+        });
+
+    </script>
+</body>
+</html>

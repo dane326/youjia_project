@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>404</title>
+
+	<link rel="stylesheet" type="text/css" th:href="@{/error/404/404_03/normalize.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/error/404/404_03/demo.css}">
+	<!--必要样式-->
+	<link rel="stylesheet" type="text/css" th:href="@{/error/404/404_03/component.css}">
+	<!--[if IE]><script src="souye/js/html5.js"></script><![endif]-->
+
+	<style type="text/css">
+		#Layer1 {position:absolute;	width:100%;	z-index:2;	top: 60%;}
+		.STYLE3 {font-size: medium}
+	</style>
+
+</head>
+<body>
+
+<div class="container demo-1">
+	<div class="content">
+		<div id="large-header" class="large-header" style="height: 917px;">
+			<canvas id="demo-canvas" width="1920" height="917"></canvas>
+			<h1 class="main-title">404<br><span class="STYLE3">sorry!网页不见了...</span></h1>
+		</div>
+		<a href="" class="btn btn-primary m-t" id="topUrl" >首页</a>
+	</div>
+</div>
+
+
+<script th:src="@{/error/404/404_03/TweenLite.min.js}"></script>
+<script th:src="@{/error/404/404_03/EasePack.min.js}"></script>
+<script th:src="@{/error/404/404_03/rAF.js}"></script>
+<script th:src="@{/error/404/404_03/demo-1.js}"></script>
+<SCRIPT type=text/javascript>
+	var contenxt = window.location.href.split(/\//g)[3];
+	document.getElementById("topUrl").setAttribute("href", "javascript:top.document.location.href='/"+contenxt+"'");
+
+</SCRIPT>
+</body></html>

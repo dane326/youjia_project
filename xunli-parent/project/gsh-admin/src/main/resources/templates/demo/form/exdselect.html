@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('扩展字典和级联字典示例')" />
+	<th:block th:include="include :: select2-css" />
+	<th:block th:include="include :: ztree-css" />
+</head>
+<body>
+<div class="main-content">
+	<form id="form-user-add" class="form-horizontal">
+		<div class="row">
+			<h4 class="form-header h4" style="margin:15px">扩展字典和级联字典组件的使用说明</h4>
+			<div class="col-sm-12">
+				<p>1、绑定html的dom，并给自定义属性data-exdselect-options赋值option，自定义属性data-exdselect-value赋值value</p>
+				<p>2、绑定html的dom的class 包含 custom-from-exdselect ,通过js的options加载无需指定此class;</p>
+				<p>3、在页面加载完成时执行$.exdSelect.initialize();</p>
+				<p>4、如果存在id为 绑定html的dom的id + “Name”的dom，赋值选中option的text给该dom;</p>
+				<p>5、字典数据异步加载，并保存在浏览器的sessionStorage中;</p>
+			</div>
+		</div>
+
+		<div class="row">
+			<h4 class="form-header h4" style="margin:15px">CODE模式示例</h4>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">字典-有默认值：</label>
+					<div class="col-sm-8">
+						<select id="processSelect22" name="procKey" data-exdselect-options='{"parentCode" :"12156"}' data-exdselect-value="12157" class="form-control m-b custom-from-exdselect" required>
+						</select>
+						<input id="processSelect22Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">字典-多选-有默认值：</label>
+					<div class="col-sm-8">
+						<select id="processSelectMulti22" name="procKey" data-exdselect-options='{"parentCode" :"12156"}' data-exdselect-value="12157,12179" class="form-control m-b custom-from-exdselect" multiple required>
+						</select>
+						<input id="processSelectMulti22Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">级联1-默认值：</label>
+					<div class="col-sm-8">
+						<select id="processSelect25" name="procKey" data-exdselect-options='{"parentCode" :"12156","relateId":"processSelect26"}' data-exdselect-value="12157"  class="form-control m-b custom-from-exdselect" required>
+						</select>
+						<input id="processSelect25Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">级联2-默认值：</label>
+					<div class="col-sm-8">
+						<select id="processSelect26" name="procKey" data-exdselect-options='{"parentCode" :"-7"}' data-exdselect-value="12160" class="form-control m-b custom-from-exdselect" required>
+						</select>
+						<input id="processSelect26Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">流程&#45;&#45;单选：</label>
+					<div class="col-sm-8 custom-from-exdselect" id="deptselect22" th:attr="data-exdselect-value='12158'" data-exdselect-options='{
+						"parentCode" :"12156",
+						"selectType":"radio",
+						"checkName" : "status22"
+					}'>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-xs-4 control-label">流程&#45;&#45;多选：</label>
+					<div class="col-xs-8 custom-from-exdselect" id="roleselect22" th:attr="data-exdselect-value='12157,12158'" data-exdselect-options='{
+						"parentCode" :"12156",
+						"selectType":"checkBox",
+						"checkName" : "role22"
+					}'>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">级联1：</label>
+					<div class="col-sm-8">
+						<select id="processSelect111" name="procKey" data-exdselect-options='{"parentCode" :"4","relateId":"processSelect112"}' th:attr="data-exdselect-value='12156'" class="form-control m-b custom-from-exdselect" required>
+						</select>
+						<input id="processSelect111Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">级联2：</label>
+					<div class="col-sm-8">
+						<select id="processSelect112" name="procKey" data-exdselect-options='{"parentCode" :"-7","relateId":"processSelect113"}' th:attr="data-exdselect-value='12157'" class="form-control m-b custom-from-exdselect" required>
+						</select>
+						<input id="processSelect112Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">级联3：</label>
+					<div class="col-sm-8">
+						<select id="processSelect113" name="procKey" data-exdselect-options='{"parentCode" :"-7","relateId":"processDefSelect114"}' th:attr="data-exdselect-value='12159'" class="form-control m-b custom-from-exdselect" required>
+						</select>
+						<input id="processSelect113Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">级联4：</label>
+					<div class="col-sm-8">
+						<select id="processDefSelect114" name="procKey" data-exdselect-options='{"parentCode" :"-7"}' th:attr="data-exdselect-value='12163'" class="form-control m-b custom-from-exdselect" required>
+						</select>
+						<input id="processDefSelect114Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<h4 class="form-header h4" style="margin:15px">TYPE模式示例</h4>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">字典-无默认值：</label>
+					<div class="col-sm-8">
+						<select id="processSelect" name="procKey" data-exdselect-options='{"parentDict" :"process"}' class="form-control m-b custom-from-exdselect" required>
+						</select>
+						<input id="processSelectName" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">字典-有默认值：</label>
+					<div class="col-sm-8">
+						<select id="processSelect2" name="procKey" data-exdselect-options='{"parentDict" :"process"}' data-exdselect-value="status" class="form-control m-b custom-from-exdselect" required>
+						</select>
+						<input id="processSelect2Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">字典-多选-无默认值：</label>
+					<div class="col-sm-8">
+						<select id="processSelectMulti" name="procKey" data-exdselect-options='{"parentDict" :"process"}' class="form-control m-b custom-from-exdselect" multiple required>
+						</select>
+						<input id="processSelectMultiName" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">字典-多选-有默认值：</label>
+					<div class="col-sm-8">
+						<select id="processSelectMulti2" name="procKey" data-exdselect-options='{"parentDict" :"process"}' data-exdselect-value="def,status" class="form-control m-b custom-from-exdselect" multiple required>
+						</select>
+						<input id="processSelectMulti2Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">级联1：</label>
+					<div class="col-sm-8">
+						<select id="processSelect11" name="procKey" data-exdselect-options='{"parentDict" :"process","relateId":"processSelect12"}' th:attr="data-exdselect-value='def'" class="form-control m-b custom-from-exdselect" required>
+						</select>
+						<input id="processSelect11Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">级联2：</label>
+					<div class="col-sm-8">
+						<select id="processSelect12" name="procKey" data-exdselect-options='{"parentDict" :"-7","relateId":"processSelect13"}' th:attr="data-exdselect-value='demo'" class="form-control m-b custom-from-exdselect" required>
+						</select>
+						<input id="processSelect12Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">级联3：</label>
+					<div class="col-sm-8">
+						<select id="processSelect13" name="procKey" data-exdselect-options='{"parentDict" :"-7","relateId":"processDefSelect14"}' th:attr="data-exdselect-value='task'" class="form-control m-b custom-from-exdselect" required>
+						</select>
+						<input id="processSelect13Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">级联4：</label>
+					<div class="col-sm-8">
+						<select id="processDefSelect14" name="procKey" data-exdselect-options='{"parentDict" :"-7"}' th:attr="data-exdselect-value='hold'" class="form-control m-b custom-from-exdselect" required>
+						</select>
+						<input id="processDefSelect14Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">级联1-默认值：</label>
+					<div class="col-sm-8">
+						<select id="processSelect15" name="procKey" data-exdselect-options='{"parentDict" :"process","relateId":"processSelect16"}' data-exdselect-value="def"  class="form-control m-b custom-from-exdselect" required>
+						</select>
+						<input id="processSelect15Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">级联2-默认值：</label>
+					<div class="col-sm-8">
+						<select id="processSelect16" name="procKey" data-exdselect-options='{"parentDict" :"-7"}' data-exdselect-value="fault" class="form-control m-b custom-from-exdselect" required>
+						</select>
+						<input id="processSelect16Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">跨级-级联1-默认值：</label>
+					<div class="col-sm-8">
+						<select id="processSelect17" name="procKey" data-exdselect-options='{"parentDict" :"process_def","relateId":"processSelect18","relateSuffix":"_task"}' data-exdselect-value="test"  class="form-control m-b custom-from-exdselect" required>
+						</select>
+						<input id="processSelect17Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">跨级-级联2-默认值：</label>
+					<div class="col-sm-8">
+						<select id="processSelect18" name="procKey" data-exdselect-options='{"parentDict" :"-7"}' data-exdselect-value="2" class="form-control m-b custom-from-exdselect" required>
+						</select>
+						<input id="processSelect18Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">js-级联1-默认值：</label>
+					<div class="col-sm-8">
+						<select id="processSelect19" name="procKey" class="form-control m-b" required>
+						</select>
+						<input id="processSelect19Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">js-级联2-默认值：</label>
+					<div class="col-sm-8">
+						<select id="processSelect20" name="procKey" class="form-control m-b" required>
+						</select>
+						<input id="processSelect20Name" name="procName" type="hidden">
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">流程--单选：</label>
+					<div class="col-sm-8 custom-from-exdselect" id="deptselect" th:attr="data-exdselect-value=${radiovalue}" data-exdselect-options='{
+						"parentDict" :"process_def",
+						"selectType":"radio",
+						"checkName" : "status"
+					}'>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-xs-4 control-label">流程--多选：</label>
+					<div class="col-xs-8 custom-from-exdselect" id="roleselect" th:attr="data-exdselect-value=${checkboxvalue}" data-exdselect-options='{
+						"parentDict" :"process_def",
+						"selectType":"checkBox",
+						"checkName" : "role"
+					}'>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label">js--单选：</label>
+					<div class="col-sm-8 custom-from-exdselect" id="selectRadio2"></div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-xs-4 control-label">js--多选：</label>
+					<div class="col-xs-8 custom-from-exdselect" id="selectCheckbox2"></div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<h4 class="form-header h4" style="margin:15px">常用参数说明</h4>
+			<div class="col-sm-12">
+				<table id="bootstrap-table" class="table table-hover table-bordered" style="border: 0px solid;">
+					<thead>
+					<tr>
+						<th tabindex="0">
+							<div class="th-inner ">参数KEY</div>
+							<div class="fht-cell"></div>
+						</th>
+						<th tabindex="0">
+							<div class="th-inner ">参数名称</div>
+							<div class="fht-cell"></div>
+						</th>
+						<th tabindex="0" width="80px">
+							<div class="th-inner ">参数类型</div>
+							<div class="fht-cell"></div>
+						</th>
+						<th tabindex="0" width="80px">
+							<div class="th-inner ">是否必选</div>
+							<div class="fht-cell"></div>
+						</th>
+						<th tabindex="0" width="80px">
+							<div class="th-inner ">默认值</div>
+							<div class="fht-cell"></div>
+						</th>
+						<th tabindex="0">
+							<div class="th-inner ">可选值</div>
+							<div class="fht-cell"></div>
+						</th>
+						<th tabindex="0">
+							<div class="th-inner ">其他说明</div>
+							<div class="fht-cell"></div>
+						</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr data-index="0">
+						<td>id</td>
+						<td>主键id</td>
+						<td>String</td>
+						<td>必选</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr data-index="0">
+						<td>parentDict</td>
+						<td>字典枚举类型</td>
+						<td>String</td>
+						<td>非必选</td>
+						<td></td>
+						<td></td>
+						<td>被级联的组件设置为-7 ，TYPE模式必选参数</td>
+					</tr>
+					<tr data-index="0">
+						<td>parentCode</td>
+						<td>字典枚举编码</td>
+						<td>String</td>
+						<td>非必选</td>
+						<td></td>
+						<td></td>
+						<td>被级联的组件设置为-7，code模式必填</td>
+					</tr>
+					<tr data-index="0">
+						<td>relateId</td>
+						<td>级联下拉列表id</td>
+						<td>json</td>
+						<td>非必选</td>
+						<td></td>
+						<td></td>
+						<td>存在下级级联填写</td>
+					</tr>
+					<tr data-index="0">
+						<td>selectType</td>
+						<td>类型</td>
+						<td>String</td>
+						<td>非必选</td>
+						<td>select</td>
+						<td>select,checkbox,radio</td>
+						<td>checkbox,radio无法级联</td>
+					</tr>
+					<tr data-index="0">
+						<td>relateSuffix</td>
+						<td>级联下拉列表后缀</td>
+						<td>String</td>
+						<td>非必选</td>
+						<td></td>
+						<td></td>
+						<td>级联是dictParent是根据value拼接，可以附加后缀，主要用于跨级, CODE模式不支持此参数</td>
+					</tr>
+					<tr data-index="0">
+						<td>defaultValue</td>
+						<td>默认值</td>
+						<td>String</td>
+						<td>非必选</td>
+						<td></td>
+						<td></td>
+						<td>设置默认选中节点</td>
+					</tr>
+					<tr data-index="0">
+						<td>checkName</td>
+						<td>选中的组件名称</td>
+						<td>String</td>
+						<td>非必选</td>
+						<td>同id一致</td>
+						<td></td>
+						<td>针对checkbox,radio生效，设置生成组件的名称</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</form>
+</div>
+
+
+<th:block th:include="include :: footer" />
+<th:block th:include="include :: select2-js" />
+<th:block th:include="include :: ztree-js" />
+<script>
+	$(function() {
+        var options = {
+			id:"processSelect19",
+			parentDict :"process_def",              // 字典类型
+			relateId :"processSelect20",              // 关联ID
+			relateSuffix : "_task",         // 关联后缀
+			defaultValue : "demo",
+			onExdChange: function (obj) {
+				console.log(obj.id + ":" + obj.value);
+			}
+		};
+		$.exdSelect.init(options);
+
+		var optionsSub = {
+			id:"processSelect20",
+			parentDict :"-7",
+			defaultValue : "hold",
+			onExdChange: function (obj) {
+				console.log(obj.id + ":" + obj.value);
+			}
+		};
+		$.exdSelect.init(optionsSub);
+
+		var optionsRadio = {
+			id:"selectRadio2",
+			parentDict :"process_def",              // 字典类型
+			checkName : "statusRadio",
+			selectType : "radio",
+			defaultValue : "demo",
+			onExdChecked: function (obj) {
+				console.log(obj.id + ":" + obj.value);
+			}
+		};
+		$.exdSelect.init(optionsRadio);
+
+		var optionsCheckbox = {
+			id:"selectCheckbox2",
+			parentDict :"process_def",              // 字典类型
+			checkName : "statusCheckbox",
+			selectType : "checkBox",
+			defaultValue : "fault,test",
+			onExdChecked: function (obj) {
+				console.log(obj.id + ":" + obj.value);
+			}
+		};
+		$.exdSelect.init(optionsCheckbox);
+
+        //初始化
+        $.exdSelect.initialize()
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gsh.system.mapper.SysFactoryOrderMapper">
+    
+    <resultMap type="SysFactoryOrder" id="SysFactoryOrderResult">
+        <result property="id"    column="id"    />
+        <result property="contextName"    column="context_name"    />
+        <result property="factoryCode"    column="factory_code"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="orderType"    column="order_type"    />
+        <result property="orderValue"    column="order_value"    />
+        <result property="buyType"    column="buy_type"    />
+        <result property="buyMethod"    column="buy_method"    />
+        <result property="buyNum"    column="buy_num"    />
+        <result property="buyPeriod"    column="buy_period"    />
+        <result property="orderSubject"    column="order_subject"    />
+        <result property="money"    column="money"    />
+        <result property="invoiced"    column="invoiced"    />
+        <result property="payStatus"    column="pay_status"    />
+        <result property="payMethod"    column="pay_method"    />
+        <result property="tradeNo"    column="trade_no"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="deleted"    column="deleted"    />
+    </resultMap>
+
+    <sql id="selectSysFactoryOrderVo">
+        select id, context_name, factory_code, order_no, order_type, order_value, buy_type, buy_method, buy_num, buy_period, order_subject, money, invoiced, pay_status, pay_method, trade_no, create_by, create_time, update_by, update_time, remark, deleted from sys_factory_order
+    </sql>
+
+    <select id="selectSysFactoryOrderList" parameterType="SysFactoryOrder" resultMap="SysFactoryOrderResult">
+        <include refid="selectSysFactoryOrderVo"/>
+        <where>
+        	<if test="contextName != null  and contextName != ''"> and context_name = #{contextName}</if>
+        	<if test="factoryCode != null"> and factory_code = #{factoryCode}</if>
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
+            <if test="orderType != null  and orderType != ''"> and order_type = #{orderType}</if>
+            <if test="orderValue != null  and orderValue != ''"> and order_value = #{orderValue}</if>
+            <if test="buyType != null  and buyType != ''"> and buy_type = #{buyType}</if>
+            <if test="buyMethod != null  and buyMethod != ''"> and buy_method = #{buyMethod}</if>
+            <if test="buyNum != null  and buyNum != ''"> and buy_num = #{buyNum}</if>
+            <if test="buyPeriod != null "> and buy_period = #{buyPeriod}</if>
+            <if test="orderSubject != null  and orderSubject != ''"> and order_subject = #{orderSubject}</if>
+            <if test="money != null  and money != ''"> and money = #{money}</if>
+            <if test="invoiced != null  and invoiced != ''"> and invoiced = #{invoiced}</if>
+            <if test="payStatus != null  and payStatus != ''"> and pay_status = #{payStatus}</if>
+            <if test="payMethod != null  and payMethod != ''"> and pay_method = #{payMethod}</if>
+            <if test="tradeNo != null  and tradeNo != ''"> and trade_no = #{tradeNo}</if>
+            <if test="deleted != null  and deleted != ''"> and deleted = #{deleted}</if>
+            <!-- 系统编码过滤 -->
+            ${params.factoryCode}
+        </where>
+    </select>
+    
+    <select id="selectSysFactoryOrderById" parameterType="Long" resultMap="SysFactoryOrderResult">
+        <include refid="selectSysFactoryOrderVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysFactoryOrder" parameterType="SysFactoryOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_factory_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="contextName != null and contextName != ''">context_name,</if>
+        	<if test="factoryCode != null">factory_code,</if>
+            <if test="orderNo != null  and orderNo != ''">order_no,</if>
+            <if test="orderType != null  and orderType != ''">order_type,</if>
+            <if test="orderValue != null  and orderValue != ''">order_value,</if>
+            <if test="buyType != null  and buyType != ''">buy_type,</if>
+            <if test="buyMethod != null  and buyMethod != ''">buy_method,</if>
+            <if test="buyNum != null  and buyNum != ''">buy_num,</if>
+            <if test="buyPeriod != null ">buy_period,</if>
+            <if test="orderSubject != null  and orderSubject != ''">order_subject,</if>
+            <if test="money != null  and money != ''">money,</if>
+            <if test="invoiced != null  and invoiced != ''">invoiced,</if>
+            <if test="payStatus != null  and payStatus != ''">pay_status,</if>
+            <if test="payMethod != null  and payMethod != ''">pay_method,</if>
+            <if test="tradeNo != null  and tradeNo != ''">trade_no,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="deleted != null  and deleted != ''">deleted,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        	<if test="contextName != null and contextName != ''">#{contextName},</if>
+        	<if test="factoryCode != null">#{factoryCode},</if>
+            <if test="orderNo != null  and orderNo != ''">#{orderNo},</if>
+            <if test="orderType != null  and orderType != ''">#{orderType},</if>
+            <if test="orderValue != null  and orderValue != ''">#{orderValue},</if>
+            <if test="buyType != null  and buyType != ''">#{buyType},</if>
+            <if test="buyMethod != null  and buyMethod != ''">#{buyMethod},</if>
+            <if test="buyNum != null  and buyNum != ''">#{buyNum},</if>
+            <if test="buyPeriod != null ">#{buyPeriod},</if>
+            <if test="orderSubject != null  and orderSubject != ''">#{orderSubject},</if>
+            <if test="money != null  and money != ''">#{money},</if>
+            <if test="invoiced != null  and invoiced != ''">#{invoiced},</if>
+            <if test="payStatus != null  and payStatus != ''">#{payStatus},</if>
+            <if test="payMethod != null  and payMethod != ''">#{payMethod},</if>
+            <if test="tradeNo != null  and tradeNo != ''">#{tradeNo},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="deleted != null  and deleted != ''">#{deleted},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysFactoryOrder" parameterType="SysFactoryOrder">
+        update sys_factory_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderNo != null  and orderNo != ''">order_no = #{orderNo},</if>
+            <if test="orderType != null  and orderType != ''">order_type = #{orderType},</if>
+            <if test="orderValue != null  and orderValue != ''">order_value = #{orderValue},</if>
+            <if test="buyType != null  and buyType != ''">buy_type = #{buyType},</if>
+            <if test="buyMethod != null  and buyMethod != ''">buy_method = #{buyMethod},</if>
+            <if test="buyNum != null  and buyNum != ''">buy_num = #{buyNum},</if>
+            <if test="buyPeriod != null ">buy_period = #{buyPeriod},</if>
+            <if test="orderSubject != null  and orderSubject != ''">order_subject = #{orderSubject},</if>
+            <if test="money != null  and money != ''">money = #{money},</if>
+            <if test="invoiced != null  and invoiced != ''">invoiced = #{invoiced},</if>
+            <if test="payStatus != null  and payStatus != ''">pay_status = #{payStatus},</if>
+            <if test="payMethod != null  and payMethod != ''">pay_method = #{payMethod},</if>
+            <if test="tradeNo != null  and tradeNo != ''">trade_no = #{tradeNo},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="deleted != null  and deleted != ''">deleted = #{deleted},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysFactoryOrderById" parameterType="Long">
+        delete from sys_factory_order where id = #{id}
+    </delete>
+
+    <delete id="deleteSysFactoryOrderByIds" parameterType="String">
+        delete from sys_factory_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="logicDeleteSysFactoryOrderById" parameterType="Long">
+        update   sys_factory_order  set deleted='1' where id = #{id}
+    </update>
+
+    <update id="logicDeleteSysFactoryOrderByIds" parameterType="String">
+        update   sys_factory_order  set deleted='1' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

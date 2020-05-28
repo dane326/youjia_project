@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('角色列表')" />
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="container" style="float: left;width:15%;height: 100px" scrolling="yes">
+        <!--<div id="rolelist"></div>-->
+        <input type="hidden" name="roleId" id="roleId" value="" >
+        <div style="margin-top: 20px">
+            <h3>角色名称
+            <button class="btn btn-primary btn-xs dropdown-toggle" type="button" onclick="addRole()">
+                <i class="fa fa-plus"></i>新增</button></h3>
+        </div>
+        <div id="showspace">
+            <ul class="sortable-list connectList agile-list" >
+                <li id="doctorUL">
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="lll"></div>
+    <div class="container" style="float: left;width:85%;margin-top: 10px">
+        <ul class="nav nav-tabs">
+            <li class="active" id="tab1"><a data-toggle="tab" href="#tab-1" aria-expanded="true">分配操作权限</a>
+            </li>
+            <li class=""  id="tab2" onclick="tabReflash2()"><a data-toggle="tab" href="#tab-2" aria-expanded="false">分配数据权限</a>
+            </li>
+            <li class=""  id="tab3" onclick="tabReflash3()"><a data-toggle="tab" href="#tab-3" aria-expanded="false">分配用户</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active" style="height:100%">
+                <iframe class="gsh_iframe" name="iframe1" id="iframe1" width="100%"  data-id="/system/customerrole/authDataScopeDane/1"
+                        th:src="@{/system/customerrole/authDataScopeDane/1}" frameborder="0" seamless scrolling="no"></iframe>
+            </div>
+            <div id="tab-2" class="tab-pane" style="height:100%">
+                <iframe class="gsh_iframe" name="iframe2" id="iframe2" width="100%"  data-id="/system/customerrole/authDataScope/1"
+                        th:src="@{/system/customerrole/authDataScope/1}" frameborder="0" seamless scrolling="no"></iframe>
+            </div>
+            <div id="tab-3" class="tab-pane" style="height:100%">
+                <iframe class="gsh_iframe" name="iframe3" id="iframe3" width="100%"  data-id="/system/role/authUser/1"
+                        th:src="@{/system/role/authUser/1}" frameborder="0" seamless scrolling="no"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:include="include :: footer" />
+<script th:inline="javascript">
+    var prefix = ctx + "system/customerrole";
+    //定义全局变量记录页码信息
+    var globalDate = {};
+    var mydata;
+    //1页显示两条数据
+    globalDate.pageSize=10000;
+    //查询数据
+    globalDate.pageNum = 1;
+
+    $(function() {
+        $.ajax({
+            type: "post",
+            url: prefix + "/list",
+            dataType: "json",
+            async: true,
+            data: globalDate,
+            success: function (data) {
+                var str = "";
+                if (data) {
+                    if(data.code == 500){
+                        $.modal.alertError(data.msg);
+                    } else {
+                        mydata = data.rows;
+                    }
+                    for (var i = 0; i < mydata.length; i++) {
+                        var info = mydata[i];
+                        var roleName = info.roleName;
+                        str += "<li class='warning-element' id='"+info.roleId+"' onclick='reflashiframe("+info.roleId+")'>";
+                        str += roleName;
+                        str += "</li>";
+                    }
+                    if(mydata.length == 0){
+                        str += "未查询到角色名称..";
+                    } else {
+                        //设置默认选中
+                        //reflashiframe(mydata[0].roleId);
+                    }
+
+                    $("#doctorUL").empty();
+                    $("#doctorUL").append(str);
+                }
+            },
+            error : function(request) {
+                $.modal.alertError("系统错误");
+            }
+        });
+    });
+
+    /* 角色新增 */
+    function addRole() {
+        var url = prefix + '/addRole';
+        $.modal.open("新增角色", url);
+    }
+
+    function tabReflash2() {
+        var roleId = document.getElementById("roleId").value;
+        if(roleId != null && roleId != ""){
+            //设置背景色
+            setBackground(roleId);
+            document.getElementById("roleId").val = roleId;
+            document.getElementById("iframe2").src = ctx + "/system/customerrole/authDataScope/"+roleId;
+        }
+    }
+
+    function tabReflash3() {
+        var roleId = document.getElementById("roleId").value;
+        if(roleId != null && roleId != ""){
+            //设置背景色
+            setBackground(roleId);
+            document.getElementById("roleId").val = roleId;
+            document.getElementById("iframe3").src = ctx + "/system/role/authUser/"+roleId;
+        }
+    }
+
+    function setBackground(roleId) {
+        for (var i = 0; i < mydata.length; i++) {
+            var info = mydata[i];
+            var roleId_t = info.roleId;
+            var temp = document.getElementById(roleId_t);
+            temp.style.cssText = "";
+        }
+        var node = document.getElementById(roleId);
+        node.style.cssText = "background-color: blue;color: #fff;";
+    }
+
+    function reflashiframe(roleId) {
+        //设置背景色
+        setBackground(roleId);
+        document.getElementById("tab1").className = "active";
+        document.getElementById("tab-1").className = "tab-pane active";
+        document.getElementById("tab2").className = "";
+        document.getElementById("tab-2").className = "tab-pane";
+        document.getElementById("tab3").className = "";
+        document.getElementById("tab-3").className = "tab-pane";
+        document.getElementById("roleId").value = roleId;
+        document.getElementById("iframe1").src = ctx + "/system/customerrole/authDataScopeDane/"+roleId;
+        document.getElementById("iframe2").src = ctx + "/system/customerrole/authDataScope/"+roleId;
+        document.getElementById("iframe3").src = ctx + "/system/role/authUser/"+roleId;
+    }
+
+</script>
+</body>
+</html>

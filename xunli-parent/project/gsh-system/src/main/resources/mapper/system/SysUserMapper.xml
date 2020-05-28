@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gsh.system.mapper.SysUserMapper">
+
+	<resultMap type="SysUser" id="SysUserResult">
+		<id     property="userId"       column="user_id"      />
+		<result property="deptId"       column="dept_id"      />
+		<result property="factoryCode"   column="factory_code"/>
+		<result property="loginName"    column="login_name"   />
+		<result property="userName"     column="user_name"    />
+		<result property="email"        column="email"        />
+		<result property="phonenumber"  column="phonenumber"  />
+		<result property="sex"          column="sex"          />
+		<result property="avatar"       column="avatar"       />
+		<result property="password"     column="password"     />
+		<result property="salt"         column="salt"         />
+		<result property="status"       column="status"       />
+		<result property="delFlag"      column="del_flag"     />
+		<result property="loginIp"      column="login_ip"     />
+		<result property="loginDate"    column="login_date"   />
+		<result property="createBy"     column="create_by"    />
+		<result property="createTime"   column="create_time"  />
+		<result property="updateBy"     column="update_by"    />
+		<result property="updateTime"   column="update_time"  />
+		<result property="remark"       column="remark"       />
+
+		<result property="wechatName"    column="wechat_name"    />
+
+		<association property="dept"    column="dept_id" javaType="SysDept" resultMap="deptResult" />
+		<collection  property="roles"   javaType="java.util.List"        resultMap="roleResult" />
+	</resultMap>
+
+	<resultMap id="deptResult" type="SysDept">
+		<id     property="deptId"   column="dept_id"     />
+		<result property="parentId" column="parent_id"   />
+		<result property="deptName" column="dept_name"   />
+		<result property="orderNum" column="order_num"   />
+		<result property="leader"   column="leader"      />
+		<result property="factoryCode"   column="d_factory_code"/>
+		<result property="status"   column="dept_status" />
+	</resultMap>
+
+	<resultMap id="roleResult" type="SysRole">
+		<id     property="roleId"       column="role_id"        />
+		<result property="roleName"     column="role_name"      />
+		<result property="roleKey"      column="role_key"       />
+		<result property="roleSort"     column="role_sort"      />
+		<result property="dataScope"     column="data_scope"    />
+		<result property="status"       column="role_status"    />
+	</resultMap>
+
+	<resultMap id="factoryInfoResult" type="SysFactoryInfo">
+		<id property="id"    column="factory_id"    />
+		<result property="factoryName"    column="factory_name"    />
+		<result property="systemName"    column="system_name"    />
+		<result property="secretKey"    column="secret_key"    />
+	</resultMap>
+
+	<resultMap id="SysFactoryUserResult" type="SysUser">
+		<id     property="userId"       column="user_Id"        />
+		<result property="loginName"    column="login_Name"        />
+		<result property="userName"     column="user_Name"        />
+		<result property="password"     column="password"        />
+		<result property="salt"         column="salt"        />
+	</resultMap>
+
+	<sql id="selectUserVo">
+		select  u.user_id, u.dept_id, u.login_name, u.user_name, u.user_type, u.email, u.avatar, u.phonenumber, u.sex, u.password, u.salt,
+		u.status, u.del_flag, u.login_ip, u.login_date,
+		u.audit_user, u.audit_time, u.manager_account, u.wechat_name, u.create_time, u.remark, u.factory_code,
+		d.dept_id, d.parent_id, d.dept_name, d.order_num, d.leader, d.status as dept_status, d.factory_code d_factory_code,
+		r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status,
+		i.id as factory_id, i.factory_name, i.system_name, i.secret_key
+		from sys_user u
+		left join sys_dept d on u.dept_id = d.dept_id
+		left join sys_factory_info i on d.factory_code = i.id
+		left join sys_user_role ur on u.user_id = ur.user_id
+		left join sys_role r on r.role_id = ur.role_id
+	</sql>
+
+	<sql id="selectSysUserLabelVo">
+		select u.user_id, u.factory_code, u.login_name, u.password, u.user_name, u.wechat_name, u.dept_id,u.salt,
+		u.status, u.create_by, u.create_time, u.update_by, u.update_time, u.remark, u.deleted,
+		d.dept_id, d.parent_id, d.dept_name, d.order_num, d.leader, d.status as dept_status ,d.factory_code
+		from sys_user u
+		left join sys_dept d on u.dept_id = d.dept_id
+		,sys_user_label l
+	</sql>
+
+	<sql id="selectSysFactoryUserVo">
+		select u.user_id, u.factory_code, u.login_name,u.email, u.avatar, u.phonenumber, u.sex, u.password, u.user_name, u.wechat_name, u.salt,u.login_ip, u.login_date,
+		u.status, u.create_by, u.create_time, u.update_by, u.update_time, u.remark, u.deleted,
+		d.dept_id, d.parent_id, d.dept_name, d.order_num, d.leader, d.status as dept_status ,d.factory_code
+		from sys_user u
+		left join sys_dept d on u.dept_id = d.dept_id
+	</sql>
+
+
+	<select id="selectUserTreeList" parameterType="SysUser" resultMap="SysUserResult">
+		select u.user_id, u.dept_id, u.login_name, u.user_name, u.user_type, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.salt, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, d.dept_name, d.leader from sys_user u
+		left join sys_dept d on u.dept_id = d.dept_id
+		where u.del_flag = '0'
+		<if test="userName != null and userName != ''">
+			and u.user_name like concat('%', #{userName}, '%')
+		</if>
+		<if test="loginName != null and loginName != ''">
+			and u.login_name like concat('%', #{loginName}, '%')
+		</if>
+		<if test="status != null and status != ''">
+			and u.status = #{status}
+		</if>
+		<if test="phonenumber != null and phonenumber != ''">
+			and u.phonenumber like concat('%', #{phonenumber}, '%')
+		</if>
+		<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+			and date_format(u.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+		</if>
+		<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+			and date_format(u.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+		</if>
+		<if test="deptId != null">
+			and u.dept_id = #{deptId}
+		</if>
+		<if test="factoryCode != null">
+			and u.factory_code = #{factoryCode}
+		</if>
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+	</select>
+
+	<select id="selectSysUserByProperties" parameterType="SysUser" resultMap="SysFactoryUserResult">
+		<include refid="selectSysFactoryUserVo"/>
+		<where>
+			<if test="loginName != null  and loginName != ''"> and u.login_name = #{loginName}</if>
+			<if test="userName != null  and userName != ''"> and u.user_name = #{userName}</if>
+			and u.status = 'normal'
+			and u.del_flag = '0'
+			<!--为了统一，单机版本也需要code-->
+			<if test="factoryCode != null">
+				and u.factory_code = #{factoryCode}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectUserList" parameterType="SysUser" resultMap="SysUserResult">
+		select u.user_id, u.dept_id, u.login_name, u.user_name, u.user_type, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.salt, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, d.dept_name, d.leader from sys_user u
+		left join sys_dept d on u.dept_id = d.dept_id
+		where u.del_flag = '0'
+		<if test="loginName != null and loginName != ''">
+			and u.login_name like concat('%', #{loginName}, '%')
+		</if>
+		<if test="status != null and status != ''">
+			and u.status = #{status}
+		</if>
+		<if test="phonenumber != null and phonenumber != ''">
+			and u.phonenumber like concat('%', #{phonenumber}, '%')
+		</if>
+		<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+			and date_format(u.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+		</if>
+		<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+			and date_format(u.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+		</if>
+		<if test="deptId != null and deptId != ''">
+			and (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE FIND_IN_SET (#{deptId},ancestors) ))
+		</if>
+		<if test="factoryCode != null">
+			and u.factory_code = #{factoryCode}
+		</if>
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+	</select>
+
+	<select id="selectAllocatedList" parameterType="SysUser" resultMap="SysUserResult">
+		select distinct u.user_id, u.dept_id, u.login_name, u.user_name, u.user_type, u.email, u.avatar, u.phonenumber, u.status, u.create_time
+		from sys_user u
+		left join sys_dept d on u.dept_id = d.dept_id
+		left join sys_user_role ur on u.user_id = ur.user_id
+		left join sys_role r on r.role_id = ur.role_id
+		where u.del_flag = '0' and r.role_id = #{roleId}
+		<if test="loginName != null and loginName != ''">
+			and u.login_name like concat('%', #{loginName}, '%')
+		</if>
+		<if test="phonenumber != null and phonenumber != ''">
+			and u.phonenumber like concat('%', #{phonenumber}, '%')
+		</if>
+		<if test="factoryCode != null">
+			and u.factory_code = #{factoryCode}
+		</if>
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+	</select>
+
+	<select id="selectUnallocatedList" parameterType="SysUser" resultMap="SysUserResult">
+		select distinct u.user_id, u.dept_id, u.login_name, u.user_name, u.user_type, u.email, u.avatar, u.phonenumber, u.status, u.create_time
+		from sys_user u
+		left join sys_dept d on u.dept_id = d.dept_id
+		left join sys_user_role ur on u.user_id = ur.user_id
+		left join sys_role r on r.role_id = ur.role_id
+		where u.del_flag = '0' and (r.role_id != #{roleId} or r.role_id IS NULL)
+		and u.user_id not in (select u.user_id from sys_user u inner join sys_user_role ur on u.user_id = ur.user_id and ur.role_id = #{roleId})
+		<if test="loginName != null and loginName != ''">
+			and u.login_name like concat('%', #{loginName}, '%')
+		</if>
+		<if test="phonenumber != null and phonenumber != ''">
+			and u.phonenumber like concat('%', #{phonenumber}, '%')
+		</if>
+		<if test="factoryCode != null">
+			and u.factory_code = #{factoryCode}
+		</if>
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+	</select>
+
+	<select id="selectUserByLoginName" parameterType="String" resultMap="SysUserResult">
+		<include refid="selectUserVo"/>
+		where u.login_name = #{userName} and u.del_flag='0'
+	</select>
+
+	<select id="selectUserByPhoneNumber" parameterType="String" resultMap="SysUserResult">
+		<include refid="selectUserVo"/>
+		where u.phonenumber = #{phonenumber}
+	</select>
+
+	<select id="selectUserByEmail" parameterType="String" resultMap="SysUserResult">
+		<include refid="selectUserVo"/>
+		where u.email = #{email}
+	</select>
+
+	<select id="checkLoginNameUnique" parameterType="String" resultType="int">
+		select count(1) from sys_user where login_name = #{loginName} and del_flag = '0'
+	</select>
+
+	<select id="checkPhoneUnique" parameterType="String" resultMap="SysUserResult">
+		select user_id, phonenumber from sys_user where phonenumber = #{phonenumber} and del_flag = '0'
+	</select>
+
+	<select id="checkEmailUnique" parameterType="String" resultMap="SysUserResult">
+		select user_id, email from sys_user where email = #{email} and del_flag = '0'
+	</select>
+
+	<select id="selectUserById" parameterType="Long" resultMap="SysUserResult">
+		<include refid="selectUserVo"/>
+		where u.user_id = #{userId}
+	</select>
+
+	<delete id="deleteUserById" parameterType="Long">
+		update sys_user set del_flag = '2' where user_id = #{userId}
+	</delete>
+
+	<delete id="deleteUserByIds" parameterType="Long">
+		update sys_user set del_flag = '2' where user_id in
+		<foreach collection="array" item="userId" open="(" separator="," close=")">
+			#{userId}
+		</foreach>
+	</delete>
+
+	<update id="updateUser" parameterType="SysUser">
+		update sys_user
+		<set>
+			<if test="factoryCode != null">factory_code = #{factoryCode},</if>
+			<if test="deptId != null and deptId != 0">dept_id = #{deptId},</if>
+			<if test="loginName != null and loginName != ''">login_name = #{loginName},</if>
+			<if test="userName != null and userName != ''">user_name = #{userName},</if>
+			<if test="email != null and email != ''">email = #{email},</if>
+			<if test="phonenumber != null and phonenumber != ''">phonenumber = #{phonenumber},</if>
+			<if test="sex != null and sex != ''">sex = #{sex},</if>
+			<if test="avatar != null and avatar != ''">avatar = #{avatar},</if>
+			<if test="password != null and password != ''">password = #{password},</if>
+			<if test="salt != null and salt != ''">salt = #{salt},</if>
+			<if test="status != null and status != ''">status = #{status},</if>
+			<if test="loginIp != null and loginIp != ''">login_ip = #{loginIp},</if>
+			<if test="loginDate != null">login_date = #{loginDate},</if>
+			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+			<if test="remark != null">remark = #{remark},</if>
+			update_time = sysdate()
+		</set>
+		where user_id = #{userId}
+	</update>
+
+	<update id="updateSysUsersByIds" parameterType="SysUser">
+		update   sys_user
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="sysFactoryUser.factoryCode != null ">factory_code = #{sysFactoryUser.factoryCode},</if>
+			<if test="sysFactoryUser.loginName != null  and sysFactoryUser.loginName != ''">login_name = #{sysFactoryUser.loginName},</if>
+			<if test="sysFactoryUser.password != null  and sysFactoryUser.password != ''">password = #{sysFactoryUser.password},</if>
+			<if test="sysFactoryUser.userName != null  and sysFactoryUser.userName != ''">user_name = #{sysFactoryUser.userName},</if>
+			<if test="sysFactoryUser.deptId != null ">dept_id = #{sysFactoryUser.deptId},</if>
+			<if test="sysFactoryUser.status != null  and sysFactoryUser.status != ''">status = #{sysFactoryUser.status},</if>
+			<if test="sysFactoryUser.createBy != null  and sysFactoryUser.createBy != ''">create_by = #{sysFactoryUser.createBy},</if>
+			<if test="sysFactoryUser.createTime != null ">create_time = #{sysFactoryUser.createTime},</if>
+			<if test="sysFactoryUser.updateBy != null  and sysFactoryUser.updateBy != ''">update_by = #{sysFactoryUser.updateBy},</if>
+			<if test="sysFactoryUser.updateTime != null ">update_time = #{sysFactoryUser.updateTime},</if>
+			<if test="sysFactoryUser.remark != null  and sysFactoryUser.remark != ''">remark = #{sysFactoryUser.remark},</if>
+		</trim>
+		where user_id in
+		<foreach item="userId" collection="userIds" open="(" separator="," close=")">
+			#{userId}
+		</foreach>
+	</update>
+
+	<insert id="insertUser" parameterType="SysUser" useGeneratedKeys="true" keyProperty="userId">
+		insert into sys_user(
+		<if test="userId != null and userId != 0">user_id,</if>
+		<if test="factoryCode != null ">factory_code,</if>
+		<if test="deptId != null and deptId != 0">dept_id,</if>
+		<if test="loginName != null and loginName != ''">login_name,</if>
+		<if test="userName != null and userName != ''">user_name,</if>
+		<if test="email != null and email != ''">email,</if>
+		<if test="avatar != null and avatar != ''">avatar,</if>
+		<if test="phonenumber != null and phonenumber != ''">phonenumber,</if>
+		<if test="sex != null and sex != ''">sex,</if>
+		<if test="password != null and password != ''">password,</if>
+		<if test="salt != null and salt != ''">salt,</if>
+		<if test="status != null and status != ''">status,</if>
+		<if test="createBy != null and createBy != ''">create_by,</if>
+		<if test="remark != null and remark != ''">remark,</if>
+		create_time
+		)values(
+		<if test="userId != null and userId != ''">#{userId},</if>
+		<if test="factoryCode != null ">#{factoryCode},</if>
+		<if test="deptId != null and deptId != ''">#{deptId},</if>
+		<if test="loginName != null and loginName != ''">#{loginName},</if>
+		<if test="userName != null and userName != ''">#{userName},</if>
+		<if test="email != null and email != ''">#{email},</if>
+		<if test="avatar != null and avatar != ''">#{avatar},</if>
+		<if test="phonenumber != null and phonenumber != ''">#{phonenumber},</if>
+		<if test="sex != null and sex != ''">#{sex},</if>
+		<if test="password != null and password != ''">#{password},</if>
+		<if test="salt != null and salt != ''">#{salt},</if>
+		<if test="status != null and status != ''">#{status},</if>
+		<if test="createBy != null and createBy != ''">#{createBy},</if>
+		<if test="remark != null and remark != ''">#{remark},</if>
+		sysdate()
+		)
+	</insert>
+	<select id="checkLoginNameUniquetwo" resultType="int">
+		select count(1) from sys_user where login_name = #{loginName}
+		and factory_code = #{factoryCode} and del_flag ='0'
+	</select>
+
+	<select id="selectSysUserListAndPaper" parameterType="SysUser" resultMap="SysFactoryUserResult">
+		<include refid="selectSysFactoryUserVo"/>
+		<where>
+			and (
+			<if test="loginName!=null or params.deptName!=null or userName!=null"> u.login_name like concat('%', #{loginName}, '%')
+				or
+				u.user_name like concat('%', #{userName}, '%')
+				or
+				d.dept_name like concat('%', #{params.deptName}, '%')  </if>
+			<if test="params.deptName==null and userName==null and loginName==null">
+				1=1 </if>
+			)
+			<if test="deptId != null "> and (u.dept_id =#{deptId} or find_in_set( #{deptId} , ancestors ) ) </if>
+			<if test="status != null  and status != ''"> and u.status = #{status}</if>
+			and u.factory_code = #{factoryCode}
+			and u.del_flag = '0'
+			and u.user_id not in (select acount_id from aiexam_paper_user where paper_id=#{params.paperid} and deleted='0')
+			<!-- 数据范围过滤 -->
+			${params.dataScope}
+		</where>
+	</select>
+
+	<select id="selectSysUserListByLabelAndPaper"  resultMap="SysFactoryUserResult">
+		<include refid="selectSysUserLabelVo"/>
+		<where>
+			and l.user_id=u.user_id
+			and l.label_id in
+			<foreach item="labelId" collection="labelIds" open="(" separator="," close=")">
+				#{labelId}
+			</foreach>
+			and u.del_flag = '0'
+			and u.user_id not in (select acount_id from aiexam_paper_user where paper_id=#{paperid}  and deleted='0')
+		</where>
+	</select>
+
+	<select id="selectSysUserListByDeptAndPaper" resultMap="SysFactoryUserResult">
+		<include refid="selectSysFactoryUserVo"/>
+		<where>
+			and u.del_flag = '0'
+			and u.dept_id in
+			(select dept_id from sys_dept sd where sd.ancestors like concat('%', #{deptid}, '%') or sd.dept_id=#{deptid})
+			and u.user_id not in (select acount_id from aiexam_paper_user where paper_id=#{paperid}  and deleted='0')
+		</where>
+	</select>
+
+	<insert id="insertSysFactoryUser" parameterType="SysUser" useGeneratedKeys="true" keyProperty="userId">
+		insert into sys_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="factoryCode != null ">factory_code,</if>
+			<if test="loginName != null  and loginName != ''">login_name,</if>
+			<if test="email != null and email != ''">email,</if>
+			<if test="avatar != null and avatar != ''">avatar,</if>
+			<if test="phonenumber != null and phonenumber != ''">phonenumber,</if>
+			<if test="sex != null and sex != ''">sex,</if>
+			<if test="password != null  and password != ''">password,</if>
+			<if test="userName != null  and userName != ''">user_name,</if>
+			<if test="wechatName != null  and wechatName != ''">wechat_name,</if>
+			<if test="deptId != null ">dept_id,</if>
+			<if test="status != null  and status != ''">status,</if>
+			<if test="createBy != null  and createBy != ''">create_by,</if>
+			<if test="createTime != null ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''">update_by,</if>
+			<if test="updateTime != null ">update_time,</if>
+			<if test="remark != null  and remark != ''">remark,</if>
+			<if test="salt != null and salt != ''">salt,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="factoryCode != null ">#{factoryCode},</if>
+			<if test="loginName != null  and loginName != ''">#{loginName},</if>
+			<if test="email != null and email != ''">#{email},</if>
+			<if test="avatar != null and avatar != ''">#{avatar},</if>
+			<if test="phonenumber != null and phonenumber != ''">#{phonenumber},</if>
+			<if test="sex != null and sex != ''">#{sex},</if>
+			<if test="password != null  and password != ''">#{password},</if>
+			<if test="userName != null  and userName != ''">#{userName},</if>
+			<if test="wechatName != null  and wechatName != ''">#{wechatName},</if>
+			<if test="deptId != null ">#{deptId},</if>
+			<if test="status != null  and status != ''">#{status},</if>
+			<if test="createBy != null  and createBy != ''">#{createBy},</if>
+			<if test="createTime != null ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+			<if test="updateTime != null ">#{updateTime},</if>
+			<if test="remark != null  and remark != ''">#{remark},</if>
+			<if test="salt != null and salt != ''">#{salt},</if>
+		</trim>
+	</insert>
+</mapper>

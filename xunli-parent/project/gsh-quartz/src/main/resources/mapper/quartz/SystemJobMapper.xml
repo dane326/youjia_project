@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gsh.quartz.mapper.SystemJobMapper">
+    <delete id="clearSystemTableData" parameterType="java.util.Map" statementType="STATEMENT">
+        <![CDATA[
+        delete from ${tbName}
+        where date_format(create_time,'%Y-%m-%d %H:%i:%s')
+        not between date_format(DATE_SUB(now(), INTERVAL ${num} ${type}),'%Y-%m-%d %H:%i:%s') and now()
+        ]]>
+    </delete>
+</mapper>

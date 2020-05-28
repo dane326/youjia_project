@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改成员')" />
+    <th:block th:include="include :: select2-css" />
+
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-user-edit" th:object="${sysFactoryUser}">
+            <input name="userId" th:field="*{userId}" type="hidden">
+            <input name="deptId"  type="hidden"  th:field="*{deptId}" id="treeId"/>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span style="color: red; ">*</span>归属部门：</label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <input class="form-control" type="text" name="deptName" onclick="selectDeptTree()" id="treeName" th:field="*{dept.deptName}" required>
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">标签：</label>
+                <div class="col-sm-8">
+                    <select id="lable" class="form-control select2-multiple" multiple>
+                        <option th:each="lable:${lables}" th:value="${lable.lableId}" th:selected="${lable.flag}" th:text="${lable.lableName}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label"><span style="color: red; ">*</span>账号：</label>
+                <div class="col-sm-8">
+                    <input name="loginName" th:field="*{loginName}" class="form-control" type="text" required rangelength="[2,20]">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">姓名：</label>
+                <div class="col-sm-8">
+                    <input name="userName" th:field="*{userName}" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: select2-js" />
+
+    <script type="text/javascript">
+        var prefix = ctx + "system/user";
+        $("#form-user-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                var data = $("#form-user-edit").serializeArray();
+                var lableIds = $.form.selectSelects("lable");
+                data.push({"name": "lableIds", "value": lableIds});
+                $.operate.save(prefix + "/edit?urltype=businessuser", data);
+            }
+        }
+
+        /*用户管理-新增-选择部门树*/
+        function selectDeptTree() {
+            var treeId = $("#treeId").val();
+            var deptId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+            var url = ctx + "system/dept/selectDeptTree/" + deptId;
+            var options = {
+                title: '选择组织架构',
+                width: "380",
+                url: url,
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        }
+        function doSubmit(index, layero){
+            var tree = layero.find("iframe")[0].contentWindow.$._tree;
+            if ($.tree.notAllowParents(tree)) {
+                var body = layer.getChildFrame('body', index);
+                $("#treeId").val(body.find('#treeId').val());
+                $("#treeName").val(body.find('#treeName').val());
+                layer.close(index);
+            }
+        }
+
+        $(function() {
+            $('#lable').select2({
+                placeholder:"请选择标签",
+                allowClear: true
+            });
+        })
+    </script>
+</body>
+</html>

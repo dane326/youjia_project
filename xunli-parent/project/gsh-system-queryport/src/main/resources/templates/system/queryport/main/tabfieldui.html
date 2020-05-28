@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增物料管理')" />
+	<th:block th:include="include :: select2-css" />
+    <th:block th:include="include :: ztree-css" />
+</head>
+<body>
+    <div class="main-content">
+        <h4 class="form-header h4" style="margin:8px">扩展自定义表单组件的使用说明</h4>
+		<div class="row">
+			<div style="padding-left:30px">
+				<p>1、根据格式编写options</p>
+				<p>2、需要引入queryport-ui.js</p>
+				<p>3、新增初始化调用SysTabfieldConf.initAddForm(options);</p>
+				<p>4、编辑初始化调用SysTabfieldConf.initEditForm(options);</p>
+				<p>5、详情初始化调用SysTabfieldConf.initDetailForm(options);</p>
+			</div>
+		</div>
+        <form id="form-add" class="form-horizontal">
+		<h4 class="form-header h4" style="margin:8px">初始化新增</h4>
+            <div class="addForm row">
+            </div>
+        </form>
+        <form id="form-edit" class="form-horizontal">
+        <h4 class="form-header h4" style="margin:8px">初始化修改</h4>
+            <div class="editForm row">
+            </div>
+        </form>
+        <form id="form-detail" class="form-horizontal">
+        <h4 class="form-header h4" style="margin:8px">初始化详情</h4>
+            <div class="detailForm row">
+            </div>
+        </form>
+		<div class="col-sm-12 search-collapse">
+		<form id="form-search" class="form-horizontal">
+			<h4 class="form-header h4" style="margin:8px">初始化查询</h4>
+			<div class="select-list">
+				<ul>
+					<div id="tiaojian"></div>
+					<li>
+						<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+						<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset('form-search')"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+					</li>
+				</ul>
+			</div>
+		</form>
+		</div>
+        <h4 class="form-header h4" style="margin:8px">常用参数说明</h4>
+		<div class="row">
+			<div style="padding-left:30px">
+				<p>form：用于初始化form验证validate。例如：.form #form </p>
+				<p>formName：表单中文名称 </p>
+				<p>element：需要初始化的dom节点。例如：.dom #dom div[name='dom']</p>
+				<p>data：对象，需要回显的数据。 注：需要与字段配置的htmlId对应才能成功赋值</p>
+				<p>fieldConfData：数组，字段的配置数据。</p>
+				<p>==============字段配置对象说明=========</p>
+				<p>columnComment：字段中文名称</p>
+				<p> htmlType：类型，可选string,date,time,dictSelect</p>
+				<p> htmlId：控件id,也是页面dom的id</p>
+				<p> htmlName：控件name,也是页面dom的name,默认和htmlId一样</p>
+				<p> isPk：是否为主键 值：1为是，null为否</p>
+				<p> isRequired：是否必填 值：1为是，null为否</p>
+				<p> isInsert：是否新增 值：1为是，null为否</p>
+				<p> isEdit：是否编辑 值：1为是，null为否</p>
+				<p> isSearch：是否查询条件 值：1为是，null为否</p>
+				<p> isDetail：是否详情 值：1为是，null为否</p>
+				<p> defaultValue：初始默认值 会被回显数据覆盖，主要用于查询视图默认赋值</p>
+				<p> dictType：字典值 注：只有在htmlType为select,checkbox,radio生效</p>
+				<p> ruleCheck：验证规则 可选值：number,phone,email.name,tel</p>
+				<p> isReadOnly：是否只读 值：1为是，null为否</p>
+				<p>======================================</p>
+				<p></p>
+				<p></p>
+				<br>
+			</div>
+		</div>
+    </div>
+	<th:block th:include="include :: footer" />
+	<th:block th:include="include :: select2-js" />
+    <th:block th:include="include :: ztree-js" />
+	<th:block th:include="system/queryport/include :: queryport-js" />
+	<script th:src="@{/system/queryport/js/tabfield-ui.js}"></script>
+	<script>
+        var id = '[[${id}]]';
+        var prefix = ctx + "warehouse/materials";
+
+        $(function() {
+            var addOptions = {
+                form:"#form-add",
+                element:'.addForm',
+                formName:"测试表单",
+                fieldConfData: [
+                    {"columnComment":"主键","htmlType":"string","htmlId":"id","htmlName":"id","isPk":"1","isRequired":null,"isInsert":null,"isEdit":null,"isDetail":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"必填验证","htmlType":"string","htmlId":"required","htmlName":"required","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"number","isReadOnly":null},
+                    {"columnComment":"数字验证","htmlType":"string","htmlId":"member","htmlName":"member","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"phone","isReadOnly":null},
+                    {"columnComment":"手机号验证","htmlType":"string","htmlId":"phone","htmlName":"phone","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"email","isReadOnly":null},
+                    {"columnComment":"邮箱验证","htmlType":"string","htmlId":"email","htmlName":"email","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"name","isReadOnly":null},
+                    {"columnComment":"姓名验证","htmlType":"string","htmlId":"name","htmlName":"name","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"tel","isReadOnly":null},
+                    {"columnComment":"电话验证","htmlType":"string","htmlId":"tel","htmlName":"tel","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"日期","htmlType":"data","htmlId":"date","htmlName":"date","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"时间","htmlType":"time","htmlId":"time","htmlName":"time","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"下拉","htmlType":"dictSelect","htmlId":"select","htmlName":"select","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"sys_user_sex","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"单选","htmlType":"dictRadio","htmlId":"radio","htmlName":"radio","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"sys_user_sex","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"多选","htmlType":"dictCheckBox","htmlId":"checkbox","htmlName":"checkbox","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"sys_user_sex","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"只读","htmlType":"string","htmlId":"readonly","htmlName":"readonly","isPk":null,"isRequired":null,"isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"","isReadOnly":"1"},
+                    {"columnComment":"人员树","htmlType":"userTree","htmlId":"userId","htmlName":"userId","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"组织树","htmlType":"deptTree","htmlId":"deptId","htmlName":"deptId","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"角色树","htmlType":"roleTree","htmlId":"roleId","htmlName":"roleId","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                ]
+            }
+            $.tabfield.initAddForm(addOptions);
+            var editOptions = {
+                form:"#form-edit",
+                element:'.editForm',
+                formName:"测试表单",
+                //回显数据
+                data:{"addid":1,"addrequired":"必填验证","addmember":"数字验证","addphone":"手机号验证","addemail":"邮箱验证","addname":"姓名验证","addtel":"电话验证","adddate":"2020-03-31","addselect":"1","addradio":"1","addcheckbox":"0,1","addreadonly":"只读","adduserId":"admin"},
+                fieldConfData: [
+                    {"columnComment":"主键","htmlType":"string","htmlId":"addid","isPk":"1","isRequired":null,"isInsert":null,"isEdit":null,"isDetail":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"必填验证","htmlType":"string","htmlId":"addrequired","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"数字验证","htmlType":"string","htmlId":"addmember","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"number","isReadOnly":null},
+                    {"columnComment":"手机号验证","htmlType":"string","htmlId":"addphone","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"phone","isReadOnly":null},
+                    {"columnComment":"邮箱验证","htmlType":"string","htmlId":"addemail","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"email","isReadOnly":null},
+                    {"columnComment":"姓名验证","htmlType":"string","htmlId":"addname","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"name","isReadOnly":null},
+                    {"columnComment":"电话验证","htmlType":"string","htmlId":"addtel","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"tel","isReadOnly":null},
+                    {"columnComment":"日期","htmlType":"date","htmlId":"adddate","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"时间","htmlType":"time","htmlId":"addtime","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"下拉","htmlType":"dictSelect","htmlId":"addselect","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"sys_user_sex","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"单选","htmlType":"dictRadio","htmlId":"addradio","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"sys_user_sex","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"多选","htmlType":"dictCheckBox","htmlId":"addcheckbox","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"sys_user_sex","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"只读","htmlType":"string","htmlId":"addreadonly","isPk":null,"isRequired":null,"isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"","isReadOnly":"1"},
+                    {"columnComment":"人员树","htmlType":"userTree","htmlId":"adduserId","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"组织树","htmlType":"deptTree","htmlId":"adddeptId","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"角色树","htmlType":"roleTree","htmlId":"addroleId","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                ]
+            }
+            $.tabfield.initEditForm(editOptions);
+             var detailOptions = {
+                form:"#form-detail",
+                element:'.detailForm',
+                formName:"测试表单",
+                 //回显数据
+                data:{"detailid":1,"detailrequired":"必填验证","detailmember":"数字验证","detailphone":"手机号验证","detailemail":"邮箱验证","detailname":"姓名验证","detailtel":"电话验证","detaildate":"2020-03-31","detailselect":"1","detailradio":"1","detailcheckbox":"0,1","detailreadonly":"只读","detailuserId":"admin"},
+                fieldConfData: [
+                    {"columnComment":"主键","htmlType":"string","htmlId":"detailid","isPk":"1","isRequired":null,"isInsert":null,"isEdit":null,"isDetail":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"必填验证","htmlType":"string","htmlId":"detailrequired","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"number","isReadOnly":null},
+                    {"columnComment":"数字验证","htmlType":"string","htmlId":"detailmember","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"phone","isReadOnly":null},
+                    {"columnComment":"手机号验证","htmlType":"string","htmlId":"detailphone","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"email","isReadOnly":null},
+                    {"columnComment":"邮箱验证","htmlType":"string","htmlId":"detailemail","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"name","isReadOnly":null},
+                    {"columnComment":"姓名验证","htmlType":"string","htmlId":"detailname","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"tel","isReadOnly":null},
+                    {"columnComment":"电话验证","htmlType":"string","htmlId":"detailtel","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"日期","htmlType":"date","htmlId":"detaildate","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"时间","htmlType":"time","htmlId":"detailtime","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"下拉","htmlType":"dictSelect","htmlId":"detailselect","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"sys_user_sex","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"单选","htmlType":"dictRadio","htmlId":"detailradio","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"sys_user_sex","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"多选","htmlType":"dictCheckBox","htmlId":"detailcheckbox","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"sys_user_sex","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"只读","htmlType":"string","htmlId":"detailreadonly","isPk":null,"isRequired":null,"isInsert":"1","isEdit":"1","isDetail":"1","dictType":"","ruleCheck":"","isReadOnly":"1"},
+                    {"columnComment":"人员树","htmlType":"userTree","htmlId":"detailuserId","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"组织树","htmlType":"deptTree","htmlId":"detaildeptId","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"角色树","htmlType":"roleTree","htmlId":"detailroleId","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isDetail":"1","isQuery":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                ]
+            }
+            $.tabfield.initDetailForm(detailOptions);
+
+             var searchOptions = {
+                form:"#form-search",
+				formName:"测试表单",
+                element:'#tiaojian',
+                fieldConfData: [
+                    {"columnComment":"主键","htmlType":"string","htmlId":"searchid","isPk":"1","isRequired":null,"isInsert":null,"isEdit":null,"isSearch":null,"isDetail":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"必填验证","htmlType":"string","htmlId":"searchrequired","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isSearch":null,"isDetail":"1","dictType":"","ruleCheck":"number","isReadOnly":null},
+                    {"columnComment":"数字验证","htmlType":"string","htmlId":"searchmember","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isSearch":null,"isDetail":"1","dictType":"","ruleCheck":"phone","isReadOnly":null},
+                    {"columnComment":"手机号验证","htmlType":"string","htmlId":"searchphone","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isSearch":null,"isDetail":"1","dictType":"","ruleCheck":"email","isReadOnly":null},
+                    {"columnComment":"邮箱验证","htmlType":"string","htmlId":"searchemail","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isSearch":null,"isDetail":"1","dictType":"","ruleCheck":"name","isReadOnly":null},
+                    {"columnComment":"姓名验证","htmlType":"string","htmlId":"searchname","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isSearch":null,"isDetail":"1","dictType":"","ruleCheck":"tel","isReadOnly":null},
+                    {"columnComment":"电话验证","htmlType":"string","htmlId":"searchtel","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isSearch":null,"isDetail":"1","dictType":"","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"日期","htmlType":"date","htmlId":"searchdate","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isSearch":"1","isDetail":"1","isQuery":null,"dictType":"","ruleCheck":"","isReadOnly":null,"defaultValue":"2020-04-05"},
+                    {"columnComment":"时间","htmlType":"time","htmlId":"searchtime","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isSearch":"1","isDetail":"1","isQuery":null,"dictType":"","ruleCheck":"","isReadOnly":null,"queryType":"BETWEEN"},
+                    {"columnComment":"下拉","htmlType":"dictSelect","htmlId":"searchselect","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isSearch":"1","isDetail":"1","isQuery":null,"dictType":"sys_user_sex","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"单选","htmlType":"dictRadio","htmlId":"searchradio","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isSearch":"1","isDetail":"1","isQuery":null,"dictType":"sys_user_sex","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"多选","htmlType":"dictCheckBox","htmlId":"searchcheckbox","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isSearch":"1","isDetail":"1","isQuery":null,"dictType":"sys_user_sex","ruleCheck":"","isReadOnly":null},
+                    {"columnComment":"只读","htmlType":"string","htmlId":"searchreadonly","isPk":null,"isRequired":null,"isInsert":"1","isEdit":"1","isSearch":"1","isDetail":"1","dictType":"","ruleCheck":"","isReadOnly":"1"},
+                    {"columnComment":"人员树","htmlType":"userTree","htmlId":"searchuserId","isPk":null,"isRequired":"1","isInsert":"1","isEdit":"1","isSearch":"1","isDetail":"1","isQuery":null,"dictType":"","ruleCheck":"","isReadOnly":null},
+                ]
+            }
+            $.tabfield.initSearchForm(searchOptions);
+            //初始化
+            $.exdSelect.initialize();
+            $.exdTree.initialize();
+        });
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-materials-add').serialize());
+            }
+        }
+
+    </script>
+</body>
+</html>

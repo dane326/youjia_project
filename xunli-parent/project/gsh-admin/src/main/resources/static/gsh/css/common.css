@@ -1,0 +1,123 @@
+/* 试题展示样式 start 如果有其他样式，在后边加样式名称，传参cssType*/
+.subject_row_1 {
+    margin-top:5px;
+    margin-left: 15%;
+    margin-right: 15%;
+    line-height: 30px;
+    background-color: white;
+    min-height: 500px;
+}
+.subject_row1_1{
+    margin-left: 3%;
+    margin-right: 3%;
+    padding-bottom: 30px;
+    padding-top: 1px;
+}
+.subject_page_1{}
+.subject_content_1{
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin:10px 0 30px 0;
+    padding:10px;
+}
+.subject_info_1{
+    background-color: #f7f7f7;
+}
+/*序号*/
+.subject_Num_1{
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    display: block;
+    float: left;
+    background: #5d9cec;
+    border-radius: 50%;
+    color: #fff;
+    margin-top: 2px;
+    font-size: 16px;
+}
+/*题目类型*/
+.subject_category_1{
+    margin-left: 7px;
+    font-size:20px;
+}
+/*题目难度*/
+.subject_diff_1{}
+
+/*得分*/
+.subject_score_row_1{
+    float: right;
+}
+.subject_score_1{
+    font-size: 20px;
+    color: rgb(236, 102, 26);
+}
+.subject_score_correct_1{
+    color: green;
+}
+.subject_score_wrong_1{
+    color: red;
+}
+
+/*收藏框*/
+.subject_collection_1{
+    font-size:20px;
+    float: right;
+    color:grey;
+}
+/*题目标题*/
+.subject_title_1{
+    margin-left:2em;
+    font-size: 16px;
+    border-bottom: 1px solid #e4e4e4;
+}
+/*选项*/
+.subject_answer_row_1{
+    margin-left:2em;
+}
+.subject_answer_row_1:hover{
+    background: #EFEFEF;
+}
+.subject_userContent_1{
+    margin-left:5em;
+    color: green;
+}
+/*单选多选框*/
+.subject_userAnswer_1{
+    margin-left:5px;
+}
+/*选项 A */
+.subject_itemName_1{
+    margin:0 10px;
+    font-weight: bolder;
+}
+.subject_itemContent_1{}
+.subject_rightAnswer_1{
+    color: green;
+    font-size: 18px;
+}
+.subject_know_row_1{
+    margin-left:2em;
+}
+/*知识点*/
+.subject_know_1{
+    height: 28px;
+    line-height:28px;
+    border: 1px solid #d9ecff;
+    background-color: #ecf5ff;
+    color: #409eff;
+    display: inline-block;
+    padding: 0 10px;
+    font-size: 12px;
+    border-radius: 4px;
+    margin-right: 4px;
+}
+/*解析*/
+.subject_showAnalysis_1{
+    font-weight: bolder;
+    margin-top: 3px;
+    line-height: 20px;
+    margin-left:2em;
+}
+/* 试题展示样式 end */

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('订单管理列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+								 &emsp;订单号：<input type="text" name="orderNo"/>
+                            </li>
+                            <li>
+								 权益类型：<select name="orderType" th:with="type=${@dict.getType('sys_order_type')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+								 购买类型：<select name="buyType" th:with="type=${@dict.getType('sys_buy_type')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+								 购买方式：<select name="buyMethod" th:with="type=${@dict.getType('sys_buy_method')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li class="select-time">
+								<span style="margin: 5px 0px;">购买期限：</span><input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginBuyPeriod]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endBuyPeriod]"/>
+                            </li>
+                            <!-- <li>
+								 已开发票：<select name="invoiced" th:with="type=${@dict.getType('sys_Invoiced')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li> -->
+                            <li>
+								 付款状态：<select name="payStatus" th:with="type=${@dict.getType('sys_pay_status')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+								 交易凭证：<input type="text" name="tradeNo"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i> 搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i> 重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:factory:order:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:factory:order:export">
+                    <i class="fa fa-download"></i> 导出
+                 </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table" ></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var removeFlag = [[${@permission.hasPermi('system:factory:order:remove')}]];
+        var orderTypeDatas = [[${@dict.getType('sys_order_type')}]];
+        var buyTypeDatas = [[${@dict.getType('sys_buy_type')}]];
+        var buyMethodDatas = [[${@dict.getType('sys_buy_method')}]];
+        var invoicedDatas = [[${@dict.getType('sys_Invoiced')}]];
+        var payStatusDatas = [[${@dict.getType('sys_pay_status')}]];
+        var deletedDatas = [[${@dict.getType('sys_deleted')}]];
+        var payMethodDatas = [[${@dict.getType('sys_pay_method')}]];
+        var prefix = ctx + "system/factory/order";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "订单管理",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'id', 
+                    title : 'id',
+                    visible: false
+                },
+                {
+                    field : 'contextName', 
+                    title : '系统名称'
+                },
+                {
+                    field : 'factoryCode', 
+                    title : '组织编码'
+                },
+                {
+                    field : 'orderNo', 
+                    title : '订单号',
+                    align : "center",
+                    width : 105,
+                    formatter: function(value, row, index) {
+                        return "<span style='word-break: break-word;'>" + (value ? value : '-') + "</span>";
+                    }
+                },
+                {
+                    field : 'orderType', 
+                    title : '权益类型',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(orderTypeDatas, value);
+                    }
+                },
+                {
+                    field : 'orderValue', 
+                    title : '权益值'
+                },
+                {
+                    field : 'buyType', 
+                    title : '购买类型',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(buyTypeDatas, value);
+                    }
+                },
+                {
+                    field : 'buyMethod', 
+                    title : '购买方式',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(buyMethodDatas, value);
+                    }
+                },
+                {
+                    field : 'buyNum', 
+                    title : '购买数量'
+                },
+                {
+                    field : 'buyPeriod', 
+                    title : '购买期限'
+                },
+                {
+                    field : 'orderSubject', 
+                    title : '订单名称'
+                },
+                {
+                    field : 'money', 
+                    title : '付款额'
+                },
+                {
+                    field : 'invoiced', 
+                    title : '已开发票',
+                    visible: false
+                    /* formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(invoicedDatas, value);
+                    } */
+                },
+                {
+                    field : 'payMethod', 
+                    title : '付款方式',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(payMethodDatas, value);
+                     }
+                },
+                {
+                    field : 'payStatus', 
+                    title : '付款状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(payStatusDatas, value);
+                    }
+                },
+                {
+                    field : 'tradeNo', 
+                    title : '交易凭证',
+                    align : "center",
+                    width : 105,
+                    formatter: function(value, row, index) {
+                        return "<span style='word-break: break-word;'>" + (value ? value : '-') + "</span>";
+                    }
+                },
+                {
+                    field : 'remark', 
+                    title : '备注'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

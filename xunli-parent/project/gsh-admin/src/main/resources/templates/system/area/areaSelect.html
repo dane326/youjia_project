@@ -1,0 +1,30 @@
+<div th:fragment="areaSelect">
+    <div data-toggle="distpicker" data-value-type="code" >
+        <select class="form-control" style="padding-top: 0px;padding-bottom: 0px;"  name="province" data-province="51" ></select>
+        <select class="form-control"  style="padding-top: 0px;padding-bottom: 0px;"   name="city" data-city="---- 选择市 ----"></select>
+        <select class="form-control"  style="padding-top: 0px;padding-bottom: 0px;"  name="county" data-district="---- 选择区 ----"></select>
+    </div>
+</div>
+<div th:fragment="areaEditSelect">
+    <div data-toggle="distpicker" data-value-type="code" >
+        <select class="form-control" style="padding-top: 0px;padding-bottom: 0px;" id="province" name="province" th:data-province="*{province}"></select>
+        <select class="form-control"  style="padding-top: 0px;padding-bottom: 0px;"  id="city" name="city" th:data-city="*{city}"></select>
+        <select class="form-control"  style="padding-top: 0px;padding-bottom: 0px;" id="county" name="county" th:data-district="*{county}"></select>
+    </div>
+</div>
+
+<div th:fragment="areaSelectRequired">
+    <div data-toggle="distpicker" data-value-type="code" >
+        <select class="form-control" style="padding-top: 0px;padding-bottom: 0px;" id="province" name="province" data-province="51" ></select>
+        <select class="form-control"  style="padding-top: 0px;padding-bottom: 0px;"  id="city" name="city" data-city="---- 选择市 ----" required></select>
+        <select class="form-control"  style="padding-top: 0px;padding-bottom: 0px;" id="county" name="county" data-district="---- 选择区 ----" required></select>
+    </div>
+</div>
+<div th:fragment="areaEditSelectRequired">
+    <div data-toggle="distpicker" data-value-type="code" >
+        <select class="form-control" style="padding-top: 0px;padding-bottom: 0px;" id="province" name="province" th:data-province="*{province}" required></select>
+        <select class="form-control"  style="padding-top: 0px;padding-bottom: 0px;"  id="city" name="city" th:data-city="*{city}" required></select>
+        <select class="form-control"  style="padding-top: 0px;padding-bottom: 0px;" id="county" name="county" th:data-district="*{county}" required></select>
+    </div>
+</div>
+

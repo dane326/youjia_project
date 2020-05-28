@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('系统资料列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                                                                                                组织编码：<input type="text" name="id"/>
+                            </li>
+                            <li>
+                            	管理员：<input type="text" name="loginName"/>
+                            </li>
+                            <li>
+                               	 组织名称：<input type="text" name="factoryName"/>
+                            </li>
+                            <li>
+                               	 系统名称：<input type="text" name="systemName"/>
+                            </li>
+                            <li>
+                                &emsp;&emsp;状态：<select name="deleted" th:with="type=${@dict.getType('sys_normal_disable')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:factory:info:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:factory:info:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:factory:info:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:factory:info:export">
+                    <i class="fa fa-download"></i> 导出
+                 </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table" ></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:factory:info:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:factory:info:remove')}]];
+        var detailFlag = [[${@permission.hasPermi('system:factory:info:detail')}]];
+        var datas = [[${@dict.getType('sys_normal_disable')}]];
+        var prefix = ctx + "system/factory/info";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "系统资料",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'id', 
+                    title : '组织编码'
+                },
+                {
+                    field : 'loginName', 
+                    title : '管理员'
+                },
+                {
+                    field : 'factoryName', 
+                    title : '组织名称'
+                },
+                {
+                    field : 'systemName', 
+                    title : '系统名称'
+                },
+                {
+                    field : 'secretKey', 
+                    title : '生成秘钥',
+                    visible: false
+                },
+                {
+                    field : 'feLogo', 
+                    title : '前端lLOGO',
+                    visible: false,
+                    formatter: function(value, row, index) {
+                        if(value) {
+                            return $.common.sprintf("<img style='height: %spx;width: %spx' src='%s'/>", 50 * 0.8, 300 * 0.8, ctx + value);
+                        }
+                    }
+                },
+                {
+                    field : 'platformLogo', 
+                    title : '平台端LOGO',
+                    formatter: function(value, row, index) {
+                        if(value) {
+                            return $.common.sprintf("<img style='height: %spx;width: %spx' src='%s'/>", 50 * 0.8, 200 * 0.8, ctx + value);
+                        }
+                    }
+                },
+                {
+                    field : 'sysLogo', 
+                    title : '系统LOGO',
+                    formatter: function(value, row, index) {
+                        if(value){
+                            return $.common.sprintf("<img style='height: %spx;width: %spx' src='%s'/>", 50*0.8, 50*0.8, ctx + value);
+                        }
+                    }
+                },
+                {
+                    field : 'accountsNum', 
+                    title : '成员账号数',
+                    visible: false
+                },
+                {
+                    field : 'onlineusersNum', 
+                    title : '同时在线人数',
+                    visible: false
+                },
+                {
+                    field : 'remark', 
+                    title : '备注',
+                    visible: false
+                },
+                {
+                    field : 'deleted', 
+                    title : '状态',
+                    formatter: function(value, item, index) {
+		            	return $.table.selectDictLabel(datas, item.deleted);
+		            }
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + detailFlag + '" href="javascript:void(0)" onclick="detail(\'' + row.id + '\')"><i class="fa fa-edit"></i>详情</a> ');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+        
+        /* 角色管理-分配数据权限 */
+		function detail(id) {
+		    var url = prefix + '/detail/' + id;
+		    $.modal.openTab("系统资料详情", url);
+		}
+    </script>
+</body>
+</html>

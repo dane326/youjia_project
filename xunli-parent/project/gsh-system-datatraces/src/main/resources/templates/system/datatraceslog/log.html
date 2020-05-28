@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('数据追溯日志列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>操作名词：</p>
+                                <select name="opMethod" >
+                                    <option value="">所有</option>
+                                    <option value="新建">新建</option>
+                                    <option value="编辑">编辑</option>
+                                    <option value="删除">删除</option>
+                                </select>
+                            </li>
+                            <li>
+                                <p>对象名称：</p>
+                                <select name="opObjectName" th:with="type=${@dict.getType('sys_domain_names')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:selected="${dict.dictValue == paramap['opObjectName']}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <p>对象ID：</p>
+                                <input type="text" name="opObjectId" th:value="${paramap['opObjectId']}"/>
+                            </li>
+                            <li class="select-time">
+                                <p>操作时间：</p>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginCreateTime]" th:value="${paramap['beginCreateTime']}"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endCreateTime]" th:value="${paramap['endCreateTime']}"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:datatraceslog:export">
+                    <i class="fa fa-download"></i> 导出
+                 </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table" ></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:datatraceslog:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:datatraceslog:remove')}]];
+        var objectNameDatas = [[${@dict.getType('sys_domain_names')}]];
+        var prefix = ctx + "system/datatraceslog";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "数据追溯日志",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'id', 
+                    title : 'id',
+                    visible: false
+                },
+                {
+                    field : 'opMethod', 
+                    title : '操作名词'
+                },
+                {
+                    field : 'opObjectId', 
+                    title : '操作对象id'
+                },
+                {
+                    field : 'opObjectName', 
+                    title : '操作对象名称',
+                    formatter: function(value, row, index) {
+                        return $.table.selectDictLabel(objectNameDatas, value);
+                    }
+                },
+                {
+                    field : 'opForeginId', 
+                    title : '关联对象id'
+                },
+                {
+                    field : 'opForeginName', 
+                    title : '关联对象名称'
+                },
+                {
+                    field : 'opContent', 
+                    title : '操作内容'
+                },
+                {
+                    field : 'createByName', 
+                    title : '创建人姓名'
+                },
+                {
+                    field : 'createByDeptname', 
+                    title : '创建人部门名称'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="detail(\'' + row.id + '\')"><i class="fa fa-edit"></i>查看</a> ');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+
+
+        function detail(id) {
+            $.modal.open('数据追溯详情', prefix+'/detail/'+id);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gsh.system.portalet.mapper.PortaletUserMapper">
+    
+    <resultMap type="PortaletUser" id="PortaletUserResult">
+        <result property="id"    column="id"    />
+        <result property="systemCode"    column="system_code"    />
+        <result property="systemName"    column="system_name"    />
+        <result property="moduleCode"    column="module_code"    />
+        <result property="moduleName"    column="module_name"    />
+        <result property="resId"    column="res_id"    />
+        <result property="userCode"    column="user_code"    />
+        <result property="width"    column="width"    />
+        <result property="height"    column="height"    />
+        <result property="row"    column="row"    />
+        <result property="col"    column="col"    />
+        <result property="sortNo"    column="sort_no"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createByName"    column="create_by_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <association property="portaletRes"    column="res_id" javaType="PortaletRes" resultMap="resResult" />
+    </resultMap>
+    
+    <resultMap id="resResult" type="PortaletRes">
+        <result property="id"    column="res_id"    />
+        <result property="resName"    column="res_name"    />
+        <result property="url"    column="res_url"    />
+        <result property="width"    column="res_width"    />
+        <result property="height"    column="res_height"    />
+        <result property="queryportId"    column="queryport_id"    />
+        <result property="imgUrl"    column="img_url"    />
+        <result property="imgWidth"    column="img_width"    />
+        <result property="imgHeight"    column="img_height"    />
+        <result property="html"    column="res_html"    />
+    </resultMap>
+
+    <sql id="selectPortaletUserVo">
+        select su.id, su.system_code, su.system_name, su.module_code, su.module_name, su.res_id, su.user_code, su.width, su.height, su.row, su.col, su.sort_no, su.deleted, su.create_by, su.create_by_name, su.create_time, su.update_by, su.update_time,
+        sr.res_name, sr.url res_url, sr.width res_width, sr.height res_height, sr.queryport_id, sr.img_url, sr.img_width, sr.img_height, sr.html res_html
+        from sys_portalet_user su
+        left join sys_portalet_res sr on sr.id = su.res_id
+    </sql>
+
+    <select id="selectPortaletUserList" parameterType="PortaletUser" resultMap="PortaletUserResult">
+        <include refid="selectPortaletUserVo"/>
+        <where>  
+            <if test="systemCode != null  and systemCode != ''"> and su.system_code = #{systemCode}</if>
+            <if test="systemName != null  and systemName != ''"> and su.system_name like concat('%', #{systemName}, '%')</if>
+            <if test="moduleCode != null  and moduleCode != ''"> and su.module_code = #{moduleCode}</if>
+            <if test="moduleName != null  and moduleName != ''"> and su.module_name like concat('%', #{moduleName}, '%')</if>
+            <if test="resId != null "> and su.res_id = #{resId}</if>
+            <if test="userCode != null  and userCode != ''"> and su.user_code = #{userCode}</if>
+            <if test="width != null "> and su.width = #{width}</if>
+            <if test="height != null "> and su.height = #{height}</if>
+            <if test="row != null "> and su.row = #{row}</if>
+            <if test="col != null "> and su.col = #{col}</if>
+            <if test="sortNo != null "> and su.sort_no = #{sortNo}</if>
+            <if test="deleted != null  and deleted != ''"> and su.deleted = #{deleted}</if>
+            <if test="createByName != null  and createByName != ''"> and su.create_by_name like concat('%', #{createByName}, '%')</if>
+            <if test="createTime != null "> and su.create_time = #{createTime}</if>
+        </where>
+        order by su.user_code, su.sort_no
+    </select>
+    
+    <select id="selectPortaletUserById" parameterType="Long" resultMap="PortaletUserResult">
+        <include refid="selectPortaletUserVo"/>
+        where su.id = #{id}
+    </select>
+    
+    <select id="selectMaxSortNoByUserCode" parameterType="String" resultType="Long">
+        select max(sort_no) sort_no
+        from sys_portalet_user
+        where user_code = #{userCode}
+    </select>
+        
+    <insert id="insertPortaletUser" parameterType="PortaletUser" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_portalet_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="systemCode != null  and systemCode != ''">system_code,</if>
+            <if test="systemName != null  and systemName != ''">system_name,</if>
+            <if test="moduleCode != null  and moduleCode != ''">module_code,</if>
+            <if test="moduleName != null  and moduleName != ''">module_name,</if>
+            <if test="resId != null ">res_id,</if>
+            <if test="userCode != null  and userCode != ''">user_code,</if>
+            <if test="width != null ">width,</if>
+            <if test="height != null ">height,</if>
+            <if test="row != null ">row,</if>
+            <if test="col != null ">col,</if>
+            <if test="sortNo != null ">sort_no,</if>
+            <if test="deleted != null  and deleted != ''">deleted,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createByName != null  and createByName != ''">create_by_name,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="systemCode != null  and systemCode != ''">#{systemCode},</if>
+            <if test="systemName != null  and systemName != ''">#{systemName},</if>
+            <if test="moduleCode != null  and moduleCode != ''">#{moduleCode},</if>
+            <if test="moduleName != null  and moduleName != ''">#{moduleName},</if>
+            <if test="resId != null ">#{resId},</if>
+            <if test="userCode != null  and userCode != ''">#{userCode},</if>
+            <if test="width != null ">#{width},</if>
+            <if test="height != null ">#{height},</if>
+            <if test="row != null ">#{row},</if>
+            <if test="col != null ">#{col},</if>
+            <if test="sortNo != null ">#{sortNo},</if>
+            <if test="deleted != null  and deleted != ''">#{deleted},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createByName != null  and createByName != ''">#{createByName},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePortaletUser" parameterType="PortaletUser">
+        update sys_portalet_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="systemCode != null  and systemCode != ''">system_code = #{systemCode},</if>
+            <if test="systemName != null  and systemName != ''">system_name = #{systemName},</if>
+            <if test="moduleCode != null  and moduleCode != ''">module_code = #{moduleCode},</if>
+            <if test="moduleName != null  and moduleName != ''">module_name = #{moduleName},</if>
+            <if test="resId != null ">res_id = #{resId},</if>
+            <if test="userCode != null  and userCode != ''">user_code = #{userCode},</if>
+            <if test="width != null ">width = #{width},</if>
+            <if test="height != null ">height = #{height},</if>
+            <if test="row != null ">row = #{row},</if>
+            <if test="col != null ">col = #{col},</if>
+            <if test="sortNo != null ">sort_no = #{sortNo},</if>
+            <if test="deleted != null  and deleted != ''">deleted = #{deleted},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createByName != null  and createByName != ''">create_by_name = #{createByName},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePortaletUserById" parameterType="Long">
+        delete from sys_portalet_user where id = #{id}
+    </delete>
+
+    <delete id="deletePortaletUserByIds" parameterType="String">
+        delete from sys_portalet_user where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="logicDeletePortaletUserById" parameterType="Long">
+        update   sys_portalet_user  set deleted='1' where id = #{id}
+    </update>
+
+    <update id="logicDeletePortaletUserByIds" parameterType="String">
+        update   sys_portalet_user  set deleted='1' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

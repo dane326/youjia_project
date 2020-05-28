@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<th:block th:include="include :: header('视图列表')" />
+    <th:block th:include="system/queryport/include :: jquery-ui-css" />
+	<th:block th:include="system/portalet/include :: portalet-css" />
+    <link th:href="@{/css/viewEdit.css}" rel="stylesheet"/>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content fadeInRight">
+    <ul id="sortable">
+        <li th:class="${'ui-state-default mainViewLi' + (isAdmin ? '' : ' noAdmin')}" th:id="'mine_id_' + ${portaletUser.id}" th:each="portaletUser : ${portaletUsers}" th:attr="data-resId=${portaletUser.resId},data-width=${portaletUser.width},data-height=${portaletUser.height}" th:style="'width: ' + ${portaletUser.width} + 'px; height: ' + ${portaletUser.height} + 'px;'">
+        	<div class="ibox" th:utext="${portaletUser.portaletRes.html}"></div>
+        </li>
+    </ul>
+
+</div>
+
+<th:block th:include="include :: footer" />
+<th:block th:include="include :: select2-js" />
+<th:block th:include="system/queryport/include :: queryport-js" />
+<th:block th:include="system/queryport/include :: jquery-ui-js" />
+<th:block th:include="system/portalet/include :: portalet-js" />
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		portaletUI.initCardCollapseLink();
+		portaletUI.initCardWrenchLink();
+		
+		portaletUI.initSortableResizable(false, false);
+	});
+</script>
+</body>
+</html>

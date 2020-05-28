@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gsh.system.queryport.mapper.QueryportMainMapper">
+    
+    <resultMap type="QueryportMain" id="QueryportMainResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="type"    column="type"    />
+        <result property="showType"    column="show_type"    />
+        <result property="status"    column="status"    />
+        <result property="ifFirstLoad"    column="is_first_load"    />
+        <result property="isPermitted"    column="is_permitted"    />
+        <result property="pagination"    column="pagination"    />
+        <result property="pagesize"    column="pagesize"    />
+        <result property="module"    column="module"    />
+        <result property="mergecols"    column="mergecols"    />
+        <result property="statement"    column="statement"    />
+        <result property="adescribe"    column="adescribe"    />
+        <result property="algorithm"    column="algorithm"    />
+        <result property="expressionColumn"    column="expression_column"    />
+        <result property="expressionExportColumn"    column="expression_export_column"    />
+        <result property="expressionFrom"    column="expression_from"    />
+        <result property="expressionWhere"    column="expression_where"    />
+        <result property="expressionGroupby"    column="expression_groupby"    />
+        <result property="expressionHaving"    column="expression_having"    />
+        <result property="expressionOrderby"    column="expression_orderby"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectQueryportMainVo">
+        select id, name, type,show_type, status, is_permitted, is_first_load, pagination, pagesize, module, mergecols, statement, adescribe, algorithm, expression_column, expression_export_column, expression_from, expression_where, expression_groupby, expression_having, expression_orderby, deleted, create_by, create_time, update_by, update_time, remark from sys_queryport_main where deleted='0'
+    </sql>
+
+    <select id="selectQueryportMainList" parameterType="QueryportMain" resultMap="QueryportMainResult">
+        <include refid="selectQueryportMainVo"/>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="showType != null  and showType != ''"> and show_type = #{showType}</if>
+            <if test="isPermitted != null  and isPermitted != ''"> and is_permitted = #{isPermitted}</if>
+            <if test="ifFirstLoad != null  and ifFirstLoad != ''"> and is_first_load = #{ifFirstLoad}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="pagination != null  and pagination != ''"> and pagination = #{pagination}</if>
+            <if test="module != null  and module != ''"> and module = #{module}</if>
+    </select>
+
+    <select id="selectQueryportMainById" parameterType="Long" resultMap="QueryportMainResult">
+        <include refid="selectQueryportMainVo"/>
+         and id = #{id} and deleted='0'
+    </select>
+
+    <insert id="insertQueryportMain" parameterType="QueryportMain" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_queryport_main
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">name,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="showType != null  and showType != ''">show_type,</if>
+            <if test="ifFirstLoad != null  and isPermitted != ''">is_first_load,</if>
+            <if test="isPermitted != null  and isPermitted != ''">is_permitted,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="pagination != null  and pagination != ''">pagination,</if>
+            <if test="pagesize != null ">pagesize,</if>
+            <if test="module != null  and module != ''">module,</if>
+            <if test="mergecols != null  and mergecols != ''">mergecols,</if>
+            <if test="statement != null  and statement != ''">statement,</if>
+            <if test="adescribe != null  and adescribe != ''">adescribe,</if>
+            <if test="algorithm != null  and algorithm != ''">algorithm,</if>
+            <if test="expressionColumn != null  and expressionColumn != ''">expression_column,</if>
+            <if test="expressionExportColumn != null  and expressionExportColumn != ''">expression_export_column,</if>
+            <if test="expressionFrom != null  and expressionFrom != ''">expression_from,</if>
+            <if test="expressionWhere != null  and expressionWhere != ''">expression_where,</if>
+            <if test="expressionGroupby != null  and expressionGroupby != ''">expression_groupby,</if>
+            <if test="expressionHaving != null  and expressionHaving != ''">expression_having,</if>
+            <if test="expressionOrderby != null  and expressionOrderby != ''">expression_orderby,</if>
+            <if test="deleted != null  and deleted != ''">deleted,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="showType != null  and showType != ''">#{showType},</if>
+            <if test="ifFirstLoad != null  and ifFirstLoad != ''">#{ifFirstLoad},</if>
+            <if test="isPermitted != null  and isPermitted != ''">#{isPermitted},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="pagination != null  and pagination != ''">#{pagination},</if>
+            <if test="pagesize != null ">#{pagesize},</if>
+            <if test="module != null  and module != ''">#{module},</if>
+            <if test="mergecols != null  and mergecols != ''">#{mergecols},</if>
+            <if test="statement != null  and statement != ''">#{statement},</if>
+            <if test="adescribe != null  and adescribe != ''">#{adescribe},</if>
+            <if test="algorithm != null  and algorithm != ''">#{algorithm},</if>
+            <if test="expressionColumn != null  and expressionColumn != ''">#{expressionColumn},</if>
+            <if test="expressionExportColumn != null  and expressionExportColumn != ''">#{expressionExportColumn},</if>
+            <if test="expressionFrom != null  and expressionFrom != ''">#{expressionFrom},</if>
+            <if test="expressionWhere != null  and expressionWhere != ''">#{expressionWhere},</if>
+            <if test="expressionGroupby != null  and expressionGroupby != ''">#{expressionGroupby},</if>
+            <if test="expressionHaving != null  and expressionHaving != ''">#{expressionHaving},</if>
+            <if test="expressionOrderby != null  and expressionOrderby != ''">#{expressionOrderby},</if>
+            <if test="deleted != null  and deleted != ''">#{deleted},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateQueryportMain" parameterType="QueryportMain">
+        update sys_queryport_main
+        <trim prefix="SET" suffixOverrides=",">
+            name = #{name},
+            type = #{type},
+            show_type = #{showType},
+            is_first_load = #{ifFirstLoad},
+            is_permitted = #{isPermitted},
+            status = #{status},
+            pagination = #{pagination},
+            pagesize = #{pagesize},
+            module = #{module},
+            mergecols = #{mergecols},
+            statement = #{statement},
+            adescribe = #{adescribe},
+            algorithm = #{algorithm},
+            expression_column = #{expressionColumn},
+            expression_export_column = #{expressionExportColumn},
+            expression_from = #{expressionFrom},
+            expression_where = #{expressionWhere},
+            expression_groupby = #{expressionGroupby},
+            expression_having = #{expressionHaving},
+            expression_orderby = #{expressionOrderby},
+            <if test="deleted != null  and deleted != ''">deleted = #{deleted},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteQueryportMainById" parameterType="Long">
+        delete from sys_queryport_main where id = #{id}
+    </delete>
+
+    <delete id="deleteQueryportMainByIds" parameterType="String">
+        delete from sys_queryport_main where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="logicDeleteQueryportMainById" parameterType="Long">
+        update   sys_queryport_main  set deleted='1' where id = #{id}
+    </update>
+
+    <update id="logicDeleteQueryportMainByIds" parameterType="String">
+        update   sys_queryport_main  set deleted='1' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

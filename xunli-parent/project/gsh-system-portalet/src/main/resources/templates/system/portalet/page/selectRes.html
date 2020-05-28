@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('可配置资源信息列表')" />
+    <th:block th:include="include :: select2-css" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                	<input name="params[filterModulePageId]" type="hidden" th:value="${modulePageId}">
+                	<input name="resType" type="hidden" value="res">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+								 系统名称：<input type="text" name="systemName"/>
+                            </li>
+                            <li>
+								模块名称：<input type="text" name="moduleName"/>
+                            </li>
+                            <li>
+								资源名称：<input type="text" name="name"/>
+                            </li>
+                            <li>
+								资源状态：<select name="deleted" th:with="type=${@dict.getType('sys_normal_disable')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:selected="${dict.default}"></option>
+								</select>
+							</li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table" ></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="system/portalet/include :: portalet-js" />
+    
+    <script th:inline="javascript">
+        var deletedDatas = [[${@dict.getType('sys_normal_disable')}]];
+        var resTypeDatas = [[${@dict.getType('sys_portalet_resType')}]];
+        var prefix = ctx + "system/portalet/page";
+
+        $(function() {
+            var options = {
+                url: prefix + "/selectResList",
+                pagination: false,
+                showToggle: false,
+                modalName: "选择资源",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'systemName', 
+                    title : '系统名称'
+                },
+                {
+                    field : 'moduleName', 
+                    title : '模块名称'
+                },
+                {
+                    field : 'cnName', 
+                    title : '资源名称'
+                },
+                {
+                    field : 'id', 
+                    title : '资源编码'
+                },                
+                {
+                    field : 'imgUrl', 
+                    title : '图片',
+	                formatter: function(value, row, index) {
+	                    if(value) {
+	                        return $.common.sprintf("<img style='height: %spx;width: %spx' src='%s'/>", 25, row.imgWidth * 25 / row.imgHeight, ctx + value);
+	                    }
+						return value;
+	                }
+                },
+                {
+                    field : 'sortNo', 
+                    title : '显示顺序'
+                },
+                {
+                    field : 'deleted', 
+                    title : '状态',
+		            formatter: function(value, item, index) {
+		            	return $.table.selectDictLabel(deletedDatas, value);
+		            }
+                }]
+            };
+            $.table.init(options);
+        });
+        
+        function submitHandler(){
+        	portaletUI.selectResSubmitHandler(prefix + "/" + [[${modulePageId}]] + "/addRes");
+        }
+    </script>
+</body>
+</html>

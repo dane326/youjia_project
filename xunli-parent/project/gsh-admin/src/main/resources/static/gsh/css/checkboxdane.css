@@ -1,0 +1,250 @@
+.all-checkbox {
+    padding: 10px;
+}
+.borderTop {
+    border-top: thin solid #ddd;
+}
+.borderBottom {
+    border-bottom: thin solid #ddd;
+}
+.borderLeft {
+    border-left: thin solid #ddd;
+}
+.borderRight {
+    border-right: thin solid #ddd;
+}
+.borderNone {
+    border-right: none;
+}
+.ui-checkboxdane {
+    background: url("../../img/download.png");
+    background-repeat: no-repeat;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: inline-block;
+}
+.ui-checkboxdane.hover {
+    background-position-x: -24px;
+    cursor: pointer;
+}
+.ui-checkboxdane.active-path {
+    background-position-x: -48px;
+    cursor: pointer;
+}
+.ui-checkboxdane.active {
+    background-position-x: -72px;
+    cursor: pointer;
+}
+.ui-checkboxdane.disabled, .ui-checkboxdane.readonly {
+    background-position-x: -120px;
+    cursor: no-drop;
+}
+.div-checkbox {
+    width: 100%;
+    height: 50px;
+    position: relative;
+    border-left: thin solid #ddd;
+    border-right: thin solid #ddd;
+}
+.div-checkbox label input[type=checkbox] {
+    margin-right: 2px;
+    position: relative;
+    top: 2px;
+    left: 0;
+    display: none;
+}
+.all-checked {
+    padding-left: 25px;
+    font-weight: normal;
+    position: relative;
+    cursor: pointer;
+}
+.all-checked input[type=checkbox] {
+    display: none;
+}
+.div-checkbox label {
+    margin: 0px;
+    padding-left: 25px;
+    cursor: pointer;
+    font-weight: normal;
+    position: relative;
+}
+/* horizontal*/
+.title {
+    overflow: hidden;
+    text-align: center;
+    border-top: thin solid #ddd;
+}
+/*  .title div{
+    font-weight: bolder;
+    float: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 5%;
+    padding-right: 5%;
+    border-right:thin solid #ddd;
+  }*/
+.div-checkbox:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+.div-checkbox:last-child {
+    border-bottom: thin solid #ddd;
+}
+._border_ {
+    border-top: thin solid #ddd;
+    border-right: thin solid #ddd;
+}
+.title div {
+    font-weight: bolder;
+    float: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 5%;
+    padding-right: 5%;
+    border-right: thin solid #ddd;
+}
+.title div:last-child {
+    border-right: none;
+}
+.check-boxdane {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    float: left;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    width: 20%;
+    height: 100%;
+    text-align: center;
+}
+.check-align-left {
+    text-align: left;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.check-absolute {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+}
+.check-boxdane .absolute-center {
+    left: 50%;
+    top: 50%;
+    margin-left: -6px;
+    margin-top: -6px;
+}
+.main {
+    width: 100%;
+    height: 100%;
+}
+.second {
+    width: 20%;
+    left: 20%;
+    height: 100%;
+}
+.third {
+    left: 100%;
+    width: 300%;
+}
+.check-block {
+    width: 100%;
+}
+._top_ {
+    top: 75px
+}
+.row-of-three {
+    width: 33.33%;
+    height: 35px;
+}
+/*vertical*/
+.vertical-checkbox {
+    overflow: hidden;
+}
+.vertical-checkbox > div {
+    float: left;
+}
+.vertical-checkbox .title {
+    width: 10%;
+    text-align: center
+}
+.vertical-checkbox .title div:last-child {
+    border-right: thin solid #ddd;
+}
+.vertical-checkbox .title > div {
+    width: 100% !important;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-bottom: thin solid #ddd;
+}
+.vertical-checkbox .div-checkbox {
+    width: 90%;
+    height: auto;
+}
+.vertical-checkbox .all-checked {
+    display: block;
+}
+.vertical-checkbox .div-checkbox {
+    border-left: none;
+}
+.vertical-checkbox .main {
+    width: 100%;
+    border-top: thin solid #ddd;
+    border-left: thin solid #ddd;
+}
+.vertical-checkbox .second, .vertical-checkbox .third {
+    width: 100%;
+    border-bottom: none;
+    border-right: thin solid #ddd;
+}
+.vertical-checkbox .second > .levelDIV {
+    width: 50% !important;
+    float: left;
+}
+.vertical-checkbox .third p.check-boxdane {
+    width: 33.33%;
+    float: left;
+    border-bottom: none;
+}
+.vertical-checkbox p.check-boxdane {
+    margin: 0px;
+    width: 100%;
+    height: 70%;
+    text-align: center;
+    border-bottom: thin solid #ddd;
+    border-right: thin solid #ddd;
+}
+/*Is Level Two Start*/
+.level-two .levelDIV {
+    overflow: hidden;
+}
+.level-two .second {
+    width: 80%;
+}
+.level-two .second > .levelDIV:last-child {
+    border-bottom: none;
+}
+.level-two .title > div {
+    border-bottom: thin solid #ddd;
+}
+.level-two .second p.check-boxdane {
+    width: 25%;
+    float: left;
+    height: 40px;
+    position: relative;
+    border-bottom: thin solid #ddd;
+}
+.level-two .second p.check-boxdane > label {
+    left: 4%;
+    top: 15%;
+    margin-top: -6px;
+    margin-left: -6px;
+}
+.title_dane{
+    background-color: #5897fb;
+}
+.center_dane{
+    text-align: center;
+    align-content: center;
+}

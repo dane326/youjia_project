@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增自定义portal页面')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-page-add">
+            <input name="parentId" type="hidden" th:value="${portaletPage.id}" />
+        	<input name="cnName" type="hidden">
+        	<input name="resType" type="hidden" th:value="${portaletPage.resType}">
+            <div class="form-group" th:style="'display:' + @{(${portaletPage.resType == 'sys'} ? 'block' : 'none')}">    
+                <label class="col-sm-3 control-label">系统编码：</label>
+                <div class="col-sm-8">
+                    <input name="systemCode" th:value="${portaletPage.systemCode}" class="form-control" type="text" th:required="${portaletPage.resType == 'sys'}">
+                </div>
+            </div>
+            <div class="form-group" th:style="'display:' + @{(${portaletPage.resType == 'sys'} ? 'block' : 'none')}">    
+                <label class="col-sm-3 control-label">系统名称：</label>
+                <div class="col-sm-8">
+                    <input name="systemName" th:value="${portaletPage.systemName}" class="form-control" type="text" th:required="${portaletPage.resType == 'sys'}">
+                </div>
+            </div>
+            <div class="form-group" th:style="'display:' + @{(${portaletPage.resType == 'module'} ? 'block' : 'none')}">    
+                <label class="col-sm-3 control-label">模块编码：</label>
+                <div class="col-sm-8">
+                    <input name="moduleCode" th:value="${portaletPage.moduleCode}" class="form-control" type="text" th:required="${portaletPage.resType == 'module'}">
+                </div>
+            </div>
+            <div class="form-group" th:style="'display:' + @{(${portaletPage.resType == 'module'} ? 'block' : 'none')}">    
+                <label class="col-sm-3 control-label">模块名称：</label>
+                <div class="col-sm-8">
+                    <input name="moduleName" th:value="${portaletPage.moduleName}" class="form-control" type="text" th:required="${portaletPage.resType == 'module'}">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">资源类型：</label>
+                <div class="col-sm-8">
+				    <div class="radio-box" th:each="dict : ${@dict.getType('sys_portalet_resType')}">
+						<input type="radio" th:id="${dict.dictCode}" name="mineResType" th:value="${dict.dictValue}" th:field="${portaletPage.resType}" disabled>
+						<label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+					</div>
+				</div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">显示顺序：</label>
+                <div class="col-sm-8">
+                    <input name="sortNo" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">状态：</label>
+                <div class="col-sm-8">
+				    <div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
+						<input type="radio" th:id="${dict.dictCode}" name="deleted" th:value="${dict.dictValue}" th:checked="${dict.default}">
+						<label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+					</div>
+				</div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "system/portalet/page"
+        $("#form-page-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+            	if('[[${portaletPage.resType}]]' == 'sys'){
+            		$("input[name='cnName']").val($("input[name='systemName']").val());
+            	} else if('[[${portaletPage.resType}]]' == 'module'){
+            		$("input[name='cnName']").val($("input[name='moduleName']").val());
+            	}
+                $.operate.save(prefix + "/add", $('#form-page-add').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

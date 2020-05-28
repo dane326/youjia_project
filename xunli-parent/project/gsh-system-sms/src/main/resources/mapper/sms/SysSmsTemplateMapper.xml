@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gsh.system.sms.mapper.SysSmsTemplateMapper">
+    
+    <resultMap type="SysSmsTemplate" id="SysSmsTemplateResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="template"    column="template"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createByName"    column="create_by_name"    />
+        <result property="createByDeptid"    column="create_by_deptid"    />
+        <result property="createByDeptname"    column="create_by_deptname"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateByName"    column="update_by_name"    />
+        <result property="updateByDeptid"    column="update_by_deptid"    />
+        <result property="updateByDeptname"    column="update_by_deptname"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="factoryCode"    column="factory_code"    />
+    </resultMap>
+
+    <sql id="selectSysSmsTemplateVo">
+        select id, name, template, create_by, create_by_name, create_by_deptid, create_by_deptname, create_time, update_by, update_by_name, update_by_deptid, update_by_deptname, update_time, remark, deleted, factory_code from sys_sms_template
+    </sql>
+
+    <select id="selectSysSmsTemplateList" parameterType="SysSmsTemplate" resultMap="SysSmsTemplateResult">
+        <include refid="selectSysSmsTemplateVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="template != null  and template != ''"> and template = #{template}</if>
+            <if test="createByName != null  and createByName != ''"> and create_by_name like concat('%', #{createByName}, '%')</if>
+            <if test="createByDeptid != null "> and create_by_deptid = #{createByDeptid}</if>
+            <if test="createByDeptname != null  and createByDeptname != ''"> and create_by_deptname like concat('%', #{createByDeptname}, '%')</if>
+            <if test="updateByName != null  and updateByName != ''"> and update_by_name = #{updateByName}</if>
+            <if test="updateByDeptid != null "> and update_by_deptid = #{updateByDeptid}</if>
+            <if test="updateByDeptname != null  and updateByDeptname != ''"> and update_by_deptname like concat('%', #{updateByDeptname}, '%')</if>
+            <if test="deleted != null  and deleted != ''"> and deleted = #{deleted}</if>
+            <if test="factoryCode != null"> and factory_code = #{factoryCode}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysSmsTemplateById" parameterType="Long" resultMap="SysSmsTemplateResult">
+        <include refid="selectSysSmsTemplateVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysSmsTemplate" parameterType="SysSmsTemplate" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_sms_template
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">name,</if>
+            <if test="template != null  and template != ''">template,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createByName != null  and createByName != ''">create_by_name,</if>
+            <if test="createByDeptid != null ">create_by_deptid,</if>
+            <if test="createByDeptname != null  and createByDeptname != ''">create_by_deptname,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateByName != null  and updateByName != ''">update_by_name,</if>
+            <if test="updateByDeptid != null ">update_by_deptid,</if>
+            <if test="updateByDeptname != null  and updateByDeptname != ''">update_by_deptname,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="deleted != null  and deleted != ''">deleted,</if>
+            <if test="factoryCode != null">factory_code,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="template != null  and template != ''">#{template},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createByName != null  and createByName != ''">#{createByName},</if>
+            <if test="createByDeptid != null ">#{createByDeptid},</if>
+            <if test="createByDeptname != null  and createByDeptname != ''">#{createByDeptname},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateByName != null  and updateByName != ''">#{updateByName},</if>
+            <if test="updateByDeptid != null ">#{updateByDeptid},</if>
+            <if test="updateByDeptname != null  and updateByDeptname != ''">#{updateByDeptname},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="deleted != null  and deleted != ''">#{deleted},</if>
+            <if test="factoryCode != null">#{factoryCode},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysSmsTemplate" parameterType="SysSmsTemplate">
+        update sys_sms_template
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="template != null  and template != ''">template = #{template},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createByName != null  and createByName != ''">create_by_name = #{createByName},</if>
+            <if test="createByDeptid != null ">create_by_deptid = #{createByDeptid},</if>
+            <if test="createByDeptname != null  and createByDeptname != ''">create_by_deptname = #{createByDeptname},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateByName != null  and updateByName != ''">update_by_name = #{updateByName},</if>
+            <if test="updateByDeptid != null ">update_by_deptid = #{updateByDeptid},</if>
+            <if test="updateByDeptname != null  and updateByDeptname != ''">update_by_deptname = #{updateByDeptname},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="deleted != null  and deleted != ''">deleted = #{deleted},</if>
+            <if test="factoryCode != null">factory_code = #{factoryCode},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysSmsTemplateById" parameterType="Long">
+        delete from sys_sms_template where id = #{id}
+    </delete>
+
+    <delete id="deleteSysSmsTemplateByIds" parameterType="String">
+        delete from sys_sms_template where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="logicDeleteSysSmsTemplateById" parameterType="Long">
+        update   sys_sms_template  set deleted='1' where id = #{id}
+    </update>
+
+    <update id="logicDeleteSysSmsTemplateByIds" parameterType="String">
+        update   sys_sms_template  set deleted='1' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    
+</mapper>

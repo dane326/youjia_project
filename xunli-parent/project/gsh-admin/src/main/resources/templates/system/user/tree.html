@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('人员树选择')" />
+	<th:block th:include="include :: ztree-css" />
+</head>
+<style>
+	body{height:auto;font-family: "Microsoft YaHei";}
+	button{font-family: "SimSun","Helvetica Neue",Helvetica,Arial;}
+</style>
+<body class="hold-transition box box-main">
+	<input id="parentDeptId"   name="parentDeptId" type="hidden" th:value="${parentDeptId}"/>
+	<input id="paramId"   name="paramId" type="hidden" th:value="${paramId}"/>
+	<input id="treeId" name="treeId" type="hidden"/>
+	<input id="treeName" name="treeName" type="hidden"/>
+	<input id="treeNode" name="treeNode" type="hidden"/>
+	<div class="wrapper"><div class="treeShowHideButton" onclick="$.tree.toggleSearch();">
+		<label id="btnShow" title="显示搜索" style="display:none;">︾</label>
+		<label id="btnHide" title="隐藏搜索">︽</label>
+	</div>
+	<div class="treeSearchInput" id="search">
+		<label for="keyword">关键字：</label><input type="text" class="empty" id="keyword" maxlength="50">
+		<button class="btn" id="btn" onclick="$.tree.searchNode()"> 搜索 </button>
+	</div>
+	<div class="treeExpandCollapse">
+		<a href="#" onclick="$.tree.expand()">展开</a> /
+		<a href="#" onclick="$.tree.collapse()">折叠</a>
+	</div>
+	<div id="tree" class="ztree treeselect"></div>
+	</div>
+	<th:block th:include="include :: footer" />
+	<th:block th:include="include :: ztree-js" />
+	<script th:inline="javascript">
+		var setting = {
+			onClick : zOnClick,
+			async: {
+				enable: true,
+				url: ctx + "system/user/treeData",
+				autoParam:["id"],
+				dataFilter: filter
+			},
+			data:{
+				simpleData:{
+					enable: true,
+					idKey:'id',
+					pIdKey:'pid',
+					rootPId: 100
+				}
+			},
+			view:{
+				showIcon: false
+			},
+			data: {
+				key: {
+					name: "title"         // 节点数据保存节点提示信息的属性名称
+				}
+			},
+			callback: {
+				onClick: zOnClick
+			}
+		};
+		$(document).ready(function(){
+			initZTree();
+		});
+
+		function zOnClick(event, treeId, treeNode) {
+			var treeId = treeNode.id;
+			var treeName = treeNode.name;
+			$("#treeId").val(treeId);
+			$("#treeName").val(treeName);
+			$("#treeNode").val(JSON.stringify(treeNode));
+			$("#factoryCode").val($.common.split(treeNode.key, '|')[0]);
+		}
+
+		function filter(treeId, parentNode, childNodes) {
+			return childNodes;
+		}
+		//初始化树
+		function initZTree(){
+			$.ajax({
+				url: ctx + "system/user/treeData?id=100",
+				type:"post",
+				dataType: "json",
+				success: function(data){
+					console.log(data);
+					var zTreeObj = $.fn.zTree.init($("#tree"),setting, data);
+					//让第一个父节点展开
+					var nodes = zTreeObj.getNodes();
+					for (var i = 0; i < nodes.length; i++) { //设置节点展开
+						zTreeObj.expandNode(nodes[i], true, false, true);
+					}
+				},
+				error: function(){
+				}
+			});
+		}
+	</script>
+</body>
+</html>
