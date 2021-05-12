@@ -32,7 +32,7 @@
 		<velocity.version>1.7</velocity.version>
 		<joda.time.version>2.10.2</joda.time.version>
 		<freehep-graphicsio.version>2.4</freehep-graphicsio.version>
-		<solr.version>7.4.0</solr.version>
+		<solr.version>8.8.2</solr.version>
 	</properties>
 
 	<!-- 依赖声明 -->
