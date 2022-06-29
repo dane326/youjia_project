@@ -28,7 +28,7 @@
 		<oshi.version>3.9.1</oshi.version>
 		<commons.io.version>2.5</commons.io.version>
 		<commons.fileupload.version>1.3.3</commons.fileupload.version>
-		<poi.version>4.1.0</poi.version>
+		<poi.version>4.1.1</poi.version>
 		<velocity.version>1.7</velocity.version>
 		<joda.time.version>2.10.2</joda.time.version>
 		<freehep-graphicsio.version>2.4</freehep-graphicsio.version>
